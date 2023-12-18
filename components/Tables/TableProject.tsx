@@ -53,8 +53,7 @@ const TableProject = () => {
 
     fetchData();
   }, []);
-
-  console.log(datas);
+  
 
   if (isLoading) return <p>Loading...</p>;
   if (!datas) return <p>No Project data</p>;
@@ -143,7 +142,7 @@ const TableProject = () => {
                       packageItem.contentcategory === "reels"
                         ? "text-primary bg-primary"
                         : packageItem.contentcategory === "tiktok"
-                        ? "text-default bg-default"
+                        ? "text-secondary bg-secondary"
                         : packageItem.contentcategory === "photo"
                         ? "text-warning bg-warning"
                         : packageItem.contentcategory === "design"
@@ -180,7 +179,7 @@ const TableProject = () => {
                   <p
                     className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium ${
                       packageItem.instagrampostingstatus === "not yet posted"
-                        ? "text-default bg-default"
+                        ? "text-primary bg-primary"
                         : packageItem.instagrampostingstatus === "on preview"
                         ? "text-warning bg-warning"
                         : packageItem.instagrampostingstatus === "on hold"
@@ -196,8 +195,8 @@ const TableProject = () => {
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <p
                     className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium ${
-                      packageItem.tiktokpostingstatus === "not yet posted"
-                        ? "text-default bg-default"
+                      packageItem.tiktokpostingstatuwhites === "not yet posted"
+                        ? "text-primary bg-primary"
                         : packageItem.tiktokpostingstatus === "on preview"
                         ? "text-warning bg-warning"
                         : packageItem.tiktokpostingstatus === "on hold"

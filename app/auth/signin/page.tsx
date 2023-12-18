@@ -4,8 +4,8 @@ import Image from "next/image";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import { Metadata } from "next";
 export const metadata: Metadata = {
-  title: "Signin Page | Next.js E-commerce Dashboard Template",
-  description: "This is Signin page for TailAdmin Next.js",
+  title: "Signin DOTS WMS",
+  description: "This is Signin page for DOTS WMS",
   // other metadata
 };
 

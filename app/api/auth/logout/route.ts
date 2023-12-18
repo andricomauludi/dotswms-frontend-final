@@ -9,7 +9,7 @@ export async function POST() {
       let hasil = datatoken;    
       const cookieStore = cookies();
 
-      const token = cookieStore.get(COOKIE_NAME);             //COOKIE_NAME diambil dari constants index.ts
+      let token = cookieStore.get(COOKIE_NAME);             //COOKIE_NAME diambil dari constants index.ts
   
   
       // serialize(COOKIE_NAME, hasil["accessToken"], {
@@ -21,9 +21,9 @@ export async function POST() {
       //   path: "/",
       // });
       try {
-        cookies().set({
+        cookies().set({          
           name: COOKIE_NAME,
-          value: token,
+          value: hasil["accessToken"],
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
           sameSite: "strict",

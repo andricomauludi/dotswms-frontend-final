@@ -51,6 +51,32 @@ export default function ButtonAddProject() {
     //   alert(error.message);
     // }
   };
+  const router = useRouter();
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const payload = {
+      item: event.currentTarget.item.value,
+      postingschedule: event.currentTarget.postingschedule.value,
+      lead: event.currentTarget.lead.value,
+      contentcategory: event.currentTarget.contentcategory.value,
+      postingtime: event.currentTarget.postingtime.value,
+      contenttextlink: event.currentTarget.contenttextlink.value,
+      contenttext: event.currentTarget.contenttext.value,
+      contentposting: event.currentTarget.contentposting.value,
+      instagrampostingstatus: event.currentTarget.instagrampostingstatus.value,
+      tiktokpostingstatus: event.currentTarget.tiktokpostingstatus.value,
+    };    
+    try {
+      const { data } = await axios.post("/api/workspaces/tableproject", payload);
+      alert(JSON.stringify(data));
+      onClose
+      //redirect the user to dashboard      
+    } catch (e) {
+      const error = e as AxiosError;
+      console.log(error);
+      alert(error.message);
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -83,9 +109,9 @@ export default function ButtonAddProject() {
           Add Data
         </Button>
       </div>
-      <div style={{ position: "absolute", zIndex: 10 }}>
+      <div>
         <Modal
-          className=""
+          className="sticky top-0 z-999 flex w-full bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none"
           size={"5xl"}
           isOpen={isOpen}
           onClose={onClose}
@@ -93,11 +119,11 @@ export default function ButtonAddProject() {
           backdrop="blur"
         >
           <ModalContent className="">
-            <div className="w-full max-w-200 z-999 rounded-lg bg-white py-12 px-8 dark:bg-boxdark md:py-15 md:px-17.5">
+            <div className="w-full max-w-200 rounded-lg bg-white py-12 px-8 dark:bg-boxdark md:py-15 md:px-17.5">
               <h3 className="font-medium text-black dark:text-white">
-                Add Table Project
+                Add Detail Project
               </h3>
-              <form action="#">
+              <form onSubmit={handleSubmit}>
                 <div className="grid grid-cols-1 gap-9 sm:grid-cols-2">
                   <div className="flex flex-col gap-9">
                     {/* <!-- Contact Form --> */}
@@ -107,6 +133,8 @@ export default function ButtonAddProject() {
                           Item <span className="text-meta-1">*</span>
                         </label>
                         <input
+                          name="item"
+                          id="item"
                           type="text"
                           placeholder="Enter item"
                           className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
@@ -119,6 +147,8 @@ export default function ButtonAddProject() {
                           </label>
                           <div className="relative">
                             <input
+                              name="postingschedule"
+                              id="postingschedule"
                               type="date"
                               className="custom-input-date custom-input-date-1 w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                             />
@@ -161,10 +191,10 @@ export default function ButtonAddProject() {
                                 </g>
                               </svg>
                             </span>
-                            <select className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input">
-                              <option value="">Muhammad Sri Garindra</option>
-                              <option value="">Syafira Amanda</option>
-                              <option value="">Muhammad Sri Gilbran</option>
+                            <select name="lead" className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input">
+                              <option value="mantab">Muhammad Sri Garindra</option>
+                              <option value="mantab2">Syafira Amanda</option>
+                              <option value="mantab3">Muhammad Sri Gilbran</option>
                             </select>
                             <span className="absolute top-1/2 right-4 z-20 -translate-y-1/2">
                               <svg
@@ -223,9 +253,9 @@ export default function ButtonAddProject() {
                                 </g>
                               </svg>
                             </span>
-                            <select className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input">
-                              <option value="">Reels</option>
-                              <option value="">Tiktok</option>
+                            <select name="contentcategory" className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input">
+                              <option value="reels">Reels</option>
+                              <option value="tiktok">Tiktok</option>
                             </select>
                             <span className="absolute top-1/2 right-4 z-20 -translate-y-1/2">
                               <svg
@@ -284,12 +314,12 @@ export default function ButtonAddProject() {
                                 </g>
                               </svg>
                             </span>
-                            <select className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input">
-                              <option value="">09:00</option>
-                              <option value="">12:00</option>
-                              <option value="">17:00</option>
-                              <option value="">19:00</option>
-                              <option value="">21:00</option>
+                            <select name="postingtime" className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input">
+                              <option value="09:00">09:00</option>
+                              <option value="12:00">12:00</option>
+                              <option value="17:00">17:00</option>
+                              <option value="19:00">19:00</option>
+                              <option value="21:00">21:00</option>
                             </select>
                             <span className="absolute top-1/2 right-4 z-20 -translate-y-1/2">
                               <svg
@@ -323,6 +353,7 @@ export default function ButtonAddProject() {
                           <span className="text-meta-1">*</span>
                         </label>
                         <input
+                          name="contenttextlink"                      
                           type="text"
                           placeholder="Enter context text link"
                           className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
@@ -334,6 +365,7 @@ export default function ButtonAddProject() {
                             Content Text
                           </label>
                           <input
+                            name="contenttext"
                             type="file"
                             className="w-full cursor-pointer rounded-lg border-[1.5px] border-stroke bg-transparent font-medium outline-none transition file:mr-5 file:border-collapse file:cursor-pointer file:border-0 file:border-r file:border-solid file:border-stroke file:bg-whiter file:py-3 file:px-5 file:hover:bg-primary file:hover:bg-opacity-10 focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:file:border-form-strokedark dark:file:bg-white/30 dark:file:text-white dark:focus:border-primary"
                           />
@@ -345,6 +377,7 @@ export default function ButtonAddProject() {
                             Content Posting
                           </label>
                           <input
+                            name="contentposting"
                             type="file"
                             className="w-full cursor-pointer rounded-lg border-[1.5px] border-stroke bg-transparent font-medium outline-none transition file:mr-5 file:border-collapse file:cursor-pointer file:border-0 file:border-r file:border-solid file:border-stroke file:bg-whiter file:py-3 file:px-5 file:hover:bg-primary file:hover:bg-opacity-10 focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:file:border-form-strokedark dark:file:bg-white/30 dark:file:text-white dark:focus:border-primary"
                           />
@@ -386,10 +419,10 @@ export default function ButtonAddProject() {
                                 </g>
                               </svg>
                             </span>
-                            <select className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input">
-                              <option value="">On Hold</option>
-                              <option value="">Posted</option>
-                              <option value="">Not Yet Posted</option>
+                            <select name="instagrampostingstatus" className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input">
+                              <option value="on hold">On Hold</option>
+                              <option value="posted">Posted</option>
+                              <option value="not yet posted">Not Yet Posted</option>
                             </select>
                             <span className="absolute top-1/2 right-4 z-20 -translate-y-1/2">
                               <svg
@@ -448,10 +481,10 @@ export default function ButtonAddProject() {
                                 </g>
                               </svg>
                             </span>
-                            <select className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input">
-                              <option value="">On Hold</option>
-                              <option value="">Posted</option>
-                              <option value="">Not Yet Posted</option>
+                            <select name="tiktokpostingstatus" className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input">
+                              <option value="on hold">On Hold</option>
+                              <option value="posted">Posted</option>
+                              <option value="not yet posted">Not Yet Posted</option>
                             </select>
                             <span className="absolute top-1/2 right-4 z-20 -translate-y-1/2">
                               <svg
@@ -477,29 +510,29 @@ export default function ButtonAddProject() {
                     </div>
                   </div>
                 </div>
-              </form>
 
-              <div className="-mx-3 flex flex-wrap gap-y-4">
-                <div className="w-full px-3 2xsm:w-1/2">
+                <div className="-mx-3 flex flex-wrap gap-y-4">
+                  {/* <div className="w-full px-3 2xsm:w-1/2">
                   <Button
-                    className="block w-full rounded border border-stroke bg-gray p-3 text-center font-medium text-black transition hover:border-meta-1 hover:bg-meta-1 hover:text-white dark:border-strokedark dark:bg-meta-4 dark:text-white dark:hover:border-meta-1 dark:hover:bg-meta-1"
-                    color="danger"
-                    variant="light"
-                    onPress={onClose}
+                  className="block w-full rounded border border-stroke bg-gray p-3 text-center font-medium text-black transition hover:border-meta-1 hover:bg-meta-1 hover:text-white dark:border-strokedark dark:bg-meta-4 dark:text-white dark:hover:border-meta-1 dark:hover:bg-meta-1"
+                  color="danger"
+                  variant="light"
+                  onPress={onClose}
                   >
-                    Close
+                  Close
                   </Button>
+                </div> */}
+                  <div className="w-full px-3 2xsm:w-1/2">
+                    <Button
+                    type="submit"
+                      className="block w-full rounded border border-primary bg-primary p-3 text-center font-medium text-white transition hover:bg-opacity-90"
+                      color="primary"                      
+                    >
+                      Add Detail Project
+                    </Button>
+                  </div>
                 </div>
-                <div className="w-full px-3 2xsm:w-1/2">
-                  <Button
-                    className="block w-full rounded border border-primary bg-primary p-3 text-center font-medium text-white transition hover:bg-opacity-90"
-                    color="primary"
-                    onPress={onClose}
-                  >
-                    Action
-                  </Button>
-                </div>
-              </div>
+              </form>
             </div>
           </ModalContent>
         </Modal>
