@@ -76,25 +76,19 @@ const DropdownUser = () => {
           <span className="block text-xs">{data.role}</span>
         </span>
 
-        <span className="h-12 w-12 rounded-full">
-          <div style={{ width: "20px", height: "20px" }}>
+        <span className="h-12 w-12 rounded-full" style={{width:48, height:48, position: 'relative'}}>  
+               
             <Image
               src={`/images/user/${data.profile_picture}`}
-              alt="User"
-              width={50}
-              height={50}
-              objectFit="cover" // change to suit your needs
-                       
+              alt="User"                                                                                    
               style={{
-                borderRadius: "50%",              
-                background: "red",
-                display: "block",
-                
+                borderRadius: "50%",     
+                margin:"auto",
+                objectFit:"cover"                         
+
               }}
-              //   width={112}
-              // height={112}
-            />
-          </div>
+              layout="fill"
+            />          
         </span>
 
         <svg
