@@ -4,9 +4,9 @@ import { cookies } from "next/headers";
 
 export async function POST() {
     try {
-      const { data } = await axios.delete(process.env.BACKEND_PORT + "users/logout");
-      let datatoken = data;
-      let hasil = datatoken;    
+      // const { data } = await axios.delete(process.env.BACKEND_PORT + "users/logout");
+      // let datatoken = data;
+      // let hasil = datatoken;    
       const cookieStore = cookies();
 
       let token = cookieStore.get(COOKIE_NAME);             //COOKIE_NAME diambil dari constants index.ts
@@ -23,7 +23,7 @@ export async function POST() {
       try {
         cookies().set({          
           name: COOKIE_NAME,
-          value: hasil["accessToken"],
+          value: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTEwMDNhNy00YjRiLTQ5NjctOGRjOC1iNWYyY2FmOTNiYmIiLCJ1c2VyTmFtZSI6Ik11aGFtbWFkIFNyaSBHaWxicmFuIEJpbGxhaHB1dHJhIiwiZW1haWwiOiJnaWxicmFuYmlsbGFocHV0cmFAZ21haWwuY29tIiwicm9sZSI6ImJ1c2luZXNzIGRldmVsb3BtZW50IiwiaWF0IjoxNzAzNDk1ODE4LCJleHAiOjE3MDM1ODIyMTh9.HTUZfyjjkWNMtNdBng_B9cdEvplqZNhFn8feLjprUyA',
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
           sameSite: "strict",

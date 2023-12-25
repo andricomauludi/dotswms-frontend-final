@@ -18,8 +18,9 @@ const Buttonlogout= () => {
       console.log(data.status)
       if (data.status==404) {
         alert(data.message)
+        console.log(data.message)        
       }else{
-        router.push('/')
+        router.push('/auth/login')
       }
       //redirect the user to dashboard
     //   router.push('/');
