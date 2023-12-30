@@ -54,7 +54,6 @@ const TableProject = () => {
 
     fetchData();
   }, []);
-  
 
   if (isLoading) return <p>Loading...</p>;
   if (!datas) return <p>No Project data</p>;
@@ -125,14 +124,28 @@ const TableProject = () => {
                   </p>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                  <div className="flex-shrink-0">
+                  <div
+                    className="relative"
+                    style={{
+                      width: "48px",
+                      height: "48px",
+                      position: "relative",
+                    }}
+                  >
                     <Image
+                      src={`data:image/jpeg;base64,${packageItem.avatar}`}
+                      layout="fill"
+                      objectFit="cover"
+                      style={{ margin: "auto", borderRadius: "50%" }}
+                      alt="profile"
+                    />
+                  </div>
+                  {/* <Image
                       src={`data:image/jpeg;base64,${packageItem.avatar}`}
                       alt="Brand"
                       width={48}
                       height={48}
-                    />
-                  </div>
+                    /> */}
                   <p className="hidden text-black dark:text-white sm:block">
                     {packageItem.lead}
                   </p>
@@ -162,24 +175,25 @@ const TableProject = () => {
                   </p>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                  <p className="text-black dark:text-white">                                  
-                    <embed src={`data:application/pdf;base64,${packageItem.contenttext}`} />                    
+                  <p className="text-black dark:text-white">
+                    <embed
+                      src={`data:application/pdf;base64,${packageItem.contenttext}`}
+                    />
                   </p>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                  <p className="text-black dark:text-white">
-                  <Image
+                  <div className="flex-shrink-0">
+                    <Image
                       src={`data:image/jpeg;base64,${packageItem.contentposting}`}
                       alt="Brand"
                       width={48}
                       height={48}
-                    />                    
-                  </p>
+                    />
+                  </div>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                  <p className="text-black dark:text-white">                    
-                    <embed src={`data:application/pdf;base64,${packageItem.postingcaption}`} />                    
-
+                  <p className="text-black dark:text-white">                  
+                    {packageItem.postingcaption}                  
                   </p>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
@@ -218,7 +232,7 @@ const TableProject = () => {
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <div className="flex-shrink-0">
-                  <Image
+                    <Image
                       src={`data:image/jpeg;base64,${packageItem.avatar}`}
                       alt="Brand"
                       width={48}

@@ -60,17 +60,21 @@ export default function ButtonAddProject() {
       lead: event.currentTarget.lead.value,
       contentcategory: event.currentTarget.contentcategory.value,
       postingtime: event.currentTarget.postingtime.value,
+      postingcaption: event.currentTarget.postingcaption.value,
       contenttextlink: event.currentTarget.contenttextlink.value,
       contenttext: event.currentTarget.contenttext.value,
       contentposting: event.currentTarget.contentposting.value,
       instagrampostingstatus: event.currentTarget.instagrampostingstatus.value,
       tiktokpostingstatus: event.currentTarget.tiktokpostingstatus.value,
-    };    
+    };
     try {
-      const { data } = await axios.post("/api/workspaces/tableproject", payload);
+      const { data } = await axios.post(
+        "/api/workspaces/tableproject",
+        payload
+      );
       alert(JSON.stringify(data));
-      onClose
-      //redirect the user to dashboard      
+      onClose;
+      //redirect the user to dashboard
     } catch (e) {
       const error = e as AxiosError;
       console.log(error);
@@ -191,10 +195,17 @@ export default function ButtonAddProject() {
                                 </g>
                               </svg>
                             </span>
-                            <select name="lead" className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input">
-                              <option value="mantab">Muhammad Sri Garindra</option>
+                            <select
+                              name="lead"
+                              className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input"
+                            >
+                              <option value="mantab">
+                                Muhammad Sri Garindra
+                              </option>
                               <option value="mantab2">Syafira Amanda</option>
-                              <option value="mantab3">Muhammad Sri Gilbran</option>
+                              <option value="mantab3">
+                                Muhammad Sri Gilbran
+                              </option>
                             </select>
                             <span className="absolute top-1/2 right-4 z-20 -translate-y-1/2">
                               <svg
@@ -253,7 +264,10 @@ export default function ButtonAddProject() {
                                 </g>
                               </svg>
                             </span>
-                            <select name="contentcategory" className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input">
+                            <select
+                              name="contentcategory"
+                              className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input"
+                            >
                               <option value="reels">Reels</option>
                               <option value="tiktok">Tiktok</option>
                             </select>
@@ -314,7 +328,10 @@ export default function ButtonAddProject() {
                                 </g>
                               </svg>
                             </span>
-                            <select name="postingtime" className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input">
+                            <select
+                              name="postingtime"
+                              className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input"
+                            >
                               <option value="09:00">09:00</option>
                               <option value="12:00">12:00</option>
                               <option value="17:00">17:00</option>
@@ -342,6 +359,20 @@ export default function ButtonAddProject() {
                           </div>
                         </div>
                       </div>
+                      <div className="mb-4.5">
+                        <div>
+                          <label className="mb-3 block text-black dark:text-white">
+                            Posting Caption
+                          </label>
+                          <textarea
+                          name="postingcaption"
+
+                            rows={6}
+                            placeholder="Default textarea"
+                            className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                          ></textarea>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <div className="flex flex-col gap-9">
@@ -353,7 +384,7 @@ export default function ButtonAddProject() {
                           <span className="text-meta-1">*</span>
                         </label>
                         <input
-                          name="contenttextlink"                      
+                          name="contenttextlink"
                           type="text"
                           placeholder="Enter context text link"
                           className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
@@ -419,10 +450,15 @@ export default function ButtonAddProject() {
                                 </g>
                               </svg>
                             </span>
-                            <select name="instagrampostingstatus" className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input">
+                            <select
+                              name="instagrampostingstatus"
+                              className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input"
+                            >
                               <option value="on hold">On Hold</option>
                               <option value="posted">Posted</option>
-                              <option value="not yet posted">Not Yet Posted</option>
+                              <option value="not yet posted">
+                                Not Yet Posted
+                              </option>
                             </select>
                             <span className="absolute top-1/2 right-4 z-20 -translate-y-1/2">
                               <svg
@@ -481,10 +517,15 @@ export default function ButtonAddProject() {
                                 </g>
                               </svg>
                             </span>
-                            <select name="tiktokpostingstatus" className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input">
+                            <select
+                              name="tiktokpostingstatus"
+                              className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input"
+                            >
                               <option value="on hold">On Hold</option>
                               <option value="posted">Posted</option>
-                              <option value="not yet posted">Not Yet Posted</option>
+                              <option value="not yet posted">
+                                Not Yet Posted
+                              </option>
                             </select>
                             <span className="absolute top-1/2 right-4 z-20 -translate-y-1/2">
                               <svg
@@ -524,9 +565,9 @@ export default function ButtonAddProject() {
                 </div> */}
                   <div className="w-full px-3 2xsm:w-1/2">
                     <Button
-                    type="submit"
+                      type="submit"
                       className="block w-full rounded border border-primary bg-primary p-3 text-center font-medium text-white transition hover:bg-opacity-90"
-                      color="primary"                      
+                      color="primary"
                     >
                       Add Detail Project
                     </Button>
