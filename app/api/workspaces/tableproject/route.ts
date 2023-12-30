@@ -67,6 +67,6 @@ export async function POST(request: Request) {
   } catch (e) {
     const error = e as AxiosError;
     console.log(error);
-    alert(error.message);
+    console.log(error.message);
   }
 }

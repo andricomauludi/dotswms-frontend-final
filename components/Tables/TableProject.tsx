@@ -6,6 +6,7 @@ import { cookies } from "next/headers";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import ButtonAddProject from "./ButtonAddProject";
+import Link from "next/link";
 
 const packageData: Package[] = [
   {
@@ -126,7 +127,7 @@ const TableProject = () => {
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <div className="flex-shrink-0">
                     <Image
-                      src={`/images/avatar/${packageItem.avatar}`}
+                      src={`data:image/jpeg;base64,${packageItem.avatar}`}
                       alt="Brand"
                       width={48}
                       height={48}
@@ -161,18 +162,24 @@ const TableProject = () => {
                   </p>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                  <p className="text-black dark:text-white">
-                    {packageItem.contenttext}
+                  <p className="text-black dark:text-white">                                  
+                    <embed src={`data:application/pdf;base64,${packageItem.contenttext}`} />                    
                   </p>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <p className="text-black dark:text-white">
-                    {packageItem.contentposting}
+                  <Image
+                      src={`data:image/jpeg;base64,${packageItem.contentposting}`}
+                      alt="Brand"
+                      width={48}
+                      height={48}
+                    />                    
                   </p>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                  <p className="text-black dark:text-white">
-                    {packageItem.postingcaption}
+                  <p className="text-black dark:text-white">                    
+                    <embed src={`data:application/pdf;base64,${packageItem.postingcaption}`} />                    
+
                   </p>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
@@ -211,8 +218,8 @@ const TableProject = () => {
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <div className="flex-shrink-0">
-                    <Image
-                      src={`/images/avatar/${packageItem.avatar}`}
+                  <Image
+                      src={`data:image/jpeg;base64,${packageItem.avatar}`}
                       alt="Brand"
                       width={48}
                       height={48}

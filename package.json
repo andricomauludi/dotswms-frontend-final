@@ -9,6 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.5.1",
+    "@fortawesome/free-solid-svg-icons": "^6.5.1",
+    "@fortawesome/react-fontawesome": "^0.2.0",
     "@nextui-org/react": "^2.2.9",
     "@react-jvectormap/core": "^1.0.4",
     "@react-jvectormap/unitedstates": "^1.0.1",
