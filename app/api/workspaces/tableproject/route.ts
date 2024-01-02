@@ -39,11 +39,8 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const body = await request.json();
-  body['project_id']="4270191b-2eea-4c59-9a32-08edcd6bf5e8";
-  body['project_name']="Dokter Petra";
-  body['created_by']="Admin1";
-  body['updated_by']="Admin1";
+  const body = await request.formData();
+ 
   const cookieStore = cookies();
 
   const token = cookieStore.get(COOKIE_NAME);
@@ -53,7 +50,7 @@ export async function POST(request: Request) {
       process.env.BACKEND_PORT + "workspaces/create-table-project",
       body,
       {
-        headers: { Authorization: `Bearer ${token?.value}` },
+        headers: { Authorization: `Bearer ${token?.value}`, 'Content-Type': 'multipart/form-data' },
       }
     );    
 

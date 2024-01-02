@@ -52,27 +52,53 @@ export default function ButtonAddProject() {
     // }
   };
   const router = useRouter();
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    var formData = new FormData();
     event.preventDefault();
-    const payload = {
-      item: event.currentTarget.item.value,
-      postingschedule: event.currentTarget.postingschedule.value,
-      lead: event.currentTarget.lead.value,
-      contentcategory: event.currentTarget.contentcategory.value,
-      postingtime: event.currentTarget.postingtime.value,
-      postingcaption: event.currentTarget.postingcaption.value,
-      contenttextlink: event.currentTarget.contenttextlink.value,
-      contenttext: event.currentTarget.contenttext.value,
-      contentposting: event.currentTarget.contentposting.value,
-      instagrampostingstatus: event.currentTarget.instagrampostingstatus.value,
-      tiktokpostingstatus: event.currentTarget.tiktokpostingstatus.value,
-    };
+
+    var contenttext = document.querySelector("#contenttext");
+    var contentposting = document.querySelector("#contentposting");
+    formData.append("contenttext", contenttext.files[0]);
+    formData.append("contentposting", contentposting.files[0]);
+    formData.append("item",event.currentTarget.item.value )    
+    formData.append("postingschedule",event.currentTarget.postingschedule.value )    
+    formData.append("lead",event.currentTarget.lead.value )    
+    formData.append("contentcategory",event.currentTarget.contentcategory.value )    
+    formData.append("postingtime",event.currentTarget.postingtime.value )    
+    formData.append("postingcaption",event.currentTarget.postingcaption.value )    
+    formData.append("contenttextlink",event.currentTarget.contenttextlink.value )    
+    formData.append("instagrampostingstatus",event.currentTarget.instagrampostingstatus.value )    
+    formData.append("tiktokpostingstatus",event.currentTarget.tiktokpostingstatus.value )    
+    formData.append("project_id", "4270191b-2eea-4c59-9a32-08edcd6bf5e8")    
+    formData.append("project_name", "Dokter Petra")    
+    formData.append("created_by", "Admin1")    
+    formData.append("updated_by", "Admin1")   
+
+    // const payload = {
+    //   item: event.currentTarget.item.value,
+    //   postingschedule: event.currentTarget.postingschedule.value,
+    //   lead: event.currentTarget.lead.value,
+    //   contentcategory: event.currentTarget.contentcategory.value,
+    //   postingtime: event.currentTarget.postingtime.value,
+    //   postingcaption: event.currentTarget.postingcaption.value,
+    //   contenttextlink: event.currentTarget.contenttextlink.value,
+    //   contentposting: event.currentTarget.contentposting.value,
+    //   instagrampostingstatus: event.currentTarget.instagrampostingstatus.value,
+    //   tiktokpostingstatus: event.currentTarget.tiktokpostingstatus.value,
+    // };
+    console.log(formData)
     try {
       const { data } = await axios.post(
         "/api/workspaces/tableproject",
-        payload
+        formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+      }
       );
-      alert(JSON.stringify(data));
+      alert("Success");
+      
       onClose;
       //redirect the user to dashboard
     } catch (e) {
@@ -140,7 +166,7 @@ export default function ButtonAddProject() {
                           name="item"
                           id="item"
                           type="text"
-                          placeholder="Enter item"
+                          placeholder="Enter the item"
                           className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                         />
                       </div>
@@ -365,10 +391,9 @@ export default function ButtonAddProject() {
                             Posting Caption
                           </label>
                           <textarea
-                          name="postingcaption"
-
+                            name="postingcaption"
                             rows={6}
-                            placeholder="Default textarea"
+                            placeholder="Write your caption"
                             className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                           ></textarea>
                         </div>
@@ -397,6 +422,7 @@ export default function ButtonAddProject() {
                           </label>
                           <input
                             name="contenttext"
+                            id="contenttext"
                             type="file"
                             className="w-full cursor-pointer rounded-lg border-[1.5px] border-stroke bg-transparent font-medium outline-none transition file:mr-5 file:border-collapse file:cursor-pointer file:border-0 file:border-r file:border-solid file:border-stroke file:bg-whiter file:py-3 file:px-5 file:hover:bg-primary file:hover:bg-opacity-10 focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:file:border-form-strokedark dark:file:bg-white/30 dark:file:text-white dark:focus:border-primary"
                           />
@@ -409,6 +435,7 @@ export default function ButtonAddProject() {
                           </label>
                           <input
                             name="contentposting"
+                            id="contentposting"
                             type="file"
                             className="w-full cursor-pointer rounded-lg border-[1.5px] border-stroke bg-transparent font-medium outline-none transition file:mr-5 file:border-collapse file:cursor-pointer file:border-0 file:border-r file:border-solid file:border-stroke file:bg-whiter file:py-3 file:px-5 file:hover:bg-primary file:hover:bg-opacity-10 focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:file:border-form-strokedark dark:file:bg-white/30 dark:file:text-white dark:focus:border-primary"
                           />

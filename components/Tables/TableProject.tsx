@@ -4,9 +4,13 @@ import { Package } from "@/types/package";
 import axios, { Axios } from "axios";
 import { cookies } from "next/headers";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import ButtonAddProject from "./ButtonAddProject";
 import Link from "next/link";
+import ShowFileProject from "./ShowFileProject";
+import { Modal, ModalContent, useDisclosure } from "@nextui-org/react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFile } from "@fortawesome/free-solid-svg-icons/faFile";
 
 const packageData: Package[] = [
   {
@@ -36,8 +40,18 @@ const packageData: Package[] = [
 ];
 
 const TableProject = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [datas, setData] = useState([]);
+  const [size, setSize] = React.useState("5xl");
   const [isLoading, setLoading] = useState(true);
+  const handleOpen = async (size: any) => {
+    setSize(size);
+    onOpen();
+  };
+  const handleOpen2 = async (size: any) => {
+    setSize(size);
+    onOpen();
+  };
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -170,15 +184,50 @@ const TableProject = () => {
                   </p>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                  <p className="text-black dark:text-white">
+                  <Link
+                    href={`${packageItem.contenttextlink}`}
+                    className="text-black dark:text-white"
+                    target="_blank"
+                  >
                     {packageItem.contenttextlink}
-                  </p>
+                  </Link>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <p className="text-black dark:text-white">
-                    <embed
+                    {/* <embed
                       src={`data:application/pdf;base64,${packageItem.contenttext}`}
-                    />
+                    /> */}
+                    <Link
+                      onClick={() => handleOpen("5xl")}
+                      href={"#"}
+                      className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
+                    >
+                      <FontAwesomeIcon icon={faFile} />
+                      Content Text
+                    </Link>
+                    <div>
+                      <Modal
+                        className="sticky top-0 z-999 flex w-full bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none"
+                        size={"5xl"}
+                        isOpen={isOpen}
+                        onClose={onClose}
+                        scrollBehavior={"outside"}
+                        backdrop="blur"
+                      >
+                        <ModalContent className="">
+                          <div className="w-full max-w-200 rounded-lg bg-white py-12 px-8 dark:bg-boxdark md:py-15 md:px-17.5">
+                            <h3 className="font-medium text-black dark:text-white">
+                              Content Text
+                            </h3>
+                            <embed
+                              src={`data:application/pdf;base64,${packageItem.contenttext}`}
+                              height={600}
+                              width={900}
+                            />
+                          </div>
+                        </ModalContent>
+                      </Modal>
+                    </div>
                   </p>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
@@ -186,14 +235,17 @@ const TableProject = () => {
                     <Image
                       src={`data:image/jpeg;base64,${packageItem.contentposting}`}
                       alt="Brand"
-                      width={48}
-                      height={48}
+                      width={200}
+                      height={200}
                     />
+                    <div>
+                      <ShowFileProject />
+                    </div>
                   </div>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                  <p className="text-black dark:text-white">                  
-                    {packageItem.postingcaption}                  
+                  <p className="text-black dark:text-white">
+                    {packageItem.postingcaption}
                   </p>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
