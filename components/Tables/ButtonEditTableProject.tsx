@@ -30,7 +30,7 @@ interface IprofileState {
   role: string;
 }
 
-export default function ButonEditProject({ tableData }) {
+export default function ButtonEditTableProject({ tableData }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [data, setData] = useState();
   const [imageloader, setImageLoader] = useState();

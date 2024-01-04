@@ -47,13 +47,14 @@ export default function ButtonAddSubItem({ tableData }) {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     var formData = new FormData();
     event.preventDefault();
+    formData.append("_id",  tableData._id);
     formData.append("subitem", event.currentTarget.subitem.value);
     formData.append("owner", event.currentTarget.owner.value);
     formData.append("date", event.currentTarget.date.value);
     formData.append("status", event.currentTarget.status.value);
     formData.append("avatar", "profil_ico.png");
-    formData.append("table_project_id", tableData);
-    formData.append("table_project_name", "Konten Tiktok Dokter Petra");
+    formData.append("table_project_id", tableData.table_project_id);
+    formData.append("table_project_name", tableData.table_project_name);
     formData.append("created_by", "Admin1");
     formData.append("updated_by", "Admin1");
 
@@ -71,7 +72,7 @@ export default function ButtonAddSubItem({ tableData }) {
     // };
     console.log(formData);
     try {
-      const { data } = await axios.post("/api/workspaces/subitem", formData, {
+      const { data } = await axios.post("/api/workspaces/editsubitem", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

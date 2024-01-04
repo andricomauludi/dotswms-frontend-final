@@ -28,7 +28,7 @@ interface IprofileState {
   role: string;
 }
 
-export default function ButtonAddProject({tableData}) {
+export default function ButtonAddTableProject({tableData}) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [data, setData] = useState();
   const [imageloader, setImageLoader] = useState();
@@ -71,8 +71,8 @@ export default function ButtonAddProject({tableData}) {
     formData.append("instagrampostingstatus",event.currentTarget.instagrampostingstatus.value )    
     formData.append("tiktokpostingstatus",event.currentTarget.tiktokpostingstatus.value )    
     formData.append("avatar","profil_ico.png" )    
-    formData.append("project_id", tableData)    
-    formData.append("project_name", "Dokter Petra")    
+    formData.append("project_id", tableData._id)    
+    formData.append("project_name", tableData.project_name)    
     formData.append("created_by", "Admin1")    
     formData.append("updated_by", "Admin1")   
 

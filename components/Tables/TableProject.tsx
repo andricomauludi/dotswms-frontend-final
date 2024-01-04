@@ -5,9 +5,9 @@ import axios, { Axios } from "axios";
 import { cookies } from "next/headers";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import ButtonAddProject from "./ButtonAddProject";
+import ButtonAddProject from "./ButtonAddTableProject";
 import Link from "next/link";
-import ShowFileProject from "./ShowFileProject";
+import ShowFileProject from "./ShowFileTableProject";
 import {
   Accordion,
   AccordionItem,
@@ -64,7 +64,7 @@ const TableProject = () => {
             title={Item.project_name}
             className={Item.color_project}
           >
-            <TableInside tableData={Item._id} />
+            <TableInside tableData={Item} />
           </AccordionItem>
         ))}
       </Accordion>

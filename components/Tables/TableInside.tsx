@@ -5,10 +5,11 @@ import axios, { Axios } from "axios";
 import { cookies } from "next/headers";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import ButtonAddProject from "./ButtonAddProject";
-import ButtonEditProject from "./ButtonEditProject";
+import ButtonAddProject from "./ButtonAddTableProject";
+import ButtonEditProject from "./ButtonEditTableProject";
+import ButtonDeleteProject from "./ButtonDeleteTableProject";
 import Link from "next/link";
-import ShowFileProject from "./ShowFileProject";
+import ShowFileProject from "./ShowFileTableProject";
 import {
   Accordion,
   AccordionItem,
@@ -21,6 +22,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFile } from "@fortawesome/free-solid-svg-icons/faFile";
 import { faEdit, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import TableSubItems from "./TableSubItems";
+import ShowContentTableProject from "./ShowContentTableProject";
 
 const TableInside = ({ tableData }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -40,7 +42,7 @@ const TableInside = ({ tableData }) => {
       setLoading(true);
       try {
         const payload = {
-          _id: tableData,
+          _id: tableData._id,
         };
         const { data: response } = await axios.post(
           "/api/workspaces/tableinside",
@@ -187,53 +189,11 @@ const TableInside = ({ tableData }) => {
                       </p>
                     </td>
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                      <p className="text-black dark:text-white">
-                        {/* <embed
-                      src={`data:application/pdf;base64,${packageItem.contenttext}`}
-                    /> */}
-                        <Link
-                          onClick={() => handleOpen("5xl")}
-                          href={"#"}
-                          className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
-                        >
-                          <FontAwesomeIcon icon={faFile} />
-                          Content Text
-                        </Link>
-                        <div>
-                          <Modal
-                            className="sticky top-0 z-999 flex w-full bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none"
-                            size={"5xl"}
-                            isOpen={isOpen}
-                            onClose={onClose}
-                            scrollBehavior={"outside"}
-                            backdrop="blur"
-                          >
-                            <ModalContent className="">
-                              <div className="w-full max-w-200 rounded-lg bg-white py-12 px-8 dark:bg-boxdark md:py-15 md:px-17.5">
-                                <h3 className="font-medium text-black dark:text-white">
-                                  Content Text
-                                </h3>
-                                <embed
-                                  key={key}
-                                  src={`data:application/pdf;base64,${packageItem.contenttext}`}
-                                  height={600}
-                                  width={900}
-                                />
-                              </div>
-                            </ModalContent>
-                          </Modal>
-                        </div>
-                      </p>
+                      <ShowFileProject tableData={packageItem} />
                     </td>
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <div className="flex-shrink-0">
-                        <Image
-                          src={`data:image/jpeg;base64,${packageItem.contentposting}`}
-                          alt="Brand"
-                          width={200}
-                          height={200}
-                        />
-                        <div>{/* <ShowFileProject /> */}</div>
+                        <ShowContentTableProject tableData={packageItem} />                        
                       </div>
                     </td>
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
@@ -307,10 +267,8 @@ const TableInside = ({ tableData }) => {
                     </td>
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <div className="flex items-center space-x-3.5">
-                       <ButtonEditProject tableData={packageItem}/>                          
-                        <button className="hover:text-danger">
-                          <FontAwesomeIcon icon={faTrash} />
-                        </button>                                    
+                        <ButtonEditProject tableData={packageItem} />
+                        <ButtonDeleteProject tableData={packageItem} />
                         {/* <button className="hover:text-primary">
                           <svg
                             className="fill-current"

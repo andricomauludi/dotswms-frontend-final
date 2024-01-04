@@ -7,7 +7,7 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import ButtonEditSubItem from "./ButtonEditSubItem";
 import Link from "next/link";
-import ShowFileProject from "./ShowFileProject";
+import ShowFileProject from "./ShowFileTableProject";
 import {
   Accordion,
   AccordionItem,
