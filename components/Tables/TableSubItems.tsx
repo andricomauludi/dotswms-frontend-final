@@ -20,6 +20,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFile } from "@fortawesome/free-solid-svg-icons/faFile";
 import { faArrowAltCircleDown, faEdit, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import ButtonAddSubItem from "./ButtonAddSubItem";
+import ButtonDeleteSubItem from "./ButtonDeleteSubItem";
 
 const TableSubItems = ({ tableData }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -149,9 +150,7 @@ const TableSubItems = ({ tableData }) => {
                         <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <div className="flex items-center space-x-3.5">
                        <ButtonEditSubItem tableData={packageItem}/>                                  
-                        <button className="hover:text-danger">
-                          <FontAwesomeIcon icon={faTrash} />
-                        </button>                                                         
+                       <ButtonDeleteSubItem tableData={packageItem} />                                                     
                       </div>
                     </td>
                       </tr>

@@ -30,7 +30,7 @@ interface IprofileState {
   role: string;
 }
 
-export default function ButtonDeleteTableProject({ tableData }) {
+export default function ButtonDeleteSubItem({ tableData }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [data, setData] = useState();
   const [imageloader, setImageLoader] = useState();
@@ -61,7 +61,7 @@ export default function ButtonDeleteTableProject({ tableData }) {
     };    
     try {
       const { data } = await axios.post(
-        "/api/workspaces/deletetableproject",
+        "/api/workspaces/deletesubitem",
         payload,      
       );
       alert("Success");
@@ -77,24 +77,24 @@ export default function ButtonDeleteTableProject({ tableData }) {
 
   
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const { data: response } = await axios.get("/api/users/me");
-        setData(await response.data.user);
-        setImageLoader(`/img/${await response.data.user.profile_picture}`);
-      } catch (error: any) {
-        console.error(error.message);
-      }
-      setLoading(false);
-    };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     setLoading(true);
+  //     try {
+  //       const { data: response } = await axios.get("/api/users/me");
+  //       setData(await response.data.user);
+  //       setImageLoader(`/img/${await response.data.user.profile_picture}`);
+  //     } catch (error: any) {
+  //       console.error(error.message);
+  //     }
+  //     setLoading(false);
+  //   };
 
-    fetchData();
-  }, []);
+  //   fetchData();
+  // }, []);
 
-  if (isLoading) return <p>Loading...</p>;
-  if (!data) return <p>No profile data</p>;
+  // if (isLoading) return <p>Loading...</p>;
+  // if (!data) return <p>No profile data</p>;
 
   return (
     <>

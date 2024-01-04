@@ -128,7 +128,7 @@ export default function ButtonAddSubItem({ tableData }) {
           <ModalContent className="">
             <div className="w-full max-w-200 rounded-lg bg-white py-12 px-8 dark:bg-boxdark md:py-15 md:px-17.5">
               <h3 className="font-medium text-black dark:text-white">
-                Add Sub Item
+                Edit Sub Item
               </h3>
               <form onSubmit={handleSubmit}>
                 {/* <!-- Contact Form --> */}
@@ -296,7 +296,7 @@ export default function ButtonAddSubItem({ tableData }) {
                           type={type}
                           onFocus={() => setType("date")}
                           onBlur={() => setType("text")}
-                          placeholder={tableData.date}
+                          defaultValue={tableData.date}
                           className="custom-input-date custom-input-date-1 w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                         />
                       </div>
@@ -309,7 +309,7 @@ export default function ButtonAddSubItem({ tableData }) {
                   className="block w-full rounded border border-primary bg-primary p-3 text-center font-medium text-white transition hover:bg-opacity-90"
                   color="primary"
                 >
-                  Add Sub Item
+                  Edit Sub Item
                 </Button>
               </form>
             </div>
