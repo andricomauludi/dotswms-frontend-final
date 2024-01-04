@@ -5,7 +5,7 @@ import axios, { Axios } from "axios";
 import { cookies } from "next/headers";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import ButtonAddProject from "./ButtonAddProject";
+import ButtonEditSubItem from "./ButtonEditSubItem";
 import Link from "next/link";
 import ShowFileProject from "./ShowFileProject";
 import {
@@ -18,7 +18,8 @@ import {
 } from "@nextui-org/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFile } from "@fortawesome/free-solid-svg-icons/faFile";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faArrowAltCircleDown, faEdit, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
+import ButtonAddSubItem from "./ButtonAddSubItem";
 
 const TableSubItems = ({ tableData }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -61,13 +62,13 @@ const TableSubItems = ({ tableData }) => {
     <>
       {console.log(datas)}
       <tr>
-        <td colSpan={12}>
+        <td colSpan={13}>
           <Accordion isCompact>
             <AccordionItem
               key="2"
               aria-label="Sub Items"
-              title="Sub Items"
-              className=""
+              startContent={<FontAwesomeIcon icon={faArrowAltCircleDown}/>}              
+              className="bg-gray-2 text-left dark:bg-meta-4"
             >
               <table className="w-full table-auto">
                 <thead>
@@ -83,6 +84,9 @@ const TableSubItems = ({ tableData }) => {
                     </th>
                     <th className="py-4 px-4 font-medium text-black dark:text-white">
                       Date
+                    </th>
+                    <th className="py-4 px-4 font-medium text-black dark:text-white">
+                      Actions
                     </th>
                   </tr>
                 </thead>
@@ -142,20 +146,21 @@ const TableSubItems = ({ tableData }) => {
                             {packageItem.date}
                           </p>
                         </td>
+                        <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                      <div className="flex items-center space-x-3.5">
+                       <ButtonEditSubItem tableData={packageItem}/>                                  
+                        <button className="hover:text-danger">
+                          <FontAwesomeIcon icon={faTrash} />
+                        </button>                                                         
+                      </div>
+                    </td>
                       </tr>
                     </>
                   ))}
                 </tbody>
               </table>
               <div className="flex flex-wrap gap-3">
-                <Button
-                  key={"5xl"}
-                  // onPress={() => handleOpen("5xl")}
-                  color="warning"
-                  variant="bordered"
-                >
-                  Add Item
-                </Button>
+                <ButtonAddSubItem tableData={tableData}/>
               </div>
             </AccordionItem>
           </Accordion>

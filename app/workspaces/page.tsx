@@ -2,15 +2,15 @@ import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import TableProject from "@/components/Tables/TableProject";
 import { Metadata } from "next";
 export const metadata: Metadata = {
-  title: "Tables Page | Next.js E-commerce Dashboard Template",
-  description: "This is Tables page for TailAdmin Next.js",
+  title: "Workspaces Page | DOTS WMS",
+  description: "This is Workspaces page for DOTS WMS",
   // other metadata
 };
 
 const TablesPage = () => {
   return (
     <>
-      <Breadcrumb pageName="Tables" />
+      <Breadcrumb pageName="Workspaces" />
 
       <div className="flex flex-col gap-10">
         <TableProject />

@@ -14,6 +14,8 @@ import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import styles from "./ButtonAddProject.module.css";
 import { Container } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEdit } from "@fortawesome/free-solid-svg-icons";
 
 interface IprofileState {
   //interface merupakan rangka object yang mau kita masukin dari api
@@ -28,12 +30,14 @@ interface IprofileState {
   role: string;
 }
 
-export default function ButtonAddProject({tableData}) {
+export default function ButonEditProject({ tableData }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [data, setData] = useState();
   const [imageloader, setImageLoader] = useState();
   const [isLoading, setLoading] = useState(true);
   const [size, setSize] = React.useState("5xl");
+  const [type, setType] = useState("text");
+  const [type2, setType2] = useState("text");
 
   const handleOpen = async (size: any) => {
     setSize(size);
@@ -59,22 +63,38 @@ export default function ButtonAddProject({tableData}) {
 
     var contenttext = document.querySelector("#contenttext");
     var contentposting = document.querySelector("#contentposting");
+    formData.append("_id", tableData._id);
     formData.append("contenttext", contenttext.files[0]);
     formData.append("contentposting", contentposting.files[0]);
-    formData.append("item",event.currentTarget.item.value )    
-    formData.append("postingschedule",event.currentTarget.postingschedule.value )    
-    formData.append("lead",event.currentTarget.lead.value )    
-    formData.append("contentcategory",event.currentTarget.contentcategory.value )    
-    formData.append("postingtime",event.currentTarget.postingtime.value )    
-    formData.append("postingcaption",event.currentTarget.postingcaption.value )    
-    formData.append("contenttextlink",event.currentTarget.contenttextlink.value )    
-    formData.append("instagrampostingstatus",event.currentTarget.instagrampostingstatus.value )    
-    formData.append("tiktokpostingstatus",event.currentTarget.tiktokpostingstatus.value )    
-    formData.append("avatar","profil_ico.png" )    
-    formData.append("project_id", tableData)    
-    formData.append("project_name", "Dokter Petra")    
-    formData.append("created_by", "Admin1")    
-    formData.append("updated_by", "Admin1")   
+    formData.append("item", event.currentTarget.item.value);
+    formData.append(
+      "postingschedule",
+      event.currentTarget.postingschedule.value
+    );
+    formData.append("lead", event.currentTarget.lead.value);
+    formData.append(
+      "contentcategory",
+      event.currentTarget.contentcategory.value
+    );
+    formData.append("postingtime", event.currentTarget.postingtime.value);
+    formData.append("postingcaption", event.currentTarget.postingcaption.value);
+    formData.append(
+      "contenttextlink",
+      event.currentTarget.contenttextlink.value
+    );
+    formData.append(
+      "instagrampostingstatus",
+      event.currentTarget.instagrampostingstatus.value
+    );
+    formData.append(
+      "tiktokpostingstatus",
+      event.currentTarget.tiktokpostingstatus.value
+    );
+    formData.append("avatar", "profil_ico.png");
+    formData.append("project_id", tableData.project_id);
+    formData.append("project_name", tableData.project_name);
+    formData.append("created_by", "Admin1");
+    formData.append("updated_by", "Admin1");
 
     // const payload = {
     //   item: event.currentTarget.item.value,
@@ -88,18 +108,19 @@ export default function ButtonAddProject({tableData}) {
     //   instagrampostingstatus: event.currentTarget.instagrampostingstatus.value,
     //   tiktokpostingstatus: event.currentTarget.tiktokpostingstatus.value,
     // };
-    console.log(formData)
+    console.log(formData);
     try {
       const { data } = await axios.post(
-        "/api/workspaces/tableproject",
-        formData, {
+        "/api/workspaces/edittableproject",
+        formData,
+        {
           headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-      }
+            "Content-Type": "multipart/form-data",
+          },
+        }
       );
       alert("Success");
-      
+
       onClose;
       //redirect the user to dashboard
     } catch (e) {
@@ -130,16 +151,13 @@ export default function ButtonAddProject({tableData}) {
 
   return (
     <>
-      <div className="flex flex-wrap gap-3">
-        <Button
+      <button className="hover:text-warning">
+        <FontAwesomeIcon
+          icon={faEdit}
           key={"5xl"}
-          onPress={() => handleOpen("5xl")}
-          color="warning"
-          variant="bordered"
-        >
-          Add Item
-        </Button>
-      </div>
+          onClick={() => handleOpen("5xl")}
+        />
+      </button>
       <div>
         <Modal
           className="sticky top-0 z-999 flex w-full bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none"
@@ -153,7 +171,7 @@ export default function ButtonAddProject({tableData}) {
           <ModalContent className="">
             <div className="w-full max-w-200 rounded-lg bg-white py-12 px-8 dark:bg-boxdark md:py-15 md:px-17.5">
               <h3 className="font-medium text-black dark:text-white">
-                Add Detail Project
+                Edit Item
               </h3>
               <form onSubmit={handleSubmit}>
                 <div className="grid grid-cols-1 gap-9 sm:grid-cols-2">
@@ -168,7 +186,8 @@ export default function ButtonAddProject({tableData}) {
                           name="item"
                           id="item"
                           type="text"
-                          placeholder="Enter the item"
+                          placeholder={tableData.item}
+                          defaultValue={tableData.item}
                           className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                         />
                       </div>
@@ -180,8 +199,11 @@ export default function ButtonAddProject({tableData}) {
                           <div className="relative">
                             <input
                               name="postingschedule"
+                              type={type}
+                              onFocus={() => setType("date")}
+                              onBlur={() => setType("text")}
                               id="postingschedule"
-                              type="date"
+                              placeholder={tableData.postingschedule}
                               className="custom-input-date custom-input-date-1 w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                             />
                           </div>
@@ -225,13 +247,19 @@ export default function ButtonAddProject({tableData}) {
                             </span>
                             <select
                               name="lead"
+                              defaultValue={tableData.lead}
                               className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input"
                             >
-                              <option value="mantab">
+                              <option hidden value={tableData.lead}>
+                                {tableData.lead}
+                              </option>
+                              <option value="Muhammad Sri Garindra">
                                 Muhammad Sri Garindra
                               </option>
-                              <option value="mantab2">Syafira Amanda</option>
-                              <option value="mantab3">
+                              <option value="Syafira Amanda">
+                                Syafira Amanda
+                              </option>
+                              <option value="Admin01">
                                 Muhammad Sri Gilbran
                               </option>
                             </select>
@@ -294,8 +322,12 @@ export default function ButtonAddProject({tableData}) {
                             </span>
                             <select
                               name="contentcategory"
+                              defaultValue={tableData.contentcategory}
                               className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input"
                             >
+                              <option hidden value={tableData.contentcategory}>
+                                {tableData.contentcategory}
+                              </option>
                               <option value="reels">Reels</option>
                               <option value="tiktok">Tiktok</option>
                             </select>
@@ -358,8 +390,13 @@ export default function ButtonAddProject({tableData}) {
                             </span>
                             <select
                               name="postingtime"
+                              defaultValue={tableData.postingtime}
                               className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input"
                             >
+                              {" "}
+                              <option hidden value={tableData.postingtime}>
+                                {tableData.postingtime}
+                              </option>
                               <option value="09:00">09:00</option>
                               <option value="12:00">12:00</option>
                               <option value="17:00">17:00</option>
@@ -395,7 +432,7 @@ export default function ButtonAddProject({tableData}) {
                           <textarea
                             name="postingcaption"
                             rows={6}
-                            placeholder="Write your caption"
+                            defaultValue={tableData.postingcaption}
                             className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                           ></textarea>
                         </div>
@@ -413,7 +450,8 @@ export default function ButtonAddProject({tableData}) {
                         <input
                           name="contenttextlink"
                           type="text"
-                          placeholder="Enter context text link"
+                          placeholder={tableData.contenttextlink}
+                          defaultValue={tableData.contenttextlink}
                           className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                         />
                       </div>
@@ -426,6 +464,7 @@ export default function ButtonAddProject({tableData}) {
                             name="contenttext"
                             id="contenttext"
                             type="file"
+                            placeholder={tableData.contenttext}
                             className="w-full cursor-pointer rounded-lg border-[1.5px] border-stroke bg-transparent font-medium outline-none transition file:mr-5 file:border-collapse file:cursor-pointer file:border-0 file:border-r file:border-solid file:border-stroke file:bg-whiter file:py-3 file:px-5 file:hover:bg-primary file:hover:bg-opacity-10 focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:file:border-form-strokedark dark:file:bg-white/30 dark:file:text-white dark:focus:border-primary"
                           />
                         </div>
@@ -481,8 +520,15 @@ export default function ButtonAddProject({tableData}) {
                             </span>
                             <select
                               name="instagrampostingstatus"
+                              defaultValue={tableData.instagrampostingstatus}
                               className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input"
                             >
+                              <option
+                                hidden
+                                value={tableData.instagrampostingstatus}
+                              >
+                                {tableData.instagrampostingstatus}
+                              </option>
                               <option value="on hold">On Hold</option>
                               <option value="posted">Posted</option>
                               <option value="not yet posted">
@@ -548,8 +594,12 @@ export default function ButtonAddProject({tableData}) {
                             </span>
                             <select
                               name="tiktokpostingstatus"
+                              defaultValue={tableData.tiktokpostingstatus}
                               className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input"
                             >
+                              <option hidden value={tableData.tiktokpostingstatus}>
+                                {tableData.tiktokpostingstatus}
+                              </option>
                               <option value="on hold">On Hold</option>
                               <option value="posted">Posted</option>
                               <option value="not yet posted">
@@ -598,7 +648,7 @@ export default function ButtonAddProject({tableData}) {
                       className="block w-full rounded border border-primary bg-primary p-3 text-center font-medium text-white transition hover:bg-opacity-90"
                       color="primary"
                     >
-                      Add Detail Project
+                      Edit Item
                     </Button>
                   </div>
                 </div>

@@ -6,18 +6,20 @@ import { cookies } from "next/headers";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import ButtonAddProject from "./ButtonAddProject";
+import ButtonEditProject from "./ButtonEditProject";
 import Link from "next/link";
 import ShowFileProject from "./ShowFileProject";
 import {
   Accordion,
   AccordionItem,
+  Button,
   Modal,
   ModalContent,
   useDisclosure,
 } from "@nextui-org/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFile } from "@fortawesome/free-solid-svg-icons/faFile";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import TableSubItems from "./TableSubItems";
 
 const TableInside = ({ tableData }) => {
@@ -66,7 +68,7 @@ const TableInside = ({ tableData }) => {
         <div className="max-w-full overflow-x-auto">
           <table className="w-full table-auto">
             <thead>
-              <tr className="bg-gray-2 text-left dark:bg-meta-4">                
+              <tr className="bg-gray-2 text-left dark:bg-meta-4">
                 <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
                   Item
                 </th>
@@ -111,7 +113,7 @@ const TableInside = ({ tableData }) => {
             <tbody>
               {datas.map((packageItem, key) => (
                 <>
-                  <tr key={key}>                 
+                  <tr key={key}>
                     <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
                       <h5 className="font-medium text-black dark:text-white">
                         {packageItem.item}
@@ -212,6 +214,7 @@ const TableInside = ({ tableData }) => {
                                   Content Text
                                 </h3>
                                 <embed
+                                  key={key}
                                   src={`data:application/pdf;base64,${packageItem.contenttext}`}
                                   height={600}
                                   width={900}
@@ -304,7 +307,11 @@ const TableInside = ({ tableData }) => {
                     </td>
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <div className="flex items-center space-x-3.5">
-                        <button className="hover:text-primary">
+                       <ButtonEditProject tableData={packageItem}/>                          
+                        <button className="hover:text-danger">
+                          <FontAwesomeIcon icon={faTrash} />
+                        </button>                                    
+                        {/* <button className="hover:text-primary">
                           <svg
                             className="fill-current"
                             width="18"
@@ -368,7 +375,7 @@ const TableInside = ({ tableData }) => {
                               fill=""
                             />
                           </svg>
-                        </button>
+                        </button> */}
                       </div>
                     </td>
                   </tr>
