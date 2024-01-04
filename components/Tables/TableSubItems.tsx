@@ -20,7 +20,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFile } from "@fortawesome/free-solid-svg-icons/faFile";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
-
 const TableSubItems = ({ tableData }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [datas, setData] = useState([]);
@@ -37,6 +36,7 @@ const TableSubItems = ({ tableData }) => {
         const payload = {
           _id: tableData,
         };
+        console.log(payload._id);
         const { data: response } = await axios.post(
           "/api/workspaces/tablesubitems",
           payload
@@ -44,7 +44,7 @@ const TableSubItems = ({ tableData }) => {
         // const { data: response } = await axios.get(
         //   "/api/workspaces/tableproject"
         // );
-        setData(await response.data.tableproject);
+        setData(await response.data.subItem);
       } catch (error: any) {
         console.error(error.message);
       }
@@ -59,9 +59,9 @@ const TableSubItems = ({ tableData }) => {
 
   return (
     <>
-        {console.log(datas)}
+      {console.log(datas)}
       <tr>
-        <td colSpan={14}>
+        <td colSpan={12}>
           <Accordion isCompact>
             <AccordionItem
               key="2"
@@ -71,8 +71,7 @@ const TableSubItems = ({ tableData }) => {
             >
               <table className="w-full table-auto">
                 <thead>
-                  <tr className="bg-gray-2 text-left dark:bg-meta-4">
-                    <th className="min-w-[50px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11"></th>
+                  <tr className="bg-gray-2 text-left dark:bg-meta-4">                  
                     <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
                       Sub Item
                     </th>
@@ -87,17 +86,77 @@ const TableSubItems = ({ tableData }) => {
                     </th>
                   </tr>
                 </thead>
-                <div className="flex flex-wrap gap-3">
-                  <Button
-                    key={"5xl"}
-                    // onPress={() => handleOpen("5xl")}
-                    color="warning"
-                    variant="bordered"
-                  >
-                    Add Item
-                  </Button>
-                </div>
+                <tbody>
+                  {datas.map((packageItem, key) => (
+                    <>
+                      <tr key={key}>
+                        <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
+                          <h5 className="font-medium text-black dark:text-white">
+                            {packageItem.subitem}
+                          </h5>
+                        </td>
+                        <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                          <div
+                            className="relative"
+                            style={{
+                              width: "48px",
+                              height: "48px",
+                              position: "relative",
+                            }}
+                          >
+                            <Image
+                              src={`data:image/jpeg;base64,${packageItem.avatar}`}
+                              layout="fill"
+                              objectFit="cover"
+                              style={{ margin: "auto", borderRadius: "50%" }}
+                              alt="profile"
+                            />
+                          </div>
+                          {/* <Image
+                      src={`data:image/jpeg;base64,${packageItem.avatar}`}
+                      alt="Brand"
+                      width={48}
+                      height={48}
+                    /> */}
+                          <p className="hidden text-black dark:text-white sm:block">
+                            {packageItem.owner}
+                          </p>
+                        </td>
+                        <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                          <p
+                            className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium ${
+                              packageItem.status === "not yet"
+                                ? "text-secondary bg-secondary"
+                                : packageItem.status === "on process"
+                                ? "text-warning bg-warning"
+                                : packageItem.status === "done"
+                                ? "text-success bg-success"
+                                : "text-warning bg-warning"
+                            }`}
+                          >
+                            {packageItem.status}
+                          </p>
+                        </td>
+                        <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                          <p className="text-black dark:text-white">
+                            {packageItem.date}
+                          </p>
+                        </td>
+                      </tr>
+                    </>
+                  ))}
+                </tbody>
               </table>
+              <div className="flex flex-wrap gap-3">
+                <Button
+                  key={"5xl"}
+                  // onPress={() => handleOpen("5xl")}
+                  color="warning"
+                  variant="bordered"
+                >
+                  Add Item
+                </Button>
+              </div>
             </AccordionItem>
           </Accordion>
         </td>
