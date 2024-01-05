@@ -77,24 +77,24 @@ export default function ButtonDeleteTableProject({ tableData }) {
 
   
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const { data: response } = await axios.get("/api/users/me");
-        setData(await response.data.user);
-        setImageLoader(`/img/${await response.data.user.profile_picture}`);
-      } catch (error: any) {
-        console.error(error.message);
-      }
-      setLoading(false);
-    };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     setLoading(true);
+  //     try {
+  //       const { data: response } = await axios.get("/api/users/me");
+  //       setData(await response.data.user);
+  //       setImageLoader(`/img/${await response.data.user.profile_picture}`);
+  //     } catch (error: any) {
+  //       console.error(error.message);
+  //     }
+  //     setLoading(false);
+  //   };
 
-    fetchData();
-  }, []);
+  //   fetchData();
+  // }, []);
 
-  if (isLoading) return <p>Loading...</p>;
-  if (!data) return <p>No profile data</p>;
+  // if (isLoading) return <p>Loading...</p>;
+  // if (!data) return <p>No profile data</p>;
 
   return (
     <>

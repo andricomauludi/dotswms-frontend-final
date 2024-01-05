@@ -144,7 +144,7 @@ const TableInside = ({ tableData }) => {
                         }}
                       >
                         <Image
-                          src={`data:image/jpeg;base64,${packageItem.avatar}`}
+                          src={`data:image/jpeg;base64,${packageItem.lead_avatar}`}
                           layout="fill"
                           objectFit="cover"
                           style={{ margin: "auto", borderRadius: "50%" }}
@@ -158,7 +158,7 @@ const TableInside = ({ tableData }) => {
                       height={48}
                     /> */}
                       <p className="hidden text-black dark:text-white sm:block">
-                        {packageItem.lead}
+                        {packageItem.lead_name}
                       </p>
                     </td>
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
@@ -251,7 +251,7 @@ const TableInside = ({ tableData }) => {
                         }}
                       >
                         <Image
-                          src={`data:image/jpeg;base64,${packageItem.avatar}`}
+                          src={`data:image/jpeg;base64,${packageItem.updated_by_avatar}`}
                           layout="fill"
                           objectFit="cover"
                           style={{ margin: "auto", borderRadius: "50%" }}

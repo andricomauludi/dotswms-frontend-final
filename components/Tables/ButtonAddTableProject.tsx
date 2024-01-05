@@ -28,9 +28,9 @@ interface IprofileState {
   role: string;
 }
 
-export default function ButtonAddTableProject({tableData}) {
+export default function ButtonAddTableProject({ tableData }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [data, setData] = useState();
+  const [data, setData] = useState([]);
   const [imageloader, setImageLoader] = useState();
   const [isLoading, setLoading] = useState(true);
   const [size, setSize] = React.useState("5xl");
@@ -61,20 +61,37 @@ export default function ButtonAddTableProject({tableData}) {
     var contentposting = document.querySelector("#contentposting");
     formData.append("contenttext", contenttext.files[0]);
     formData.append("contentposting", contentposting.files[0]);
-    formData.append("item",event.currentTarget.item.value )    
-    formData.append("postingschedule",event.currentTarget.postingschedule.value )    
-    formData.append("lead",event.currentTarget.lead.value )    
-    formData.append("contentcategory",event.currentTarget.contentcategory.value )    
-    formData.append("postingtime",event.currentTarget.postingtime.value )    
-    formData.append("postingcaption",event.currentTarget.postingcaption.value )    
-    formData.append("contenttextlink",event.currentTarget.contenttextlink.value )    
-    formData.append("instagrampostingstatus",event.currentTarget.instagrampostingstatus.value )    
-    formData.append("tiktokpostingstatus",event.currentTarget.tiktokpostingstatus.value )    
-    formData.append("avatar","profil_ico.png" )    
-    formData.append("project_id", tableData._id)    
-    formData.append("project_name", tableData.project_name)    
-    formData.append("created_by", "Admin1")    
-    formData.append("updated_by", "Admin1")   
+    formData.append("item", event.currentTarget.item.value);
+    formData.append(
+      "postingschedule",
+      event.currentTarget.postingschedule.value
+    );
+    formData.append("lead_name", data[event.currentTarget.lead.value]['full_name']);
+    formData.append("lead_email", data[event.currentTarget.lead.value]['email']);    
+    formData.append(
+      "contentcategory",
+      event.currentTarget.contentcategory.value
+    );
+    formData.append("postingtime", event.currentTarget.postingtime.value);
+    formData.append("postingcaption", event.currentTarget.postingcaption.value);
+    formData.append(
+      "contenttextlink",
+      event.currentTarget.contenttextlink.value
+    );
+    formData.append(
+      "instagrampostingstatus",
+      event.currentTarget.instagrampostingstatus.value
+    );
+    formData.append(
+      "tiktokpostingstatus",
+      event.currentTarget.tiktokpostingstatus.value
+    );
+    formData.append("lead_avatar", data[event.currentTarget.lead.value]['profile_picture']);
+    formData.append("updated_by_avatar", "profil_ico.png");
+    formData.append("project_id", tableData._id);
+    formData.append("project_name", tableData.project_name);
+    formData.append("created_by", "Admin1");
+    formData.append("updated_by", "Admin1");
 
     // const payload = {
     //   item: event.currentTarget.item.value,
@@ -88,18 +105,19 @@ export default function ButtonAddTableProject({tableData}) {
     //   instagrampostingstatus: event.currentTarget.instagrampostingstatus.value,
     //   tiktokpostingstatus: event.currentTarget.tiktokpostingstatus.value,
     // };
-    console.log(formData)
+    // console.log(data[event.currentTarget.lead.value]['full_name']);
     try {
       const { data } = await axios.post(
         "/api/workspaces/tableproject",
-        formData, {
+        formData,
+        {
           headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-      }
+            "Content-Type": "multipart/form-data",
+          },
+        }
       );
       alert("Success");
-      
+
       onClose;
       //redirect the user to dashboard
     } catch (e) {
@@ -113,9 +131,10 @@ export default function ButtonAddTableProject({tableData}) {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const { data: response } = await axios.get("/api/users/me");
+        const { data: response } = await axios.get(
+          "/api/workspaces/dropdownuser"
+        );
         setData(await response.data.user);
-        setImageLoader(`/img/${await response.data.user.profile_picture}`);
       } catch (error: any) {
         console.error(error.message);
       }
@@ -125,8 +144,8 @@ export default function ButtonAddTableProject({tableData}) {
     fetchData();
   }, []);
 
-  if (isLoading) return <p>Loading...</p>;
-  if (!data) return <p>No profile data</p>;
+  // if (isLoading) return <p>Loading...</p>;
+  // if (!data) return <p>No profile data</p>;
 
   return (
     <>
@@ -227,13 +246,14 @@ export default function ButtonAddTableProject({tableData}) {
                               name="lead"
                               className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input"
                             >
-                              <option value="mantab">
-                                Muhammad Sri Garindra
-                              </option>
-                              <option value="mantab2">Syafira Amanda</option>
-                              <option value="mantab3">
-                                Muhammad Sri Gilbran
-                              </option>
+                              {data.map((item, key) => (
+                                <>
+                                {console.log(key)}
+                                  <option value={key}>
+                                    {item.full_name}
+                                  </option>                                 
+                                </>
+                              ))}
                             </select>
                             <span className="absolute top-1/2 right-4 z-20 -translate-y-1/2">
                               <svg

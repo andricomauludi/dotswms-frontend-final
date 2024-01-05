@@ -5,12 +5,13 @@ import axios, { Axios } from "axios";
 import { cookies } from "next/headers";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import ButtonAddProject from "./ButtonAddTableProject";
+import ButtonAddProject from "./ButtonAddProject";
 import Link from "next/link";
 import ShowFileProject from "./ShowFileTableProject";
 import {
   Accordion,
   AccordionItem,
+  Button,
   Modal,
   ModalContent,
   useDisclosure,
@@ -56,6 +57,7 @@ const TableProject = () => {
 
   return (
     <>
+      <ButtonAddProject tableData={"mantab"}/>
       <Accordion variant="splitted">
         {dataproject.map((Item, key) => (
           <AccordionItem

@@ -32,7 +32,7 @@ interface IprofileState {
 
 export default function ButtonEditTableProject({ tableData }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [data, setData] = useState();
+  const [data, setData] = useState([]);
   const [imageloader, setImageLoader] = useState();
   const [isLoading, setLoading] = useState(true);
   const [size, setSize] = React.useState("5xl");
@@ -71,7 +71,8 @@ export default function ButtonEditTableProject({ tableData }) {
       "postingschedule",
       event.currentTarget.postingschedule.value
     );
-    formData.append("lead", event.currentTarget.lead.value);
+    formData.append("lead_name",  data[event.currentTarget.lead.value]['full_name']);
+    formData.append("lead_email",  data[event.currentTarget.lead.value]['email']);
     formData.append(
       "contentcategory",
       event.currentTarget.contentcategory.value
@@ -90,7 +91,8 @@ export default function ButtonEditTableProject({ tableData }) {
       "tiktokpostingstatus",
       event.currentTarget.tiktokpostingstatus.value
     );
-    formData.append("avatar", "profil_ico.png");
+    formData.append("lead_avatar",  data[event.currentTarget.lead.value]['profile_picture']);
+    formData.append("created_by_avatar", 'profil_ico.png');
     formData.append("project_id", tableData.project_id);
     formData.append("project_name", tableData.project_name);
     formData.append("created_by", "Admin1");
@@ -134,9 +136,10 @@ export default function ButtonEditTableProject({ tableData }) {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const { data: response } = await axios.get("/api/users/me");
+        const { data: response } = await axios.get(
+          "/api/workspaces/dropdownuser"
+        );
         setData(await response.data.user);
-        setImageLoader(`/img/${await response.data.user.profile_picture}`);
       } catch (error: any) {
         console.error(error.message);
       }
@@ -146,8 +149,9 @@ export default function ButtonEditTableProject({ tableData }) {
     fetchData();
   }, []);
 
-  if (isLoading) return <p>Loading...</p>;
-  if (!data) return <p>No profile data</p>;
+
+  // if (isLoading) return <p>Loading...</p>;
+  // if (!data) return <p>No profile data</p>;
 
   return (
     <>
@@ -203,7 +207,7 @@ export default function ButtonEditTableProject({ tableData }) {
                               onFocus={() => setType("date")}
                               onBlur={() => setType("text")}
                               id="postingschedule"
-                              placeholder={tableData.postingschedule}
+                              defaultValue={tableData.postingschedule}
                               className="custom-input-date custom-input-date-1 w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                             />
                           </div>
@@ -247,21 +251,20 @@ export default function ButtonEditTableProject({ tableData }) {
                             </span>
                             <select
                               name="lead"
-                              defaultValue={tableData.lead}
+                              defaultValue={tableData.lead_name}
                               className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input"
                             >
-                              <option hidden value={tableData.lead}>
-                                {tableData.lead}
+                              <option hidden value={tableData.lead_name}>
+                                {tableData.lead_name}
                               </option>
-                              <option value="Muhammad Sri Garindra">
-                                Muhammad Sri Garindra
-                              </option>
-                              <option value="Syafira Amanda">
-                                Syafira Amanda
-                              </option>
-                              <option value="Admin01">
-                                Muhammad Sri Gilbran
-                              </option>
+                              {data.map((item, key) => (
+                                <>
+                                {console.log(key)}
+                                  <option value={key}>
+                                    {item.full_name}
+                                  </option>                                 
+                                </>
+                              ))}
                             </select>
                             <span className="absolute top-1/2 right-4 z-20 -translate-y-1/2">
                               <svg

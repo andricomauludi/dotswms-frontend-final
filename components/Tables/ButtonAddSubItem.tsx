@@ -15,9 +15,9 @@ import { useRouter } from "next/navigation";
 import styles from "./ButtonAddSubItem.module.css";
 import { Container } from "react-bootstrap";
 
-export default function ButtonAddSubItem({tableData}) {
+export default function ButtonAddProject({tableData}) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [data, setData] = useState();
+  const [data, setData] = useState([]);
   const [imageloader, setImageLoader] = useState();
   const [isLoading, setLoading] = useState(true);
   const [size, setSize] = React.useState("2xl");
@@ -44,10 +44,11 @@ export default function ButtonAddSubItem({tableData}) {
     var formData = new FormData();
     event.preventDefault();
     formData.append("subitem",event.currentTarget.subitem.value )    
-    formData.append("owner",event.currentTarget.owner.value )    
+    formData.append("owner",  data[event.currentTarget.owner.value]['full_name'] )    
+    formData.append("owner_email",  data[event.currentTarget.owner.value]['email'] )    
     formData.append("date",event.currentTarget.date.value )    
     formData.append("status",event.currentTarget.status.value )    
-    formData.append("avatar","profil_ico.png" )    
+    formData.append("avatar",  data[event.currentTarget.owner.value]['profile_picture'] )    
     formData.append("table_project_id", tableData)    
     formData.append("table_project_name", "Konten Tiktok Dokter Petra")    
     formData.append("created_by", "Admin1")    
@@ -64,8 +65,7 @@ export default function ButtonAddSubItem({tableData}) {
     //   contentposting: event.currentTarget.contentposting.value,
     //   instagrampostingstatus: event.currentTarget.instagrampostingstatus.value,
     //   tiktokpostingstatus: event.currentTarget.tiktokpostingstatus.value,
-    // };
-    console.log(formData)
+    // };    
     try {
       const { data } = await axios.post(
         "/api/workspaces/subitem",
@@ -86,13 +86,15 @@ export default function ButtonAddSubItem({tableData}) {
     }
   };
 
+
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const { data: response } = await axios.get("/api/users/me");
+        const { data: response } = await axios.get(
+          "/api/workspaces/dropdownuser"
+        );
         setData(await response.data.user);
-        setImageLoader(`/img/${await response.data.user.profile_picture}`);
       } catch (error: any) {
         console.error(error.message);
       }
@@ -187,13 +189,14 @@ export default function ButtonAddSubItem({tableData}) {
                               name="owner"
                               className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input"
                             >
-                              <option value="mantab">
-                                Muhammad Sri Garindra
-                              </option>
-                              <option value="mantab2">Syafira Amanda</option>
-                              <option value="mantab3">
-                                Muhammad Sri Gilbran
-                              </option>
+                              {data.map((item, key) => (
+                                <>
+                                {console.log(key)}
+                                  <option value={key}>
+                                    {item.full_name}
+                                  </option>                                 
+                                </>
+                              ))}
                             </select>
                             <span className="absolute top-1/2 right-4 z-20 -translate-y-1/2">
                               <svg

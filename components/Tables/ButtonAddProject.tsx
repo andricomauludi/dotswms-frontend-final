@@ -14,8 +14,6 @@ import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import styles from "./ButtonAddSubItem.module.css";
 import { Container } from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit } from "@fortawesome/free-solid-svg-icons";
 
 export default function ButtonAddSubItem({ tableData }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -23,7 +21,6 @@ export default function ButtonAddSubItem({ tableData }) {
   const [imageloader, setImageLoader] = useState();
   const [isLoading, setLoading] = useState(true);
   const [size, setSize] = React.useState("2xl");
-  const [type, setType] = useState("text");
 
   const handleOpen = async (size: any) => {
     setSize(size);
@@ -46,7 +43,6 @@ export default function ButtonAddSubItem({ tableData }) {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     var formData = new FormData();
     event.preventDefault();
-    formData.append("_id", tableData._id);
     formData.append("subitem", event.currentTarget.subitem.value);
     formData.append(
       "owner",
@@ -62,8 +58,8 @@ export default function ButtonAddSubItem({ tableData }) {
       "avatar",
       data[event.currentTarget.owner.value]["profile_picture"]
     );
-    formData.append("table_project_id", tableData.table_project_id);
-    formData.append("table_project_name", tableData.table_project_name);
+    formData.append("table_project_id", tableData);
+    formData.append("table_project_name", "Konten Tiktok Dokter Petra");
     formData.append("created_by", "Admin1");
     formData.append("updated_by", "Admin1");
 
@@ -79,17 +75,12 @@ export default function ButtonAddSubItem({ tableData }) {
     //   instagrampostingstatus: event.currentTarget.instagrampostingstatus.value,
     //   tiktokpostingstatus: event.currentTarget.tiktokpostingstatus.value,
     // };
-    console.log(formData);
     try {
-      const { data } = await axios.post(
-        "/api/workspaces/editsubitem",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const { data } = await axios.post("/api/workspaces/subitem", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       alert("Success");
 
       onClose;
@@ -100,6 +91,7 @@ export default function ButtonAddSubItem({ tableData }) {
       alert(error.message);
     }
   };
+
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -122,13 +114,14 @@ export default function ButtonAddSubItem({ tableData }) {
 
   return (
     <>
-      <button className="hover:text-warning">
-        <FontAwesomeIcon
-          icon={faEdit}
-          key={"5xl"}
-          onClick={() => handleOpen("5xl")}
-        />
-      </button>
+      <Button
+        key={"2xl"}
+        onPress={() => handleOpen("2xl")}
+        color="primary"
+        variant="flat"
+      >
+        Add Project
+      </Button>
       <div>
         <Modal
           className="sticky top-0 z-999 flex w-full bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none"
@@ -137,24 +130,25 @@ export default function ButtonAddSubItem({ tableData }) {
           onClose={onClose}
           scrollBehavior={"outside"}
           backdrop="blur"
+          isDismissable={false}
         >
           <ModalContent className="">
             <div className="w-full max-w-200 rounded-lg bg-white py-12 px-8 dark:bg-boxdark md:py-15 md:px-17.5">
               <h3 className="font-medium text-black dark:text-white">
-                Edit Sub Item
+                Add Project
               </h3>
               <form onSubmit={handleSubmit}>
                 {/* <!-- Contact Form --> */}
                 <div className="p-6.5">
                   <div className="mb-4.5">
                     <label className="mb-2.5 block text-black dark:text-white">
-                      Sub Item <span className="text-meta-1">*</span>
+                      Project Name <span className="text-meta-1">*</span>
                     </label>
                     <input
-                      name="subitem"
+                      name="projectname"
                       id="item"
                       type="text"
-                      defaultValue={tableData.subitem}
+                      placeholder="Enter the project name"
                       className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                     />
                   </div>
@@ -196,12 +190,8 @@ export default function ButtonAddSubItem({ tableData }) {
                         </span>
                         <select
                           name="owner"
-                          defaultValue={tableData.owner}
                           className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input"
                         >
-                          <option hidden value={tableData.owner}>
-                            {tableData.owner}
-                          </option>
                           {data.map((item, key) => (
                             <>
                               {console.log(key)}
@@ -268,13 +258,8 @@ export default function ButtonAddSubItem({ tableData }) {
                         </span>
                         <select
                           name="status"
-                          defaultValue={tableData.status}
                           className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input"
                         >
-                          <option hidden value={tableData.status}>
-                            {tableData.status}
-                          </option>
-
                           <option value="not yet">Not Yet</option>
                           <option value="done">Done</option>
                           <option value="on progress">on progress</option>
@@ -309,10 +294,7 @@ export default function ButtonAddSubItem({ tableData }) {
                         <input
                           name="date"
                           id="date"
-                          type={type}
-                          onFocus={() => setType("date")}
-                          onBlur={() => setType("text")}
-                          defaultValue={tableData.date}
+                          type="date"
                           className="custom-input-date custom-input-date-1 w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                         />
                       </div>
@@ -325,7 +307,7 @@ export default function ButtonAddSubItem({ tableData }) {
                   className="block w-full rounded border border-primary bg-primary p-3 text-center font-medium text-white transition hover:bg-opacity-90"
                   color="primary"
                 >
-                  Edit Sub Item
+                  Add Sub Item
                 </Button>
               </form>
             </div>
