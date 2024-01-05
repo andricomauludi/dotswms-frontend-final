@@ -111,8 +111,8 @@ export default function ButtonAddSubItem({tableData}) {
         <Button
           key={"2xl"}
           onPress={() => handleOpen("2xl")}
-          color="warning"
-          variant="bordered"
+          color="primary"
+          // variant="bordered"
         >
           Add Sub Item
         </Button>

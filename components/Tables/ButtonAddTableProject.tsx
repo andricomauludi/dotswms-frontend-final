@@ -134,8 +134,8 @@ export default function ButtonAddTableProject({tableData}) {
         <Button
           key={"5xl"}
           onPress={() => handleOpen("5xl")}
-          color="warning"
-          variant="bordered"
+          color="primary"
+          // variant="bordered"
         >
           Add Item
         </Button>

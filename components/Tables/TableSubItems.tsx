@@ -18,7 +18,12 @@ import {
 } from "@nextui-org/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFile } from "@fortawesome/free-solid-svg-icons/faFile";
-import { faArrowAltCircleDown, faEdit, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowAltCircleDown,
+  faEdit,
+  faPlus,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 import ButtonAddSubItem from "./ButtonAddSubItem";
 import ButtonDeleteSubItem from "./ButtonDeleteSubItem";
 
@@ -68,12 +73,15 @@ const TableSubItems = ({ tableData }) => {
             <AccordionItem
               key="2"
               aria-label="Sub Items"
-              startContent={<FontAwesomeIcon icon={faArrowAltCircleDown}/>}              
+              startContent={<FontAwesomeIcon icon={faArrowAltCircleDown} />}
               className="bg-gray-2 text-left dark:bg-meta-4"
             >
+              <div className="flex flex-wrap gap-3" style={{marginTop:"10px" , marginBottom:"20px"}}>
+                <ButtonAddSubItem tableData={tableData} />
+              </div>
               <table className="w-full table-auto">
                 <thead>
-                  <tr className="bg-gray-2 text-left dark:bg-meta-4">                  
+                  <tr className="bg-gray-2 text-left dark:bg-meta-4">
                     <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
                       Sub Item
                     </th>
@@ -148,19 +156,16 @@ const TableSubItems = ({ tableData }) => {
                           </p>
                         </td>
                         <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                      <div className="flex items-center space-x-3.5">
-                       <ButtonEditSubItem tableData={packageItem}/>                                  
-                       <ButtonDeleteSubItem tableData={packageItem} />                                                     
-                      </div>
-                    </td>
+                          <div className="flex items-center space-x-3.5">
+                            <ButtonEditSubItem tableData={packageItem} />
+                            <ButtonDeleteSubItem tableData={packageItem} />
+                          </div>
+                        </td>
                       </tr>
                     </>
                   ))}
                 </tbody>
               </table>
-              <div className="flex flex-wrap gap-3">
-                <ButtonAddSubItem tableData={tableData}/>
-              </div>
             </AccordionItem>
           </Accordion>
         </td>

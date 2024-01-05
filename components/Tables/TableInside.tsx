@@ -67,6 +67,9 @@ const TableInside = ({ tableData }) => {
   return (
     <>
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+        <div style={{ marginTop: "10px", marginBottom:"20px" }}>
+          <ButtonAddProject tableData={tableData} />
+        </div>
         <div className="max-w-full overflow-x-auto">
           <table className="w-full table-auto">
             <thead>
@@ -193,7 +196,7 @@ const TableInside = ({ tableData }) => {
                     </td>
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <div className="flex-shrink-0">
-                        <ShowContentTableProject tableData={packageItem} />                        
+                        <ShowContentTableProject tableData={packageItem} />
                       </div>
                     </td>
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
@@ -342,9 +345,6 @@ const TableInside = ({ tableData }) => {
               ))}
             </tbody>
           </table>
-        </div>
-        <div style={{ marginTop: "10px" }}>
-          <ButtonAddProject tableData={tableData} />
         </div>
       </div>
     </>
