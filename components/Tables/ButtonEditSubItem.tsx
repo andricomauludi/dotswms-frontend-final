@@ -46,40 +46,35 @@ export default function ButtonAddSubItem({ tableData }) {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     var formData = new FormData();
     event.preventDefault();
+    console.log(data);
+
     formData.append("_id", tableData._id);
     formData.append("subitem", event.currentTarget.subitem.value);
-    formData.append(
-      "owner",
-      data[event.currentTarget.owner.value]["full_name"]
-    );
-    formData.append(
-      "owner_email",
-      data[event.currentTarget.owner.value]["email"]
-    );
+    if (
+      event.currentTarget.owner.value == 0 ||
+      event.currentTarget.owner.value == 1
+    ) {
+      formData.append(
+        "owner",
+        data[event.currentTarget.owner.value]["full_name"]
+      );
+
+      formData.append(
+        "owner_email",
+        data[event.currentTarget.owner.value]["email"]
+      );
+      formData.append(
+        "avatar",
+        data[event.currentTarget.owner.value]["profile_picture"]
+      );
+    }
     formData.append("date", event.currentTarget.date.value);
     formData.append("status", event.currentTarget.status.value);
-    formData.append(
-      "avatar",
-      data[event.currentTarget.owner.value]["profile_picture"]
-    );
     formData.append("table_project_id", tableData.table_project_id);
     formData.append("table_project_name", tableData.table_project_name);
     formData.append("created_by", "Admin1");
     formData.append("updated_by", "Admin1");
 
-    // const payload = {
-    //   item: event.currentTarget.item.value,
-    //   postingschedule: event.currentTarget.postingschedule.value,
-    //   lead: event.currentTarget.lead.value,
-    //   contentcategory: event.currentTarget.contentcategory.value,
-    //   postingtime: event.currentTarget.postingtime.value,
-    //   postingcaption: event.currentTarget.postingcaption.value,
-    //   contenttextlink: event.currentTarget.contenttextlink.value,
-    //   contentposting: event.currentTarget.contentposting.value,
-    //   instagrampostingstatus: event.currentTarget.instagrampostingstatus.value,
-    //   tiktokpostingstatus: event.currentTarget.tiktokpostingstatus.value,
-    // };
-    console.log(formData);
     try {
       const { data } = await axios.post(
         "/api/workspaces/editsubitem",
@@ -204,7 +199,6 @@ export default function ButtonAddSubItem({ tableData }) {
                           </option>
                           {data.map((item, key) => (
                             <>
-                              {console.log(key)}
                               <option value={key}>{item.full_name}</option>
                             </>
                           ))}
