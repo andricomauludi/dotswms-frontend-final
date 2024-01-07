@@ -46,11 +46,11 @@ export default function ButtonAddSubItem({ tableData }) {
     formData.append("project_name", event.currentTarget.projectname.value);
     formData.append(
       "group_project",
-      "October 2023"
+      tableData.group_project
     );
     formData.append(
       "group_project_id",
-      "13"
+      tableData._id
     );
     formData.append(
       "color_project",

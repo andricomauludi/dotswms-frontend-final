@@ -40,7 +40,7 @@ export async function POST(request: Request) {
 
   try {
     const { data } = await axios.post(
-      process.env.BACKEND_PORT + "workspaces/create-table-project",
+      process.env.BACKEND_PORT + "workspaces/create-group-project",
       body,
       {
         headers: { Authorization: `Bearer ${token?.value}`, 'Content-Type': 'multipart/form-data' },

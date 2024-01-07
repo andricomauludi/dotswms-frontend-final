@@ -21,7 +21,7 @@ import { faFile } from "@fortawesome/free-solid-svg-icons/faFile";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import TableInside from "./TableInside";
 
-const TableProject = () => {
+const TableProject = ({tableData}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [datas, setData] = useState([]);
   const [dataproject, setDataProject] = useState([]);
@@ -38,11 +38,14 @@ const TableProject = () => {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
+      const payload = {
+        _id: tableData._id,
+      };
       try {
-        const { data: response } = await axios.get(
-          "/api/workspaces/all-project"
+        const { data: response } = await axios.post(
+          "/api/workspaces/all-project",payload
         );
-        setDataProject(await response.data.project);
+        setDataProject(await response.data.groupproject);
       } catch (error: any) {
         console.error(error.message);
       }
@@ -50,14 +53,15 @@ const TableProject = () => {
     };
 
     fetchData();
-  }, []);
+  }, [tableData]);
 
   if (isLoading) return <p>Loading...</p>;
   if (!datas) return <p>No Project data</p>;
 
   return (
     <>
-      <ButtonAddProject tableData={"mantab"}/>
+      <ButtonAddProject tableData={tableData}/>
+        {console.log(datas)}
       <Accordion variant="splitted">
         {dataproject.map((Item, key) => (
           <AccordionItem

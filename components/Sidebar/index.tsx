@@ -3,6 +3,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import SidebarLinkGroup from "./SidebarLinkGroup";
 import Image from "next/image";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPerson } from "@fortawesome/free-solid-svg-icons";
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -409,6 +411,18 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                     </defs>
                   </svg>
                   Workspaces
+                </Link>
+              </li>
+              {/* <!-- Menu Item My Task --> */}
+              <li>
+                <Link
+                  href="/my-task"
+                  className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
+                    pathname.includes("my-task") && "bg-graydark dark:bg-meta-4"
+                  }`}
+                >
+                 <FontAwesomeIcon icon={faPerson} width={18} height={19} />
+                  My Task
                 </Link>
               </li>
               {/* <!-- Menu Item Tables --> */}
