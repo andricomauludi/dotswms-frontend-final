@@ -8,23 +8,7 @@ import React, { useEffect, useState } from "react";
 import ButtonEditSubItem from "./ButtonEditSubItem";
 import Link from "next/link";
 import ShowFileProject from "./ShowFileTableProject";
-import {
-  Accordion,
-  AccordionItem,
-  Button,
-  Modal,
-  ModalContent,
-  useDisclosure,
-} from "@nextui-org/react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFile } from "@fortawesome/free-solid-svg-icons/faFile";
-import {
-  faArrowAltCircleDown,
-  faEdit,
-  faPlus,
-  faTrash,
-} from "@fortawesome/free-solid-svg-icons";
-import ButtonAddSubItem from "./ButtonAddSubItem";
+import { useDisclosure } from "@nextui-org/react";
 import ButtonDeleteSubItem from "./ButtonDeleteSubItem";
 
 const TableMyTask = ({ tableData }) => {
@@ -37,8 +21,11 @@ const TableMyTask = ({ tableData }) => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const { data: response } = await axios.get("/api/users/me");
-        setData(await response.data.user);
+        const payload = {
+          email: tableData.email,
+        };
+        const { data: response } = await axios.post("/api/mytask/all",payload);
+        setData(await response.data.subItem);
       } catch (error: any) {
         console.error(error.message);
       }

@@ -35,17 +35,24 @@ const TableProject = ({tableData}) => {
     setSize(size);
     onOpen();
   };
+ 
+
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      const payload = {
-        _id: tableData._id,
-      };
       try {
+        const payload = {
+          _id: tableData,
+        };
+        console.log(payload._id);
         const { data: response } = await axios.post(
-          "/api/workspaces/all-project",payload
+          "/api/workspaces/tablesubitems",
+          payload
         );
-        setDataProject(await response.data.groupproject);
+        // const { data: response } = await axios.get(
+        //   "/api/workspaces/tableproject"
+        // );
+        setData(await response.data.subItem);
       } catch (error: any) {
         console.error(error.message);
       }
@@ -53,7 +60,7 @@ const TableProject = ({tableData}) => {
     };
 
     fetchData();
-  }, [tableData]);
+  }, []);
 
   if (isLoading) return <p>Loading...</p>;
   if (!datas) return <p>No Project data</p>;
