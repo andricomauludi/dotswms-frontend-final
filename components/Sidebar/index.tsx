@@ -123,7 +123,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
                           (pathname === "/" ||
                             pathname.includes("dashboard")) &&
-                          "bg-graydark dark:bg-meta-4"
+                          "text-black bg-[#98CC00]  dark:text-black dark:bg-[#98CC00]"
                         }`}
                         onClick={(e) => {
                           e.preventDefault();
@@ -229,7 +229,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               </li> */}
               {/* <!-- Menu Item Calendar --> */}
 
-
               {/* <!-- Menu Item Forms --> */}
               {/* <SidebarLinkGroup
                 activeCondition={
@@ -301,8 +300,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           />
                         </svg>
                       </Link> */}
-                      {/* <!-- Dropdown Menu Start --> */}
-                      {/* <div
+              {/* <!-- Dropdown Menu Start --> */}
+              {/* <div
                         className={`translate transform overflow-hidden ${
                           !open && "hidden"
                         }`}
@@ -332,8 +331,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           </li>
                         </ul>
                       </div> */}
-                      {/* <!-- Dropdown Menu End --> */}
-                    {/* </React.Fragment>
+              {/* <!-- Dropdown Menu End --> */}
+              {/* </React.Fragment>
                   );
                 }}
               </SidebarLinkGroup> */}
@@ -382,7 +381,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                 <Link
                   href="/workspaces"
                   className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                    pathname.includes("workspaces") && "bg-graydark dark:bg-meta-4"
+                    pathname.includes("workspaces") &&
+                    "text-black bg-[#98CC00]  dark:text-black dark:bg-[#98CC00]"
                   }`}
                 >
                   <svg
@@ -418,10 +418,11 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                 <Link
                   href="/my-task"
                   className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                    pathname.includes("my-task") && "bg-graydark dark:bg-meta-4"
+                    pathname.includes("my-task") &&
+                    "text-black bg-[#98CC00]  dark:text-black dark:bg-[#98CC00]"
                   }`}
                 >
-                 <FontAwesomeIcon icon={faPerson} width={18} height={19} />
+                  <FontAwesomeIcon icon={faPerson} width={18} height={19} />
                   My Task
                 </Link>
               </li>
@@ -473,7 +474,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
           </div>
 
           {/* <!-- Others Group --> */}
-      
         </nav>
         {/* <!-- Sidebar Menu --> */}
       </div>

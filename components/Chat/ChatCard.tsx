@@ -78,7 +78,7 @@ const ChatCard = () => {
   if (isLoading) return <p>Loading...</p>;
   if (!data) return <p>No profile data</p>;
   return (
-    <div className="col-span-12 rounded-sm border border-stroke bg-white py-6 shadow-default dark:border-strokedark dark:bg-boxdark xl:col-span-4">
+    <div className="col-span-12 rounded-sm border border-stroke bg-white py-6 shadow-default dark:border-strokedark dark:bg-boxdark xl:col-span-4" >
       <h4 className="mb-6 px-7.5 text-xl font-semibold text-black dark:text-white">
         Users
       </h4>
@@ -90,7 +90,18 @@ const ChatCard = () => {
             key={key}
           >
             <div className="relative h-14 w-14 rounded-full">
-              <Image src={item.profile_picture} alt="User" width={57} height={56} />
+              <Image
+                src={`data:image/jpeg;base64,${item.profile_picture}`}
+                alt="User"
+                style={{
+                  borderRadius: "50%",
+                  margin: "auto",
+                  objectFit: "cover",
+                }}
+                layout="fill"
+              />
+
+              {/* <Image src={item.profile_picture} alt="User" width={57} height={56} /> */}
               {/* <span
                 className={`absolute right-0 bottom-0 h-3.5 w-3.5 rounded-full border-2 border-white ${
                   chat.dot === 6 ? "bg-meta-6" : `bg-meta-${chat.dot}`
@@ -105,15 +116,13 @@ const ChatCard = () => {
                 </h5>
                 <p>
                   <span className="text-sm text-black dark:text-white">
-                    {item.address}
-                  </span>
-                 
-                </p>
-                <p>
-                  <span className="text-sm text-black dark:text-white">
                     {item.email}
                   </span>
-                 
+                </p>
+                <p
+                  className={"inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium text-warning bg-warning"}
+                >
+                  {item.role}
                 </p>
               </div>
               {/* {chat.textCount !== 0 && (

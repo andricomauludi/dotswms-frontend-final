@@ -16,7 +16,7 @@ export async function GET() {
   //   status: 200,
   // });
   try {
-    const { data } = await axios.get(process.env.BACKEND_PORT + "users/", {
+    const { data } = await axios.get(process.env.BACKEND_PORT + "dashboard/get-users-dashboard", {
       headers: { Authorization: `Bearer ${token?.value}` },
     });
     let datatoken = data;
