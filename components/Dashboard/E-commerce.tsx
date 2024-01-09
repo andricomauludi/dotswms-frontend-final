@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ChartOne from "../Charts/ChartOne";
 import ChartThree from "../Charts/ChartThree";
 import ChartTwo from "../Charts/ChartTwo";
@@ -10,16 +10,40 @@ import CardDataStats from "../CardDataStats";
 
 // without this the component renders on server and throws an error
 import dynamic from "next/dynamic";
+import CardDataStatsGreen from "../CardDataStatsGreen";
+import axios from "axios";
 const MapOne = dynamic(() => import("../Maps/MapOne"), {
   ssr: false,
 });
 
+
 const ECommerce: React.FC = () => {
+  const [data, setData] = useState();
+  const [isLoading, setLoading] = useState(true);
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const { data: response } = await axios.get("/api/dashboard/content-card");
+        setData(await response.data);      
+      } catch (error: any) {
+        console.error(error.message);
+      }
+      setLoading(false);
+    };
+  
+    fetchData();
+  }, []);
+  
+  if (isLoading) return <p>Loading...</p>;
+  if (!data) return <p>No profile data</p>;
+
   return (
     <>
-
+{console.log(data)}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
-        <CardDataStats title="Total views" total="$3.456K" rate="0.43%" levelUp>
+        <CardDataStats title="Total Project" total={data.project} >
+        {/* <CardDataStats title="Total Group Project" total={data.groupproject} rate="0.43%" levelUp> */}
           <svg
             className="fill-primary dark:fill-white"
             width="22"
@@ -38,7 +62,8 @@ const ECommerce: React.FC = () => {
             />
           </svg>
         </CardDataStats>
-        <CardDataStats title="Total Profit" total="$45,2K" rate="4.35%" levelUp>
+        <CardDataStats title="Total Table Project" total={data.tableproject} >
+        {/* <CardDataStats title="Total Profit" total="$45,2K" rate="4.35%" levelUp> */}
           <svg
             className="fill-primary dark:fill-white"
             width="20"
@@ -61,7 +86,8 @@ const ECommerce: React.FC = () => {
             />
           </svg>
         </CardDataStats>
-        <CardDataStats title="Total Product" total="2.450" rate="2.59%" levelUp>
+        <CardDataStats title="Total subitem" total={data.subitem}>
+        {/* <CardDataStats title="Total Product" total="2.450" rate="2.59%" levelUp> */}
           <svg
             className="fill-primary dark:fill-white"
             width="22"
@@ -80,7 +106,8 @@ const ECommerce: React.FC = () => {
             />
           </svg>
         </CardDataStats>
-        <CardDataStats title="Total Users" total="3.456" rate="0.95%" levelDown>
+                  
+        <CardDataStatsGreen title="Total Users" total={data.user}>
           <svg
             className="fill-primary dark:fill-white"
             width="22"
@@ -102,18 +129,18 @@ const ECommerce: React.FC = () => {
               fill=""
             />
           </svg>
-        </CardDataStats>
+        </CardDataStatsGreen>
       </div>
 
       <div className="mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5">
         <ChartOne />
-        <ChartTwo />
+        <ChatCard />
         <ChartThree />
         <MapOne />
         <div className="col-span-12 xl:col-span-8">
           <TableOne />
         </div>
-        <ChatCard />
+        <ChartTwo />
       </div>
     </>
   );

@@ -40,19 +40,14 @@ const TableProject = ({tableData}) => {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
+      const payload = {
+        _id: tableData._id,
+      };
       try {
-        const payload = {
-          _id: tableData,
-        };
-        console.log(payload._id);
         const { data: response } = await axios.post(
-          "/api/workspaces/tablesubitems",
-          payload
+          "/api/workspaces/all-project",payload
         );
-        // const { data: response } = await axios.get(
-        //   "/api/workspaces/tableproject"
-        // );
-        setData(await response.data.subItem);
+        setDataProject(await response.data.groupproject);
       } catch (error: any) {
         console.error(error.message);
       }
@@ -60,15 +55,14 @@ const TableProject = ({tableData}) => {
     };
 
     fetchData();
-  }, []);
+  }, [tableData]);
 
   if (isLoading) return <p>Loading...</p>;
   if (!datas) return <p>No Project data</p>;
 
   return (
     <>
-      <ButtonAddProject tableData={tableData}/>
-        {console.log(datas)}
+      <ButtonAddProject tableData={tableData}/>        
       <Accordion variant="splitted">
         {dataproject.map((Item, key) => (
           <AccordionItem

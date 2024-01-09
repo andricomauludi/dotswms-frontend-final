@@ -161,8 +161,9 @@ export default function ButtonAddTableProject({ tableData }) {
       </div>
       <div>
         <Modal
-          className="sticky top-0 z-999 flex w-full bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none"
+          className="sticky top-0 flex w-full bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none"
           size={"5xl"}
+          style={{zIndex:"99999"}}
           isOpen={isOpen}
           onClose={onClose}
           scrollBehavior={"outside"}

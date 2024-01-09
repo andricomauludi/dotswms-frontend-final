@@ -51,8 +51,9 @@ const WorkspacePage = () => {
   const selectedOptionValue = Array.from(selectedOption)[0];
   return (
     <>
+      {console.log(datas)}
       <Breadcrumb pageName="Workspaces" />
-      <div className="flex flex-col gap-10">
+      <div className="flex flex-col gap-5">
         <div className="text-left">
           <h1>
             <strong>Group Project :</strong>
@@ -93,13 +94,13 @@ const WorkspacePage = () => {
                     ))}
                   </DropdownMenu>
                 </Dropdown>
+
+                <ButtonAddGroupProject />
               </ButtonGroup>
             </Col>
-            <Col>
-              <ButtonAddGroupProject />
-            </Col>
+            <Col></Col>
           </Row>
-        </div>        
+        </div>
         <TableProject tableData={datas[selectedOptionValue]} />
       </div>
     </>

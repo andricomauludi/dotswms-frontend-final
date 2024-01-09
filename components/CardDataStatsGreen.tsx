@@ -9,7 +9,7 @@ interface CardDataStatsProps {
   children: ReactNode;
 }
 
-const CardDataStats: React.FC<CardDataStatsProps> = ({
+const CardDataStatsGreen: React.FC<CardDataStatsProps> = ({
   title,
   total,
   rate,
@@ -18,7 +18,7 @@ const CardDataStats: React.FC<CardDataStatsProps> = ({
   children,
 }) => {
   return (
-    <div className="rounded-sm border border-stroke bg-white py-6 px-7.5 shadow-default dark:border-strokedark dark:bg-boxdark" sty>
+    <div className="rounded-sm border border-stroke bg-white py-6 px-7.5 shadow-default dark:border-strokedark dark:bg-boxdark" style={{backgroundImage:"linear-gradient(to right, green , yellow)", color:"black"}}           >
       <div className="flex h-11.5 w-11.5 items-center justify-center rounded-full bg-meta-2 dark:bg-meta-4">
         {children}
       </div>
@@ -74,4 +74,4 @@ const CardDataStats: React.FC<CardDataStatsProps> = ({
   );
 };
 
-export default CardDataStats;
+export default CardDataStatsGreen;

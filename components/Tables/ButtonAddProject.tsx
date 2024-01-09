@@ -106,13 +106,12 @@ export default function ButtonAddSubItem({ tableData }) {
     <>
       <Button
         key={"2xl"}
-        onPress={() => handleOpen("2xl")}
-        color="primary"
-        variant="flat"
+        onPress={() => handleOpen("2xl")}          
+        style={{backgroundImage:"linear-gradient(to right, green , yellow)", color:"black"}}   
+        className="hover:bg-opacity-30"
       >
         Add Project
-      </Button>
-      <div>
+      </Button>      
         <Modal
           className="sticky top-0 z-999 flex w-full bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none"
           size={"2xl"}
@@ -221,8 +220,7 @@ export default function ButtonAddSubItem({ tableData }) {
               </form>
             </div>
           </ModalContent>
-        </Modal>        
-      </div>
+        </Modal>              
     </>
   );
 }

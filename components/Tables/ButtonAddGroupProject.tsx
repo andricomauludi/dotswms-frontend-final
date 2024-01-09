@@ -14,6 +14,8 @@ import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import styles from "./ButtonAddSubItem.module.css";
 import { Container } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 export default function ButtonAddGroupProject() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -79,13 +81,15 @@ export default function ButtonAddGroupProject() {
 
   return (
     <>
-      <Button
+      <Button      
+      variant="flat"
         key={"2xl"}
         onPress={() => handleOpen("2xl")}
-        color="primary"
-        variant="flat"
+        style={{backgroundImage:"linear-gradient(to right, green , yellow)", color:"black"}}   
+        className="hover:bg-opacity-30" 
+        isIconOnly
       >
-        Add Group Project
+        <FontAwesomeIcon icon={faPlus} />
       </Button>
       <div>
         <Modal
@@ -134,8 +138,8 @@ export default function ButtonAddGroupProject() {
 
                 <Button
                   type="submit"
-                  className="block w-full rounded border border-primary bg-primary p-3 text-center font-medium text-white transition hover:bg-opacity-90"
-                  color="primary"
+                  className="block w-full rounded p-3 text-center font-medium text-white transition hover:bg-opacity-90"
+                  style={{backgroundImage:"linear-gradient(to right, green , yellow)", color:"black"}}           
                 >
                   Add Group Project
                 </Button>

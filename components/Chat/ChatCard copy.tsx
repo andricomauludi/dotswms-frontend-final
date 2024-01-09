@@ -1,8 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Chat } from "@/types/chat";
-import { useEffect, useState } from "react";
-import axios from "axios";
 
 const chatData: Chat[] = [
   {
@@ -56,74 +54,48 @@ const chatData: Chat[] = [
 ];
 
 const ChatCard = () => {
-  const [data, setData] = useState();
-  const [imageloader, setImageLoader] = useState();
-  const [isLoading, setLoading] = useState(true);
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const { data: response } = await axios.get("/api/users/all");
-        setData(await response.data.user);
-        setImageLoader(`/img/${await response.data.user.profile_picture}`);
-      } catch (error: any) {
-        console.error(error.message);
-      }
-      setLoading(false);
-    };
-
-    fetchData();
-  }, []);
-
-  if (isLoading) return <p>Loading...</p>;
-  if (!data) return <p>No profile data</p>;
   return (
     <div className="col-span-12 rounded-sm border border-stroke bg-white py-6 shadow-default dark:border-strokedark dark:bg-boxdark xl:col-span-4">
       <h4 className="mb-6 px-7.5 text-xl font-semibold text-black dark:text-white">
-        Users
+        Chats
       </h4>
+
       <div>
-        {data.map((item, key) => (
+        {chatData.map((chat, key) => (
           <Link
             href="/"
             className="flex items-center gap-5 py-3 px-7.5 hover:bg-gray-3 dark:hover:bg-meta-4"
             key={key}
           >
             <div className="relative h-14 w-14 rounded-full">
-              <Image src={item.profile_picture} alt="User" width={57} height={56} />
-              {/* <span
+              <Image src={chat.avatar} alt="User" width={57} height={56} />
+              <span
                 className={`absolute right-0 bottom-0 h-3.5 w-3.5 rounded-full border-2 border-white ${
                   chat.dot === 6 ? "bg-meta-6" : `bg-meta-${chat.dot}`
                 } `}
-              ></span> */}
+              ></span>
             </div>
 
             <div className="flex flex-1 items-center justify-between">
               <div>
                 <h5 className="font-medium text-black dark:text-white">
-                  {item.full_name}
+                  {chat.name}
                 </h5>
                 <p>
                   <span className="text-sm text-black dark:text-white">
-                    {item.address}
+                    {chat.text}
                   </span>
-                 
-                </p>
-                <p>
-                  <span className="text-sm text-black dark:text-white">
-                    {item.email}
-                  </span>
-                 
+                  <span className="text-xs"> . {chat.time} min</span>
                 </p>
               </div>
-              {/* {chat.textCount !== 0 && (
+              {chat.textCount !== 0 && (
                 <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary">
                   <span className="text-sm font-medium text-white">
                     {" "}
                     {chat.textCount}
                   </span>
                 </div>
-              )} */}
+              )}
             </div>
           </Link>
         ))}
