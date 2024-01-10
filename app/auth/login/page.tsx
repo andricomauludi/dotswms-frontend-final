@@ -111,7 +111,7 @@ export default function Home() {
                       />
                     </div>
                     <div className="text-center mt-6">
-                      <button className="w-full cursor-pointer rounded-lg border border-warning bg-warning p-4 text-white transition hover:bg-opacity-20">
+                      <button className="w-full cursor-pointer rounded-lg border p-4 text-white transition hover:bg-opacity-20"  style={{backgroundImage:"linear-gradient(to right, green , yellow)", color:"black"}} >
                         Sign In
                       </button>
                     </div>

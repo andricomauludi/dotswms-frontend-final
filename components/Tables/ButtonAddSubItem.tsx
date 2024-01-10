@@ -114,6 +114,7 @@ export default function ButtonAddProject({tableData}) {
           key={"2xl"}
           onPress={() => handleOpen("2xl")}
           color="primary"
+          style={{backgroundImage:"linear-gradient(to right, green , yellow)", color:"black"}} 
           // variant="bordered"
         >
           Add Sub Item

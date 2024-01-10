@@ -74,44 +74,43 @@ const TableInside = ({ tableData }) => {
           <table className="w-full sm:table-auto">
             <thead>
               <tr className="bg-gray-2 text-left dark:bg-meta-4">
-                <th className="py-2 px-2 text-xs text-black dark:text-white xl:pl-4">
-                {/* <th className="py-4 px-4 text-xs text-black dark:text-white xl:pl-11"> */}
+                <th className="py-4 px-4 font-small text-black dark:text-white xl:pl-11">
                   Item
                 </th>
-                <th className=" py-2 px-2 text-xs text-black dark:text-white">
+                <th className=" py-4 px-4 font-small text-black dark:text-white">
                   Posting Schedule
                 </th>
-                <th className=" py-2 px-2 text-xs text-black dark:text-white">
+                <th className=" py-4 px-4 font-small text-black dark:text-white">
                   Posting Time
                 </th>
-                <th className="py-2 px-2 text-xs text-black dark:text-white">
+                <th className="py-4 px-4 font-small text-black dark:text-white">
                   Lead
                 </th>
-                <th className="py-2 px-2 text-xs text-black dark:text-white">
+                <th className="py-4 px-4 font-small text-black dark:text-white">
                   Content Category
                 </th>
-                <th className="py-2 px-2 text-xs text-black dark:text-white">
+                <th className="py-4 px-4 font-small text-black dark:text-white">
                   Content Text Link
                 </th>
-                <th className="py-2 px-2 text-xs text-black dark:text-white">
+                <th className="py-4 px-4 font-small text-black dark:text-white">
                   Content Text
                 </th>
-                <th className="py-2 px-2 text-xs text-black dark:text-white">
+                <th className="py-4 px-4 font-small text-black dark:text-white">
                   Content Posting
                 </th>
-                <th className="py-2 px-2 text-xs text-black dark:text-white">
+                <th className="py-4 px-4 font-small text-black dark:text-white">
                   Posting Caption
                 </th>
-                <th className="py-2 px-2 text-xs text-black dark:text-white">
+                <th className="py-4 px-4 font-small text-black dark:text-white">
                   Instagram Posting Status
                 </th>
-                <th className="py-2 px-2 text-xs text-black dark:text-white">
+                <th className="py-4 px-4 font-small text-black dark:text-white">
                   Tiktok Posting Status
                 </th>
-                <th className="py-2 px-2 text-xs text-black dark:text-white">
+                <th className="py-4 px-4 font-small text-black dark:text-white">
                   Last Updated
                 </th>
-                <th className="py-2 px-2 text-xs text-black dark:text-white">
+                <th className="py-4 px-4 font-small text-black dark:text-white">
                   Actions
                 </th>
               </tr>
@@ -120,22 +119,22 @@ const TableInside = ({ tableData }) => {
               {datas.map((packageItem, key) => (
                 <>
                   <tr key={key}>
-                    <td className="border-b border-[#eee] py-3 px-2 pl-5 dark:border-strokedark xl:pl-5">
-                      <h5 className="text-xs text-black dark:text-white">
+                    <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
+                      <h5 className="font-small text-black dark:text-white">
                         {packageItem.item}
                       </h5>
                     </td>
-                    <td className="border-b border-[#eee] py-3 px-2 dark:border-strokedark">
-                      <p className="text-black dark:text-white text-xs">
+                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                      <p className="text-black dark:text-white">
                         {packageItem.postingschedule}
                       </p>
                     </td>
-                    <td className="border-b border-[#eee] py-3 px-2 dark:border-strokedark">
-                      <p className="text-black dark:text-white text-xs">
+                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                      <p className="text-black dark:text-white">
                         {packageItem.postingtime}
                       </p>
                     </td>
-                    <td className="border-b border-[#eee] py-3 px-2 dark:border-strokedark">
+                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <div
                         className="relative"
                         style={{
@@ -158,13 +157,13 @@ const TableInside = ({ tableData }) => {
                       width={48}
                       height={48}
                     /> */}
-                      <p className="hidden text-black dark:text-white sm:block text-xs">
+                      <p className="hidden text-black dark:text-white sm:block">
                         {packageItem.lead_name}
                       </p>
                     </td>
-                    <td className="border-b border-[#eee] py-3 px-2 dark:border-strokedark">
+                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <p
-                        className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-xs text-xs ${
+                        className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-small ${
                           packageItem.contentcategory === "reels"
                             ? "text-primary bg-primary"
                             : packageItem.contentcategory === "tiktok"
@@ -181,34 +180,33 @@ const TableInside = ({ tableData }) => {
                         {packageItem.contentcategory}
                       </p>
                     </td>
-                    <td className="border-b border-[#eee] py-3 px-2 dark:border-strokedark">
-                      <p className="text-black dark:text-white text-xs">
+                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                      <p className="text-black dark:text-white">
                         <Link
                           href={`${packageItem.contenttextlink}`}
-                          className="flex items-center gap-3.5 text-xs text-xs duration-300 ease-in-out hover:text-primary lg:text-xs"
-                          // className="flex items-center gap-3.5 text-xs text-xs duration-300 ease-in-out hover:text-primary lg:text-base"
+                          className="flex items-center gap-3.5 text-sm font-small duration-300 ease-in-out hover:text-primary lg:text-base"
                           target="_blank"
                         >
                           {packageItem.contenttextlink}
                         </Link>
                       </p>
                     </td>
-                    <td className="border-b border-[#eee] py-3 px-2 dark:border-strokedark">
+                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <ShowFileProject tableData={packageItem} />
                     </td>
-                    <td className="border-b border-[#eee] py-3 px-2 dark:border-strokedark">
+                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <div className="flex-shrink-0">
                         <ShowContentTableProject tableData={packageItem} />
                       </div>
                     </td>
-                    <td className="border-b border-[#eee] py-3 px-2 dark:border-strokedark">
-                      <p className="text-black dark:text-white text-xs">
+                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                      <p className="text-black dark:text-white">
                         {packageItem.postingcaption}
                       </p>
                     </td>
-                    <td className="border-b border-[#eee] py-3 px-2 dark:border-strokedark">
+                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <p
-                        className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-xs text-xs ${
+                        className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-small ${
                           packageItem.instagrampostingstatus ===
                           "not yet posted"
                             ? "text-primary bg-primary"
@@ -225,9 +223,9 @@ const TableInside = ({ tableData }) => {
                         {packageItem.instagrampostingstatus}
                       </p>
                     </td>
-                    <td className="border-b border-[#eee] py-3 px-2 dark:border-strokedark">
+                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <p
-                        className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-xs text-xs ${
+                        className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-small ${
                           packageItem.tiktokpostingstatuwhites ===
                           "not yet posted"
                             ? "text-primary bg-primary"
@@ -243,7 +241,7 @@ const TableInside = ({ tableData }) => {
                         {packageItem.tiktokpostingstatus}
                       </p>
                     </td>
-                    <td className="border-b border-[#eee] py-3 px-2 dark:border-strokedark">
+                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <div
                         className="relative"
                         style={{
@@ -266,11 +264,11 @@ const TableInside = ({ tableData }) => {
                       width={48}
                       height={48}
                     /> */}
-                      <p className="hidden text-black dark:text-white sm:block text-xs">
+                      <p className="hidden text-black dark:text-white sm:block">
                         {packageItem.updated_by}
                       </p>
                     </td>
-                    <td className="border-b border-[#eee] py-3 px-2 dark:border-strokedark">
+                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <div className="flex items-center space-x-3.5">
                         <ButtonEditProject tableData={packageItem} />
                         <ButtonDeleteProject tableData={packageItem} />

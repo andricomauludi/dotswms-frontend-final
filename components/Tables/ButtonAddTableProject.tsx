@@ -57,9 +57,7 @@ export default function ButtonAddTableProject({ tableData }) {
     var formData = new FormData();
     event.preventDefault();
 
-    var contenttext = document.querySelector("#contenttext");
     var contentposting = document.querySelector("#contentposting");
-    formData.append("contenttext", contenttext.files[0]);
     formData.append("contentposting", contentposting.files[0]);
     formData.append("item", event.currentTarget.item.value);
     formData.append(
@@ -77,6 +75,10 @@ export default function ButtonAddTableProject({ tableData }) {
     formData.append(
       "contenttextlink",
       event.currentTarget.contenttextlink.value
+    );
+    formData.append(
+      "contenttext",
+      event.currentTarget.contenttext.value
     );
     formData.append(
       "instagrampostingstatus",
@@ -154,6 +156,7 @@ export default function ButtonAddTableProject({ tableData }) {
           key={"5xl"}
           onPress={() => handleOpen("5xl")}
           color="primary"
+          style={{backgroundImage:"linear-gradient(to right, green , yellow)", color:"black"}} 
           // variant="bordered"
         >
           Add Item
@@ -441,14 +444,14 @@ export default function ButtonAddTableProject({ tableData }) {
                       <div className="mb-4.5">
                         <div>
                           <label className="mb-3 block text-black dark:text-white">
-                            Content Text
+                            Content Text (Google Docs)
                           </label>
                           <input
-                            name="contenttext"
-                            id="contenttext"
-                            type="file"
-                            className="w-full cursor-pointer rounded-lg border-[1.5px] border-stroke bg-transparent font-medium outline-none transition file:mr-5 file:border-collapse file:cursor-pointer file:border-0 file:border-r file:border-solid file:border-stroke file:bg-whiter file:py-3 file:px-5 file:hover:bg-primary file:hover:bg-opacity-10 focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:file:border-form-strokedark dark:file:bg-white/30 dark:file:text-white dark:focus:border-primary"
-                          />
+                          name="contenttext"
+                          type="text"
+                          placeholder="Enter context text"
+                          className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                        />
                         </div>
                       </div>
                       <div className="mb-4.5">

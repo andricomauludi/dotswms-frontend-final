@@ -55,7 +55,8 @@ export default function ShowFileProject({ tableData }) {
         <Link
           onClick={() => handleOpen("5xl")}
           href={"#"}
-          className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
+          className="flex items-center gap-3.5 text-xs font-medium duration-300 ease-in-out hover:text-primary lg:text-xs"
+          // className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
         >
           <FontAwesomeIcon icon={faFile} />
           Content Text
@@ -71,15 +72,17 @@ export default function ShowFileProject({ tableData }) {
           >
             <ModalContent className="">
               <div className="w-full max-w-200 rounded-lg bg-white py-12 px-8 dark:bg-boxdark md:py-15 md:px-17.5">
-                <h3 className="font-medium text-black dark:text-white">
+                <h3 className="font-medium text-black dark:text-white" style={{paddingBottom:"20px"}}>
                   Content Text
-                </h3>
-                <embed
+                </h3>                
+                {/* <embed
                   key={tableData._id}
                   src={`data:application/pdf;base64,${tableData.contenttext}`}
                   height={600}
                   width={900}
-                />
+                /> */}                
+                <iframe src={`${tableData.contenttext}`} height={600}
+                  width={900} ></iframe>             
               </div>
             </ModalContent>
           </Modal>

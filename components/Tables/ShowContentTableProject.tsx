@@ -78,7 +78,7 @@ export default function ShowContentTableProject({ tableData }) {
           >
             <ModalContent className="">
               <div className="w-full max-w-200 rounded-lg bg-white py-12 px-8 dark:bg-boxdark md:py-15 md:px-17.5">
-                <h3 className="font-medium text-black dark:text-white">
+                <h3 className="font-medium text-black dark:text-white" style={{paddingBottom:"20px"}}>
                   Content Posting
                 </h3>
                 <div className="flex-shrink-0 text-center">
@@ -88,6 +88,8 @@ export default function ShowContentTableProject({ tableData }) {
                     width={800}     
                     className="text-center"               
                   />
+                  {console.log(tableData)}
+                  <a style={{paddingTop:"20px"}} download={`${tableData.contentpostingname}`}  href={`data:image/jpeg;base64,${tableData.contentposting}`}>Download</a>
                   <div>{/* <ShowFileProject /> */}</div>
                 </div>
               </div>
