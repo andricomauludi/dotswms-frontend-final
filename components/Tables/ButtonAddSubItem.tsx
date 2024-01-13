@@ -112,8 +112,7 @@ export default function ButtonAddProject({tableData}) {
       <div className="flex flex-wrap gap-3">
         <Button
           key={"2xl"}
-          onPress={() => handleOpen("2xl")}
-          color="primary"
+          onPress={() => handleOpen("2xl")}          
           style={{backgroundImage:"linear-gradient(to right, green , yellow)", color:"black"}} 
           // variant="bordered"
         >

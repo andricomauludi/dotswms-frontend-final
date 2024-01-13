@@ -112,7 +112,9 @@ export default function ButtonAddSubItem({ tableData }) {
     fetchData();
   }, []);
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return(<Button color="default" isLoading>
+  Loading
+</Button>);
   if (!data) return <p>No profile data</p>;
 
   return (
@@ -316,8 +318,8 @@ export default function ButtonAddSubItem({ tableData }) {
 
                 <Button
                   type="submit"
-                  className="block w-full rounded border border-primary bg-primary p-3 text-center font-medium text-white transition hover:bg-opacity-90"
-                  color="primary"
+                  className="block w-full rounded p-3 text-center font-medium text-white transition hover:bg-opacity-90"
+                  style={{ backgroundImage:"linear-gradient(to right, green , yellow)"}}                   
                 >
                   Edit Sub Item
                 </Button>

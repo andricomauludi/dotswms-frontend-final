@@ -69,7 +69,7 @@ const TableProject = ({tableData}) => {
             key={key}
             aria-label={Item.project_name}
             title={Item.project_name}
-            className={Item.color_project}
+            className={`${Item.color_project}`}
           >
             <TableInside tableData={Item} />
           </AccordionItem>

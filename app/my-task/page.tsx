@@ -1,6 +1,7 @@
 "use client";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import TableMyTask from "@/components/Tables/TableMyTask";
+import TableMyTaskDone from "@/components/Tables/TableMyTaskDone";
 import {
   Button,
   ButtonGroup,
@@ -49,8 +50,11 @@ const MyTaskPage = () => {
     <>
       <Breadcrumb pageName="My Task" />
 
-      <div className="flex flex-col gap-10">        
-        <TableMyTask tableData={datas}/>
+      <h1>On Going My Task</h1>
+      <div className="flex flex-col gap-10">
+        <TableMyTask tableData={datas} />
+      <h1>My Task (Done)</h1>
+        <TableMyTaskDone tableData={datas} />
       </div>
     </>
   );

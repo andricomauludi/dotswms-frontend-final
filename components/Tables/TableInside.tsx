@@ -59,7 +59,7 @@ const TableInside = ({ tableData }) => {
     };
 
     fetchData();
-  }, []);
+  }, [tableData]);
 
   if (isLoading) return <p>Loading...</p>;
   if (!datas) return <p>No Project data</p>;
@@ -103,11 +103,8 @@ const TableInside = ({ tableData }) => {
                   Posting Caption
                 </th>
                 <th className="py-2 px-2 text-xs text-black dark:text-white">
-                  Instagram Posting Status
-                </th>
-                <th className="py-2 px-2 text-xs text-black dark:text-white">
-                  Tiktok Posting Status
-                </th>
+                   Posting Status
+                </th>              
                 <th className="py-2 px-2 text-xs text-black dark:text-white">
                   Last Updated
                 </th>
@@ -173,7 +170,7 @@ const TableInside = ({ tableData }) => {
                             ? "text-warning bg-warning"
                             : packageItem.contentcategory === "design"
                             ? "text-danger bg-danger"
-                            : packageItem.contentcategory === "education"
+                            : packageItem.contentcategory === "youtubevideo"
                             ? "text-success bg-success"
                             : "text-warning bg-warning"
                         }`}
@@ -209,40 +206,22 @@ const TableInside = ({ tableData }) => {
                     <td className="border-b border-[#eee] py-3 px-2 dark:border-strokedark">
                       <p
                         className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-xs text-xs ${
-                          packageItem.instagrampostingstatus ===
-                          "not yet posted"
+                          packageItem.postingstatus ===
+                          "not yet"
                             ? "text-primary bg-primary"
-                            : packageItem.instagrampostingstatus ===
+                            : packageItem.postingstatus ===
                               "on preview"
                             ? "text-warning bg-warning"
-                            : packageItem.instagrampostingstatus === "on hold"
+                            : packageItem.postingstatus === "on hold"
                             ? "text-danger bg-danger"
-                            : packageItem.instagrampostingstatus === "posted"
+                            : packageItem.postingstatus === "posted"
                             ? "text-success bg-success"
                             : "text-warning bg-warning"
                         }`}
                       >
-                        {packageItem.instagrampostingstatus}
+                        {packageItem.postingstatus}
                       </p>
-                    </td>
-                    <td className="border-b border-[#eee] py-3 px-2 dark:border-strokedark">
-                      <p
-                        className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-xs text-xs ${
-                          packageItem.tiktokpostingstatuwhites ===
-                          "not yet posted"
-                            ? "text-primary bg-primary"
-                            : packageItem.tiktokpostingstatus === "on preview"
-                            ? "text-warning bg-warning"
-                            : packageItem.tiktokpostingstatus === "on hold"
-                            ? "text-danger bg-danger"
-                            : packageItem.tiktokpostingstatus === "posted"
-                            ? "text-success bg-success"
-                            : "text-warning bg-warning"
-                        }`}
-                      >
-                        {packageItem.tiktokpostingstatus}
-                      </p>
-                    </td>
+                    </td>                  
                     <td className="border-b border-[#eee] py-3 px-2 dark:border-strokedark">
                       <div
                         className="relative"

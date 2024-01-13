@@ -59,7 +59,7 @@ const TableSubItems = ({ tableData }) => {
     };
 
     fetchData();
-  }, []);
+  }, [tableData]);
 
   if (isLoading) return <p>Loading...</p>;
   // if (!datas) return <p>No Project data</p>;

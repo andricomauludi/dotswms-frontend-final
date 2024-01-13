@@ -91,15 +91,16 @@ export default function ButtonAddGroupProject() {
       >
         <FontAwesomeIcon icon={faPlus} />
       </Button>
-      <div>
+      <div style={{zIndex:99999}}>
         <Modal
-          className="sticky top-0 z-999 flex w-full bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none"
+          className="sticky top-0 flex w-full bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none"
           size={"2xl"}
           isOpen={isOpen}
           onClose={onClose}
           scrollBehavior={"outside"}
           backdrop="blur"
           isDismissable={false}
+          style={{zIndex:99999}}
         >
           <ModalContent className="">
             <div className="w-full max-w-200 rounded-lg bg-white py-12 px-8 dark:bg-boxdark md:py-15 md:px-17.5">
