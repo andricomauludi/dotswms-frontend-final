@@ -9,6 +9,7 @@ import {
   useDisclosure,
   Image,
   Chip,
+  Spinner,
 } from "@nextui-org/react";
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
@@ -22,6 +23,7 @@ export default function ButtonAddGroupProject() {
   const [data, setData] = useState([]);
   const [imageloader, setImageLoader] = useState();
   const [isLoading, setLoading] = useState(true);
+  const [isLoadingModal, setLoadingModal] = useState(false);
   const [size, setSize] = React.useState("2xl");
 
   const handleOpen = async (size: any) => {
@@ -31,9 +33,13 @@ export default function ButtonAddGroupProject() {
   const router = useRouter();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    setLoadingModal(true);
     var formData = new FormData();
     event.preventDefault();
-    formData.append("group_project", event.currentTarget.groupprojectname.value);
+    formData.append(
+      "group_project",
+      event.currentTarget.groupprojectname.value
+    );
     formData.append("description", event.currentTarget.description.value);
     formData.append("created_by", "admin1");
     formData.append("updated_by", "admin1");
@@ -48,11 +54,14 @@ export default function ButtonAddGroupProject() {
           },
         }
       );
-      alert("Success");
+      setLoadingModal(false);
+      // alert("Success");
 
-      onClose;
+      onClose();
+      onClose();
       //redirect the user to dashboard
     } catch (e) {
+      setLoadingModal(false);
       const error = e as AxiosError;
       console.log(error);
       alert(error.message);
@@ -77,21 +86,49 @@ export default function ButtonAddGroupProject() {
   }, []);
 
   if (isLoading) return <p>Loading...</p>;
+  if (isLoadingModal)
+    return (
+      <Modal
+        className="sticky top-0 flex w-full bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none"
+        size={"2xl"}
+        isOpen={isOpen}
+        scrollBehavior={"outside"}
+        backdrop="blur"
+        isDismissable={false}
+        style={{ zIndex: 99999 }}
+      >
+        <ModalContent className="">
+          <div
+            className="text-center"
+            style={{
+              margin: "40px",
+              alignContent: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Spinner label="Loading" color="success" labelColor="success" />
+          </div>
+        </ModalContent>
+      </Modal>
+    );
   if (!data) return <p>No profile data</p>;
 
   return (
     <>
-      <Button      
-      variant="flat"
+      <Button
+        variant="flat"
         key={"2xl"}
         onPress={() => handleOpen("2xl")}
-        style={{backgroundImage:"linear-gradient(to right, green , yellow)", color:"black"}}   
-        className="hover:bg-opacity-30" 
+        style={{
+          backgroundImage: "linear-gradient(to right, green , yellow)",
+          color: "black",
+        }}
+        className="hover:bg-opacity-30"
         isIconOnly
       >
         <FontAwesomeIcon icon={faPlus} />
       </Button>
-      <div style={{zIndex:99999}}>
+      <div style={{ zIndex: 99999 }}>
         <Modal
           className="sticky top-0 flex w-full bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none"
           size={"2xl"}
@@ -100,7 +137,7 @@ export default function ButtonAddGroupProject() {
           scrollBehavior={"outside"}
           backdrop="blur"
           isDismissable={false}
-          style={{zIndex:99999}}
+          style={{ zIndex: 99999 }}
         >
           <ModalContent className="">
             <div className="w-full max-w-200 rounded-lg bg-white py-12 px-8 dark:bg-boxdark md:py-15 md:px-17.5">
@@ -112,7 +149,8 @@ export default function ButtonAddGroupProject() {
                 <div className="p-6.5">
                   <div className="mb-4.5">
                     <label className="mb-2.5 block text-black dark:text-white">
-                      Group Project Name <span className="text-meta-1">*</span>
+                      Group Project Name
+                      {/* <span className="text-meta-1">*</span> */}
                     </label>
                     <input
                       name="groupprojectname"
@@ -140,7 +178,11 @@ export default function ButtonAddGroupProject() {
                 <Button
                   type="submit"
                   className="block w-full rounded p-3 text-center font-medium text-white transition hover:bg-opacity-90"
-                  style={{backgroundImage:"linear-gradient(to right, green , yellow)", color:"black"}}           
+                  style={{
+                    backgroundImage:
+                      "linear-gradient(to right, green , yellow)",
+                    color: "black",
+                  }}
                 >
                   Add Group Project
                 </Button>

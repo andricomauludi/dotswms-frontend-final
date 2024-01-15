@@ -42,8 +42,7 @@ const TableSubItems = ({ tableData }) => {
       try {
         const payload = {
           _id: tableData,
-        };
-        console.log(payload._id);
+        };        
         const { data: response } = await axios.post(
           "/api/workspaces/tablesubitems",
           payload
@@ -65,8 +64,7 @@ const TableSubItems = ({ tableData }) => {
   // if (!datas) return <p>No Project data</p>;
 
   return (
-    <>
-      {console.log(datas)}
+    <>      
       <tr>
         <td colSpan={13}>
           <Accordion isCompact>

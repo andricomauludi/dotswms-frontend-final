@@ -112,8 +112,7 @@ export default function ShowContentTableProject({ tableData }) {
                     alt="Brand"
                     width={800}
                     className="text-center"
-                  />
-                  {console.log(tableData)}
+                  />                  
                   <div>{/* <ShowFileProject /> */}</div>
                 </div>
               </div>

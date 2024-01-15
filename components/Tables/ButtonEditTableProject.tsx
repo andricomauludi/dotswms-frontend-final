@@ -62,21 +62,31 @@ export default function ButtonEditTableProject({ tableData }) {
     event.preventDefault();
 
     var contentposting = document.querySelector("#contentposting");
+    if (!contentposting.files[0] === undefined) {
+      formData.append("contentposting", contentposting.files[0]);
+    } else {
+      formData.append("contentposting", "");
+    }
     formData.append("_id", tableData._id);
-    formData.append("contentposting", contentposting.files[0]);
     formData.append("item", event.currentTarget.item.value);
     formData.append(
       "postingschedule",
       event.currentTarget.postingschedule.value
     );
-    formData.append(
-      "lead_name",
-      data[event.currentTarget.lead.value]["full_name"]
-    );
-    formData.append(
-      "lead_email",
-      data[event.currentTarget.lead.value]["email"]
-    );
+    if (!event.currentTarget.lead.value == "default") {
+      formData.append(
+        "lead_name",
+        data[event.currentTarget.lead.value]["full_name"]
+      );
+      formData.append(
+        "lead_email",
+        data[event.currentTarget.lead.value]["email"]
+      );
+      formData.append(
+        "lead_avatar",
+        data[event.currentTarget.lead.value]["profile_picture"]
+      );
+    }
     formData.append(
       "contentcategory",
       event.currentTarget.contentcategory.value
@@ -89,10 +99,6 @@ export default function ButtonEditTableProject({ tableData }) {
     );
     formData.append("contenttext", event.currentTarget.contenttext.value);
     formData.append("postingstatus", event.currentTarget.postingstatus.value);
-    formData.append(
-      "lead_avatar",
-      data[event.currentTarget.lead.value]["profile_picture"]
-    );
     formData.append("created_by_avatar", "profil_ico.png");
     formData.append("project_id", tableData.project_id);
     formData.append("project_name", tableData.project_name);
@@ -184,7 +190,8 @@ export default function ButtonEditTableProject({ tableData }) {
                     <div className="p-6.5">
                       <div className="mb-4.5">
                         <label className="mb-2.5 block text-black dark:text-white">
-                          Item <span className="text-meta-1">*</span>
+                          Item
+                          {/* <span className="text-meta-1">*</span> */}
                         </label>
                         <input
                           name="item"
@@ -251,15 +258,14 @@ export default function ButtonEditTableProject({ tableData }) {
                             </span>
                             <select
                               name="lead"
-                              defaultValue={tableData.lead_name}
+                              defaultValue="default"
                               className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input"
                             >
-                              <option hidden value={tableData.lead_name}>
+                              <option hidden value="default">
                                 {tableData.lead_name}
                               </option>
                               {data.map((item, key) => (
                                 <>
-                                  {console.log(key)}
                                   <option value={key}>{item.full_name}</option>
                                 </>
                               ))}
@@ -446,7 +452,7 @@ export default function ButtonEditTableProject({ tableData }) {
                       <div className="mb-4.5">
                         <label className="mb-2.5 block text-black dark:text-white">
                           Content Text Link{" "}
-                          <span className="text-meta-1">*</span>
+                          {/* <span className="text-meta-1">*</span> */}
                         </label>
                         <input
                           name="contenttextlink"
@@ -475,6 +481,14 @@ export default function ButtonEditTableProject({ tableData }) {
                           <label className="mb-3 block text-black dark:text-white">
                             Content Posting
                           </label>
+                          <Image
+                            src={`data:image/jpeg;base64,${tableData.contentposting}`}
+                            style={{ marginBottom: "20px" }}
+                            alt="Brand"
+                            width={200}
+                            height={200}
+                            onClick={() => handleOpen("5xl")}
+                          />
                           <input
                             name="contentposting"
                             id="contentposting"
@@ -553,7 +567,6 @@ export default function ButtonEditTableProject({ tableData }) {
                           </div>
                         </div>
                       </div>
-                    
                     </div>
                   </div>
                 </div>
@@ -573,7 +586,10 @@ export default function ButtonEditTableProject({ tableData }) {
                     <Button
                       type="submit"
                       className="block w-full rounded p-3 text-center font-medium text-white transition hover:bg-opacity-90"
-                      style={{ backgroundImage:"linear-gradient(to right, green , yellow)"}} 
+                      style={{
+                        backgroundImage:
+                          "linear-gradient(to right, green , yellow)",
+                      }}
                     >
                       Edit Item
                     </Button>

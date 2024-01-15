@@ -50,8 +50,7 @@ const WorkspacePage = () => {
   // Convert the Set to an Array and get the first value.
   const selectedOptionValue = Array.from(selectedOption)[0];
   return (
-    <>
-      {console.log(datas)}
+    <>      
       <Breadcrumb pageName="Workspaces" />
       <div className="flex flex-col gap-5">
         <div className="text-left">
