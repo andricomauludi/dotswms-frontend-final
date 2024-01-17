@@ -1,35 +1,40 @@
-import React, { useEffect, useState } from "react";
+import React, { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import {
   Modal,
   ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
   Button,
   useDisclosure,
-  Image,
-  Chip,
   Spinner,
 } from "@nextui-org/react";
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
-import styles from "./ButtonAddSubItem.module.css";
-import { Container } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { Flip, ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-export default function ButtonAddGroupProject() {
+const ButtonAddGroupProject = forwardRef(( {parentFunction} , ref) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [data, setData] = useState([]);
-  const [imageloader, setImageLoader] = useState();
+  const [data, setData] = useState([]);  
   const [isLoading, setLoading] = useState(true);
   const [isLoadingModal, setLoadingModal] = useState(false);
   const [size, setSize] = React.useState("2xl");
+
+  const handleChildEvent = () => {
+    // Do something in the child component
+    parentFunction(); // Call the parent function
+  };
+
+  useImperativeHandle(ref, () => ({
+    // Expose parent function to parent component
+    callParentFunction: handleChildEvent,
+  }));
 
   const handleOpen = async (size: any) => {
     setSize(size);
     onOpen();
   };
+
   const router = useRouter();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -58,7 +63,20 @@ export default function ButtonAddGroupProject() {
       // alert("Success");
 
       onClose();
-      onClose();
+      onClose();      
+      
+      toast.success("New Group Project Added!", {
+        autoClose: 3000,
+        position: "top-right",        
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Flip,
+        onClose: () => handleChildEvent()
+      });      
       //redirect the user to dashboard
     } catch (e) {
       setLoadingModal(false);
@@ -190,7 +208,9 @@ export default function ButtonAddGroupProject() {
             </div>
           </ModalContent>
         </Modal>
+        <ToastContainer />
       </div>
     </>
   );
-}
+});
+export default ButtonAddGroupProject;

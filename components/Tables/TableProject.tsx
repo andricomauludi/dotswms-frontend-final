@@ -4,7 +4,7 @@ import { Package } from "@/types/package";
 import axios, { Axios } from "axios";
 import { cookies } from "next/headers";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ButtonAddProject from "./ButtonAddProject";
 import Link from "next/link";
 import ShowFileProject from "./ShowFileTableProject";
@@ -22,6 +22,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import TableInside from "./TableInside";
 
 const TableProject = ({tableData}) => {
+  const childRef = useRef(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [datas, setData] = useState([]);
   const [dataproject, setDataProject] = useState([]);

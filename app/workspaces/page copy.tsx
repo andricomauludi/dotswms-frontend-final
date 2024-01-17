@@ -13,7 +13,7 @@ import {
 } from "@nextui-org/react";
 import axios from "axios";
 import { Metadata } from "next";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 export const metadata: Metadata = {
   title: "Workspaces Page | DOTS WMS",
@@ -22,10 +22,8 @@ export const metadata: Metadata = {
 };
 
 const WorkspacePage = () => {
-  const childRef = useRef(null);
   const [datas, setData] = useState([]);
   const [isLoading, setLoading] = useState(true);
-  const [triggerApiCall, setTriggerApiCall] = useState(true);
 
   const [selectedOption, setSelectedOption] = React.useState(new Set([0]));
 
@@ -43,21 +41,11 @@ const WorkspacePage = () => {
       setLoading(false);
     };
 
-    if (triggerApiCall) {
-      fetchData();
-      setTriggerApiCall(false); // Reset the trigger after API call
-    }
-  }, [triggerApiCall]);
+    fetchData();
+  }, [setData]);
 
   if (isLoading) return <p>Loading...</p>;
   if (!datas) return <p>No profile data</p>;
-
-  const handleButtonClick = () => {
-    // Your logic or function here
-
-    // Set the trigger to true to re-run the useEffect
-    setTriggerApiCall(true);
-  };
 
   // Convert the Set to an Array and get the first value.
   const selectedOptionValue = Array.from(selectedOption)[0];
@@ -103,7 +91,8 @@ const WorkspacePage = () => {
                 ))}
               </DropdownMenu>
             </Dropdown>
-            <ButtonAddGroupProject ref={childRef}  parentFunction={handleButtonClick}/>
+
+            <ButtonAddGroupProject />
           </ButtonGroup>
         </div>
         <TableProject tableData={datas[selectedOptionValue]} />
