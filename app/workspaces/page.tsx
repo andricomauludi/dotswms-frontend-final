@@ -52,7 +52,7 @@ const WorkspacePage = () => {
   if (isLoading) return <p>Loading...</p>;
   if (!datas) return <p>No profile data</p>;
 
-  const handleButtonClick = () => {
+  const handleParentFunction = () => {
     // Your logic or function here
 
     // Set the trigger to true to re-run the useEffect
@@ -103,7 +103,7 @@ const WorkspacePage = () => {
                 ))}
               </DropdownMenu>
             </Dropdown>
-            <ButtonAddGroupProject ref={childRef}  parentFunction={handleButtonClick}/>
+            <ButtonAddGroupProject ref={childRef}  parentFunction={handleParentFunction}/>
           </ButtonGroup>
         </div>
         <TableProject tableData={datas[selectedOptionValue]} />

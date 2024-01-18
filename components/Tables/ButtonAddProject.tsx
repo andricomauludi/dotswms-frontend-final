@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import {
   Modal,
   ModalContent,
@@ -9,18 +9,31 @@ import {
   useDisclosure,
   Image,
   Chip,
+  Spinner,
 } from "@nextui-org/react";
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
-import styles from "./ButtonAddSubItem.module.css";
-import { Container } from "react-bootstrap";
+import { Flip, ToastContainer, toast } from "react-toastify";
 
-export default function ButtonAddSubItem({ tableData }) {
+const ButtonAddProject = forwardRef(( {parentFunction,tableData} , ref) => {
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [data, setData] = useState([]);
   const [imageloader, setImageLoader] = useState();
   const [isLoading, setLoading] = useState(true);
+  const [isLoadingModal, setLoadingModal] = useState(false);
   const [size, setSize] = React.useState("2xl");
+
+  
+  const handleChildEvent = () => {
+    // Do something in the child component
+    parentFunction(); // Call the parent function
+  };
+
+  useImperativeHandle(ref, () => ({
+    // Expose parent function to parent component
+    callParentFunction: handleChildEvent,
+  }));
 
   const handleOpen = async (size: any) => {
     setSize(size);
@@ -41,6 +54,8 @@ export default function ButtonAddSubItem({ tableData }) {
   const router = useRouter();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    setLoadingModal(true);
+
     var formData = new FormData();
     event.preventDefault();
     formData.append("project_name", event.currentTarget.projectname.value);
@@ -60,11 +75,27 @@ export default function ButtonAddSubItem({ tableData }) {
           },
         }
       );
-      alert("Success");
+      setLoadingModal(false);
 
-      onClose;
+
+      onClose();
+      onClose();      
+      
+      toast.success("New Project Added!", {
+        autoClose: 3000,
+        position: "top-right",        
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Flip,
+        onClose: () => handleChildEvent()
+      });      
       //redirect the user to dashboard
     } catch (e) {
+      setLoadingModal(false);
       const error = e as AxiosError;
       console.log(error);
       alert(error.message);
@@ -89,6 +120,31 @@ export default function ButtonAddSubItem({ tableData }) {
   }, []);
 
   if (isLoading) return <p>Loading...</p>;
+  if (isLoadingModal)
+    return (
+      <Modal
+        className="sticky top-0 flex w-full bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none"
+        size={"2xl"}
+        isOpen={isOpen}
+        scrollBehavior={"outside"}
+        backdrop="blur"
+        isDismissable={false}
+        style={{ zIndex: 99999 }}
+      >
+        <ModalContent className="">
+          <div
+            className="text-center"
+            style={{
+              margin: "40px",
+              alignContent: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Spinner label="Loading" color="success" labelColor="success" />
+          </div>
+        </ModalContent>
+      </Modal>
+    );
   if (!data) return <p>No profile data</p>;
 
   return (
@@ -119,7 +175,8 @@ export default function ButtonAddSubItem({ tableData }) {
               <div className="p-6.5">
                 <div className="mb-4.5">
                   <label className="mb-2.5 block text-black dark:text-white">
-                    Project Name <span className="text-meta-1">*</span>
+                    Project Name 
+                    {/* <span className="text-meta-1">*</span> */}
                   </label>
                   <input
                     name="projectname"
@@ -213,6 +270,9 @@ export default function ButtonAddSubItem({ tableData }) {
           </div>
         </ModalContent>
       </Modal>
+      <ToastContainer />
     </>
   );
-}
+});
+export default ButtonAddProject;
+

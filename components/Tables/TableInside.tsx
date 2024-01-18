@@ -4,7 +4,7 @@ import { Package } from "@/types/package";
 import axios, { Axios } from "axios";
 import { cookies } from "next/headers";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ButtonAddProject from "./ButtonAddTableProject";
 import ButtonEditProject from "./ButtonEditTableProject";
 import ButtonDeleteProject from "./ButtonDeleteTableProject";
@@ -23,12 +23,17 @@ import { faFile } from "@fortawesome/free-solid-svg-icons/faFile";
 import { faEdit, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import TableSubItems from "./TableSubItems";
 import ShowContentTableProject from "./ShowContentTableProject";
+import { useReducedMotion } from "framer-motion";
 
 const TableInside = ({ tableData }) => {
+  const childRef = useRef(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [datas, setData] = useState([]);
   const [size, setSize] = React.useState("5xl");
   const [isLoading, setLoading] = useState(true);
+  const [triggerApiCall, setTriggerApiCall] = useState(true);
+
+  
   const handleOpen = async (size: any) => {
     setSize(size);
     onOpen();
@@ -58,8 +63,18 @@ const TableInside = ({ tableData }) => {
       setLoading(false);
     };
 
-    fetchData();
-  }, [tableData]);
+    if (triggerApiCall) {
+      fetchData();
+      setTriggerApiCall(false); // Reset the trigger after API call
+    }
+  }, [triggerApiCall, tableData]);
+
+  const handleParentFunction = () => {
+    // Your logic or function here
+
+    // Set the trigger to true to re-run the useEffect
+    setTriggerApiCall(true);
+  };
 
   if (isLoading) return <p>Loading...</p>;
   if (!datas) return <p>No Project data</p>;
@@ -68,7 +83,7 @@ const TableInside = ({ tableData }) => {
     <>
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
         <div style={{ marginTop: "10px", marginBottom:"20px" }}>
-          <ButtonAddProject tableData={tableData} />
+          <ButtonAddProject ref={childRef}  parentFunction={handleParentFunction} tableData={tableData} />
         </div>
         <div className="max-w-full overflow-x-auto">
           <table className="w-full sm:table-auto">
@@ -251,7 +266,7 @@ const TableInside = ({ tableData }) => {
                     </td>
                     <td className="border-b border-[#eee] py-3 px-2 dark:border-strokedark">
                       <div className="flex items-center space-x-3.5">
-                        <ButtonEditProject tableData={packageItem} />
+                        <ButtonEditProject ref={childRef}  parentFunction={handleParentFunction} tableData={packageItem} />
                         <ButtonDeleteProject tableData={packageItem} />
                         {/* <button className="hover:text-primary">
                           <svg

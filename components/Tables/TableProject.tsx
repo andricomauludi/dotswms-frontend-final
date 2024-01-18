@@ -1,13 +1,7 @@
 "use client";
-import { COOKIE_NAME } from "@/constants";
-import { Package } from "@/types/package";
 import axios, { Axios } from "axios";
-import { cookies } from "next/headers";
-import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import ButtonAddProject from "./ButtonAddProject";
-import Link from "next/link";
-import ShowFileProject from "./ShowFileTableProject";
 import {
   Accordion,
   AccordionItem,
@@ -16,9 +10,6 @@ import {
   ModalContent,
   useDisclosure,
 } from "@nextui-org/react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFile } from "@fortawesome/free-solid-svg-icons/faFile";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import TableInside from "./TableInside";
 
 const TableProject = ({tableData}) => {
@@ -28,6 +19,9 @@ const TableProject = ({tableData}) => {
   const [dataproject, setDataProject] = useState([]);
   const [size, setSize] = React.useState("5xl");
   const [isLoading, setLoading] = useState(true);
+  const [triggerApiCall, setTriggerApiCall] = useState(true);
+
+
   const handleOpen = async (size: any) => {
     setSize(size);
     onOpen();
@@ -55,15 +49,26 @@ const TableProject = ({tableData}) => {
       setLoading(false);
     };
 
-    fetchData();
-  }, [tableData]);
+    if (triggerApiCall) {
+      fetchData();
+      setTriggerApiCall(false); // Reset the trigger after API call
+    }
+  }, [triggerApiCall, tableData]);
+
+  
+  const handleParentFunction = () => {
+    // Your logic or function here
+
+    // Set the trigger to true to re-run the useEffect
+    setTriggerApiCall(true);
+  };
 
   if (isLoading) return <p>Loading...</p>;
   if (!datas) return <p>No Project data</p>;
 
   return (
     <>
-      <ButtonAddProject tableData={tableData}/>        
+      <ButtonAddProject ref={childRef}  parentFunction={handleParentFunction} tableData={tableData}/>        
       <Accordion variant="splitted">
         {dataproject.map((Item, key) => (
           <AccordionItem
@@ -76,6 +81,7 @@ const TableProject = ({tableData}) => {
           </AccordionItem>
         ))}
       </Accordion>
+
     </>
   );
 };
