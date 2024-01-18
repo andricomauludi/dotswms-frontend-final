@@ -140,7 +140,7 @@ const ButtonEditTableProject = forwardRef(
       //   instagrampostingstatus: event.currentTarget.instagrampostingstatus.value,
       //   tiktokpostingstatus: event.currentTarget.tiktokpostingstatus.value,
       // };
-      console.log(formData);
+      
       try {
         const { data } = await axios.post(
           "/api/workspaces/edittableproject",
@@ -156,7 +156,7 @@ const ButtonEditTableProject = forwardRef(
         onClose();
         onClose();
 
-        toast.warning("Item Edited!", {
+        toast.success("Item Edited!", {
           autoClose: 3000,
           position: "top-right",
           hideProgressBar: false,

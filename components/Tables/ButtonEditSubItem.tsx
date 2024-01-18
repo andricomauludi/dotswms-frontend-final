@@ -1,4 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useState,
+} from "react";
 import {
   Modal,
   ModalContent,
@@ -9,6 +14,7 @@ import {
   useDisclosure,
   Image,
   Chip,
+  Spinner,
 } from "@nextui-org/react";
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
@@ -16,14 +22,26 @@ import styles from "./ButtonAddSubItem.module.css";
 import { Container } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
+import { Flip, ToastContainer, toast } from "react-toastify";
 
-export default function ButtonAddSubItem({ tableData }) {
+const ButtonEditSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [data, setData] = useState([]);
   const [imageloader, setImageLoader] = useState();
+  const [isLoadingModal, setLoadingModal] = useState(false);
   const [isLoading, setLoading] = useState(true);
   const [size, setSize] = React.useState("2xl");
   const [type, setType] = useState("text");
+
+  const handleChildEvent = () => {
+    // Do something in the child component
+    parentFunction(); // Call the parent function
+  };
+
+  useImperativeHandle(ref, () => ({
+    // Expose parent function to parent component
+    callParentFunction: handleChildEvent,
+  }));
 
   const handleOpen = async (size: any) => {
     setSize(size);
@@ -44,6 +62,7 @@ export default function ButtonAddSubItem({ tableData }) {
   const router = useRouter();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    setLoadingModal(true);
     var formData = new FormData();
     event.preventDefault();
     console.log(data);
@@ -85,11 +104,26 @@ export default function ButtonAddSubItem({ tableData }) {
           },
         }
       );
-      alert("Success");
+      setLoadingModal(false);
 
-      onClose;
+      onClose();
+      onClose();
+
+      toast.success("Sub Item Edited!", {
+        autoClose: 3000,
+        position: "top-right",
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Flip,
+        onClose: () => handleChildEvent(),
+      });
       //redirect the user to dashboard
     } catch (e) {
+      setLoadingModal(false);
       const error = e as AxiosError;
       console.log(error);
       alert(error.message);
@@ -112,10 +146,38 @@ export default function ButtonAddSubItem({ tableData }) {
     fetchData();
   }, []);
 
-  if (isLoading) return(<Button color="default" isLoading>
-  Loading
-</Button>);
+  if (isLoading)
+    return (
+      <Button color="default" isLoading>
+        Loading
+      </Button>
+    );
   if (!data) return <p>No profile data</p>;
+  if (isLoadingModal)
+    return (
+      <Modal
+        className="sticky top-0 flex w-full bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none"
+        size={"2xl"}
+        isOpen={isOpen}
+        scrollBehavior={"outside"}
+        backdrop="blur"
+        isDismissable={false}
+        style={{ zIndex: 99999 }}
+      >
+        <ModalContent className="">
+          <div
+            className="text-center"
+            style={{
+              margin: "40px",
+              alignContent: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Spinner label="Loading" color="success" labelColor="success" />
+          </div>
+        </ModalContent>
+      </Modal>
+    );
 
   return (
     <>
@@ -145,7 +207,7 @@ export default function ButtonAddSubItem({ tableData }) {
                 <div className="p-6.5">
                   <div className="mb-4.5">
                     <label className="mb-2.5 block text-black dark:text-white">
-                      Sub Item <span className="text-meta-1">*</span>
+                      Sub Item                       
                     </label>
                     <input
                       name="subitem"
@@ -319,7 +381,10 @@ export default function ButtonAddSubItem({ tableData }) {
                 <Button
                   type="submit"
                   className="block w-full rounded p-3 text-center font-medium text-white transition hover:bg-opacity-90"
-                  style={{ backgroundImage:"linear-gradient(to right, green , yellow)"}}                   
+                  style={{
+                    backgroundImage:
+                      "linear-gradient(to right, green , yellow)",
+                  }}
                 >
                   Edit Sub Item
                 </Button>
@@ -327,6 +392,7 @@ export default function ButtonAddSubItem({ tableData }) {
             </div>
           </ModalContent>
         </Modal>
+        <ToastContainer />
 
         {/* <div         
           className="fixed top-0 left-0 z-999999 flex h-full min-h-screen w-full items-center justify-center bg-black/90 px-4 py-5"
@@ -359,4 +425,5 @@ export default function ButtonAddSubItem({ tableData }) {
       </div>
     </>
   );
-}
+});
+export default ButtonEditSubItem;

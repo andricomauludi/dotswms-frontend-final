@@ -1,8 +1,5 @@
 "use client";
-import { COOKIE_NAME } from "@/constants";
-import { Package } from "@/types/package";
 import axios, { Axios } from "axios";
-import { cookies } from "next/headers";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import ButtonAddProject from "./ButtonAddTableProject";
@@ -11,19 +8,10 @@ import ButtonDeleteProject from "./ButtonDeleteTableProject";
 import Link from "next/link";
 import ShowFileProject from "./ShowFileTableProject";
 import {
-  Accordion,
-  AccordionItem,
-  Button,
-  Modal,
-  ModalContent,
   useDisclosure,
 } from "@nextui-org/react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFile } from "@fortawesome/free-solid-svg-icons/faFile";
-import { faEdit, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import TableSubItems from "./TableSubItems";
 import ShowContentTableProject from "./ShowContentTableProject";
-import { useReducedMotion } from "framer-motion";
 
 const TableInside = ({ tableData }) => {
   const childRef = useRef(null);
@@ -267,7 +255,7 @@ const TableInside = ({ tableData }) => {
                     <td className="border-b border-[#eee] py-3 px-2 dark:border-strokedark">
                       <div className="flex items-center space-x-3.5">
                         <ButtonEditProject ref={childRef}  parentFunction={handleParentFunction} tableData={packageItem} />
-                        <ButtonDeleteProject tableData={packageItem} />
+                        <ButtonDeleteProject ref={childRef}  parentFunction={handleParentFunction} tableData={packageItem} />
                         {/* <button className="hover:text-primary">
                           <svg
                             className="fill-current"

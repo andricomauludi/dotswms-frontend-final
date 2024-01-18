@@ -4,7 +4,7 @@ import { Package } from "@/types/package";
 import axios, { Axios } from "axios";
 import { cookies } from "next/headers";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ButtonEditSubItem from "./ButtonEditSubItem";
 import Link from "next/link";
 import ShowFileProject from "./ShowFileTableProject";
@@ -28,10 +28,13 @@ import ButtonAddSubItem from "./ButtonAddSubItem";
 import ButtonDeleteSubItem from "./ButtonDeleteSubItem";
 
 const TableSubItems = ({ tableData }) => {
+  const childRef = useRef(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [datas, setData] = useState([]);
   const [size, setSize] = React.useState("5xl");
   const [isLoading, setLoading] = useState(true);
+  const [triggerApiCall, setTriggerApiCall] = useState(true);
+
   const handleOpen = async (size: any) => {
     setSize(size);
     onOpen();
@@ -42,7 +45,7 @@ const TableSubItems = ({ tableData }) => {
       try {
         const payload = {
           _id: tableData,
-        };        
+        };
         const { data: response } = await axios.post(
           "/api/workspaces/tablesubitems",
           payload
@@ -57,14 +60,24 @@ const TableSubItems = ({ tableData }) => {
       setLoading(false);
     };
 
-    fetchData();
-  }, [tableData]);
+    if (triggerApiCall) {
+      fetchData();
+      setTriggerApiCall(false); // Reset the trigger after API call
+    }
+  }, [triggerApiCall, tableData]);
+
+  const handleParentFunction = () => {
+    // Your logic or function here
+
+    // Set the trigger to true to re-run the useEffect
+    setTriggerApiCall(true);
+  };
 
   if (isLoading) return <p>Loading...</p>;
   // if (!datas) return <p>No Project data</p>;
 
   return (
-    <>      
+    <>
       <tr>
         <td colSpan={13}>
           <Accordion isCompact>
@@ -74,18 +87,25 @@ const TableSubItems = ({ tableData }) => {
               startContent={<FontAwesomeIcon icon={faArrowAltCircleDown} />}
               className="bg-gray-2 text-left dark:bg-meta-4"
             >
-              <div className="flex flex-wrap gap-3" style={{marginTop:"10px" , marginBottom:"20px"}}>
-                <ButtonAddSubItem tableData={tableData} />
+              <div
+                className="flex flex-wrap gap-3"
+                style={{ marginTop: "10px", marginBottom: "20px" }}
+              >
+                <ButtonAddSubItem
+                  ref={childRef}
+                  parentFunction={handleParentFunction}
+                  tableData={tableData}
+                />
               </div>
               <table className="w-full table-auto">
                 <thead>
                   <tr className="bg-gray-2 text-left dark:bg-meta-4">
                     <th className="min-w-[220px] py-4 px-4 text-xs text-black dark:text-white xl:pl-11">
-                    {/* <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11"> */}
+                      {/* <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11"> */}
                       Sub Item
                     </th>
                     <th className="min-w-[150px] py-4 px-4 text-xs text-black dark:text-white">
-                    {/* <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white"> */}
+                      {/* <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white"> */}
                       Owner
                     </th>
                     {/* <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white"> */}
@@ -158,8 +178,16 @@ const TableSubItems = ({ tableData }) => {
                         </td>
                         <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                           <div className="flex items-center space-x-3.5">
-                            <ButtonEditSubItem tableData={packageItem} />
-                            <ButtonDeleteSubItem tableData={packageItem} />
+                            <ButtonEditSubItem
+                              ref={childRef}
+                              parentFunction={handleParentFunction}
+                              tableData={packageItem}
+                            />
+                            <ButtonDeleteSubItem
+                              ref={childRef}
+                              parentFunction={handleParentFunction}
+                              tableData={packageItem}
+                            />
                           </div>
                         </td>
                       </tr>

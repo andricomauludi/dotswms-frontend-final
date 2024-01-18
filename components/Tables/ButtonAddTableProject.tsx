@@ -18,8 +18,6 @@ import {
 } from "@nextui-org/react";
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
-import styles from "./ButtonAddProject.module.css";
-import { Container } from "react-bootstrap";
 import { Flip, ToastContainer, toast } from "react-toastify";
 
 interface IprofileState {

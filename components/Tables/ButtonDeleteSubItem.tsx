@@ -1,21 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import {
   Modal,
   ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
   Button,
   useDisclosure,
-  Image,
-  Chip,
 } from "@nextui-org/react";
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
-import styles from "./ButtonAddProject.module.css";
-import { Container, Row } from "react-bootstrap";
+import {Row } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { Flip, ToastContainer, toast } from "react-toastify";
 
 interface IprofileState {
   //interface merupakan rangka object yang mau kita masukin dari api
@@ -30,12 +25,24 @@ interface IprofileState {
   role: string;
 }
 
-export default function ButtonDeleteSubItem({ tableData }) {
+const ButtonDeleteSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [data, setData] = useState();
   const [imageloader, setImageLoader] = useState();
+  const [isLoadingModal, setLoadingModal] = useState(false);
   const [isLoading, setLoading] = useState(true);
   const [size, setSize] = React.useState("5xl");
+
+  const handleChildEvent = () => {
+    // Do something in the child component
+    parentFunction(); // Call the parent function
+  };
+
+  useImperativeHandle(ref, () => ({
+    // Expose parent function to parent component
+    callParentFunction: handleChildEvent,
+  }));
+
 
   const handleOpen = async (size: any) => {
     setSize(size);
@@ -56,6 +63,8 @@ export default function ButtonDeleteSubItem({ tableData }) {
   const router = useRouter();
 
   const handleDelete = async () => {   
+    setLoadingModal(true);
+
     const payload = {
       _id: tableData._id,     
     };    
@@ -64,11 +73,26 @@ export default function ButtonDeleteSubItem({ tableData }) {
         "/api/workspaces/deletesubitem",
         payload,      
       );
-      alert("Success");
+      setLoadingModal(false);
 
-      onClose;
+      onClose();
+      onClose();
+
+      toast.success("Sub Item Deleted!", {
+        autoClose: 3000,
+        position: "top-right",
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Flip,
+        onClose: () => handleChildEvent(),
+      });
       //redirect the user to dashboard
     } catch (e) {
+      setLoadingModal(false);
       const error = e as AxiosError;
       console.log(error);
       alert(error.message);
@@ -153,7 +177,10 @@ export default function ButtonDeleteSubItem({ tableData }) {
             </div>
           </ModalContent>
         </Modal>
+        <ToastContainer />
       </div>
     </>
   );
-}
+});
+export default ButtonDeleteSubItem;
+
