@@ -53,6 +53,7 @@ const TableProject = ({tableData}) => {
       fetchData();
       setTriggerApiCall(false); // Reset the trigger after API call
     }
+    fetchData();
   }, [triggerApiCall, tableData]);
 
   

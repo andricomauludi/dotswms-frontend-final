@@ -87,114 +87,116 @@ const TableSubItems = ({ tableData }) => {
               startContent={<FontAwesomeIcon icon={faArrowAltCircleDown} />}
               className="bg-gray-2 text-left dark:bg-meta-4"
             >
-              <div
-                className="flex flex-wrap gap-3"
-                style={{ marginTop: "10px", marginBottom: "20px" }}
-              >
-                <ButtonAddSubItem
-                  ref={childRef}
-                  parentFunction={handleParentFunction}
-                  tableData={tableData}
-                />
-              </div>
-              <table className="w-full table-auto">
-                <thead>
-                  <tr className="bg-gray-2 text-left dark:bg-meta-4">
-                    <th className="min-w-[220px] py-4 px-4 text-xs text-black dark:text-white xl:pl-11">
-                      {/* <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11"> */}
-                      Sub Item
-                    </th>
-                    <th className="min-w-[150px] py-4 px-4 text-xs text-black dark:text-white">
-                      {/* <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white"> */}
-                      Owner
-                    </th>
-                    {/* <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white"> */}
-                    <th className="min-w-[120px] py-4 px-4 text-xs text-black dark:text-white">
-                      Status
-                    </th>
-                    <th className="py-4 px-4 text-xs text-black dark:text-white">
-                      Date
-                    </th>
-                    <th className="py-4 px-4 text-xs text-black dark:text-white">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {datas.map((packageItem, key) => (
-                    <>
-                      <tr key={key}>
-                        <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
-                          <h5 className="font-medium text-black dark:text-white text-xs">
-                            {packageItem.subitem}
-                          </h5>
-                        </td>
-                        <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                          <div
-                            className="relative"
-                            style={{
-                              width: "48px",
-                              height: "48px",
-                              position: "relative",
-                            }}
-                          >
-                            <Image
-                              src={`data:image/jpeg;base64,${packageItem.avatar}`}
-                              layout="fill"
-                              objectFit="cover"
-                              style={{ margin: "auto", borderRadius: "50%" }}
-                              alt="profile"
-                            />
-                          </div>
-                          {/* <Image
+              <div className="rounded-sm bg-white px-5 pt-6 pb-2.5 dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+                <div
+                  className="flex flex-wrap gap-3"
+                  style={{ marginTop: "10px", marginBottom: "20px" }}
+                >
+                  <ButtonAddSubItem
+                    ref={childRef}
+                    parentFunction={handleParentFunction}
+                    tableData={tableData}
+                  />
+                </div>
+                <table className="w-full table-auto">
+                  <thead>
+                    <tr className="bg-gray-2 text-left dark:bg-meta-4">
+                      <th className="min-w-[220px] py-4 px-4 text-xs text-black dark:text-white xl:pl-11">
+                        {/* <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11"> */}
+                        Sub Item
+                      </th>
+                      <th className="min-w-[150px] py-4 px-4 text-xs text-black dark:text-white">
+                        {/* <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white"> */}
+                        Owner
+                      </th>
+                      {/* <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white"> */}
+                      <th className="min-w-[120px] py-4 px-4 text-xs text-black dark:text-white">
+                        Status
+                      </th>
+                      <th className="py-4 px-4 text-xs text-black dark:text-white">
+                        Date
+                      </th>
+                      <th className="py-4 px-4 text-xs text-black dark:text-white">
+                        Actions
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {datas.map((packageItem, key) => (
+                      <>
+                        <tr key={key}>
+                          <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
+                            <h5 className="font-medium text-black dark:text-white text-xs">
+                              {packageItem.subitem}
+                            </h5>
+                          </td>
+                          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                            <div
+                              className="relative"
+                              style={{
+                                width: "48px",
+                                height: "48px",
+                                position: "relative",
+                              }}
+                            >
+                              <Image
+                                src={`data:image/jpeg;base64,${packageItem.avatar}`}
+                                layout="fill"
+                                objectFit="cover"
+                                style={{ margin: "auto", borderRadius: "50%" }}
+                                alt="profile"
+                              />
+                            </div>
+                            {/* <Image
                       src={`data:image/jpeg;base64,${packageItem.avatar}`}
                       alt="Brand"
                       width={48}
                       height={48}
                     /> */}
-                          <p className="hidden text-black dark:text-white sm:block text-xs">
-                            {packageItem.owner}
-                          </p>
-                        </td>
-                        <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                          <p
-                            className={`inline-flex rounded-full bg-opacity-10 py-1 px-3  text-xs font-medium ${
-                              packageItem.status === "not yet"
-                                ? "text-secondary bg-secondary"
-                                : packageItem.status === "on process"
-                                ? "text-warning bg-warning"
-                                : packageItem.status === "done"
-                                ? "text-success bg-success"
-                                : "text-warning bg-warning"
-                            }`}
-                          >
-                            {packageItem.status}
-                          </p>
-                        </td>
-                        <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                          <p className="text-black dark:text-white text-xs">
-                            {packageItem.date}
-                          </p>
-                        </td>
-                        <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                          <div className="flex items-center space-x-3.5">
-                            <ButtonEditSubItem
-                              ref={childRef}
-                              parentFunction={handleParentFunction}
-                              tableData={packageItem}
-                            />
-                            <ButtonDeleteSubItem
-                              ref={childRef}
-                              parentFunction={handleParentFunction}
-                              tableData={packageItem}
-                            />
-                          </div>
-                        </td>
-                      </tr>
-                    </>
-                  ))}
-                </tbody>
-              </table>
+                            <p className="hidden text-black dark:text-white sm:block text-xs">
+                              {packageItem.owner}
+                            </p>
+                          </td>
+                          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                            <p
+                              className={`inline-flex rounded-full bg-opacity-10 py-1 px-3  text-xs font-medium ${
+                                packageItem.status === "not yet"
+                                  ? "text-secondary bg-secondary"
+                                  : packageItem.status === "on process"
+                                  ? "text-warning bg-warning"
+                                  : packageItem.status === "done"
+                                  ? "text-success bg-success"
+                                  : "text-warning bg-warning"
+                              }`}
+                            >
+                              {packageItem.status}
+                            </p>
+                          </td>
+                          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                            <p className="text-black dark:text-white text-xs">
+                              {packageItem.date}
+                            </p>
+                          </td>
+                          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                            <div className="flex items-center space-x-3.5">
+                              <ButtonEditSubItem
+                                ref={childRef}
+                                parentFunction={handleParentFunction}
+                                tableData={packageItem}
+                              />
+                              <ButtonDeleteSubItem
+                                ref={childRef}
+                                parentFunction={handleParentFunction}
+                                tableData={packageItem}
+                              />
+                            </div>
+                          </td>
+                        </tr>
+                      </>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </AccordionItem>
           </Accordion>
         </td>
