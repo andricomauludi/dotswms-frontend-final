@@ -82,10 +82,12 @@ const ButtonEditTableProject = forwardRef(
       event.preventDefault();
 
       var contentposting = document.querySelector("#contentposting");
-      if (!contentposting.files[0] === undefined) {
-        formData.append("contentposting", contentposting.files[0]);
-      } else {
+      console.log(contentposting.files[0] === undefined)
+      if (contentposting.files[0] === undefined) {
         formData.append("contentposting", "");
+      } else {
+        console.log("MASUK TOT")
+        formData.append("contentposting", contentposting.files[0]);
       }
       formData.append("_id", tableData._id);
       formData.append("item", event.currentTarget.item.value);

@@ -77,7 +77,11 @@ const ButtonAddTableProject = forwardRef(
       event.preventDefault();
 
       var contentposting = document.querySelector("#contentposting");
-      formData.append("contentposting", contentposting.files[0]);
+      if (contentposting.files[0] !== undefined) {
+        formData.append("contentposting", contentposting.files[0]);
+      }else{
+        formData.append("contentposting", "");
+      }
       formData.append("item", event.currentTarget.item.value);
       formData.append(
         "postingschedule",
@@ -250,7 +254,7 @@ const ButtonAddTableProject = forwardRef(
                       <div className="p-6.5">
                         <div className="mb-4.5">
                           <label className="mb-2.5 block text-black dark:text-white">
-                            Item 
+                            Item
                             {/* <span className="text-meta-1">*</span> */}
                           </label>
                           <input

@@ -7,9 +7,7 @@ import ButtonEditProject from "./ButtonEditTableProject";
 import ButtonDeleteProject from "./ButtonDeleteTableProject";
 import Link from "next/link";
 import ShowFileProject from "./ShowFileTableProject";
-import {
-  useDisclosure,
-} from "@nextui-org/react";
+import { useDisclosure } from "@nextui-org/react";
 import TableSubItems from "./TableSubItems";
 import ShowContentTableProject from "./ShowContentTableProject";
 
@@ -21,7 +19,6 @@ const TableInside = ({ tableData }) => {
   const [isLoading, setLoading] = useState(true);
   const [triggerApiCall, setTriggerApiCall] = useState(true);
 
-  
   const handleOpen = async (size: any) => {
     setSize(size);
     onOpen();
@@ -70,15 +67,19 @@ const TableInside = ({ tableData }) => {
   return (
     <>
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
-        <div style={{ marginTop: "10px", marginBottom:"20px" }}>
-          <ButtonAddProject ref={childRef}  parentFunction={handleParentFunction} tableData={tableData} />
+        <div style={{ marginTop: "10px", marginBottom: "20px" }}>
+          <ButtonAddProject
+            ref={childRef}
+            parentFunction={handleParentFunction}
+            tableData={tableData}
+          />
         </div>
         <div className="max-w-full overflow-x-auto">
           <table className="w-full sm:table-auto">
             <thead>
               <tr className="bg-gray-2 text-left dark:bg-meta-4">
                 <th className="py-2 px-2 text-xs text-black dark:text-white xl:pl-4">
-                {/* <th className="py-4 px-4 text-xs text-black dark:text-white xl:pl-11"> */}
+                  {/* <th className="py-4 px-4 text-xs text-black dark:text-white xl:pl-11"> */}
                   Item
                 </th>
                 <th className=" py-2 px-2 text-xs text-black dark:text-white">
@@ -106,8 +107,8 @@ const TableInside = ({ tableData }) => {
                   Posting Caption
                 </th>
                 <th className="py-2 px-2 text-xs text-black dark:text-white">
-                   Posting Status
-                </th>              
+                  Posting Status
+                </th>
                 <th className="py-2 px-2 text-xs text-black dark:text-white">
                   Last Updated
                 </th>
@@ -194,11 +195,24 @@ const TableInside = ({ tableData }) => {
                       </p>
                     </td>
                     <td className="border-b border-[#eee] py-3 px-2 dark:border-strokedark">
-                      <ShowFileProject tableData={packageItem} />
+                      {packageItem.contenttext === "" ? (
+                        <p className="text-black dark:text-white text-xs">
+                          No file
+                        </p>
+                      ) : (
+                        <p>ada</p>
+                      )}
                     </td>
                     <td className="border-b border-[#eee] py-3 px-2 dark:border-strokedark">
                       <div className="flex-shrink-0">
-                        <ShowContentTableProject tableData={packageItem} />
+                        {console.log(packageItem.contentposting)}
+                      {packageItem.contentposting === "" ? (
+                        <p className="text-black dark:text-white text-xs">
+                          No file
+                        </p>
+                      ) : (                        
+                        <p>ada</p>
+                      )}
                       </div>
                     </td>
                     <td className="border-b border-[#eee] py-3 px-2 dark:border-strokedark">
@@ -209,11 +223,9 @@ const TableInside = ({ tableData }) => {
                     <td className="border-b border-[#eee] py-3 px-2 dark:border-strokedark">
                       <p
                         className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-xs text-xs ${
-                          packageItem.postingstatus ===
-                          "not yet"
+                          packageItem.postingstatus === "not yet"
                             ? "text-primary bg-primary"
-                            : packageItem.postingstatus ===
-                              "on preview"
+                            : packageItem.postingstatus === "on preview"
                             ? "text-warning bg-warning"
                             : packageItem.postingstatus === "on hold"
                             ? "text-danger bg-danger"
@@ -224,7 +236,7 @@ const TableInside = ({ tableData }) => {
                       >
                         {packageItem.postingstatus}
                       </p>
-                    </td>                  
+                    </td>
                     <td className="border-b border-[#eee] py-3 px-2 dark:border-strokedark">
                       <div
                         className="relative"
@@ -254,8 +266,16 @@ const TableInside = ({ tableData }) => {
                     </td>
                     <td className="border-b border-[#eee] py-3 px-2 dark:border-strokedark">
                       <div className="flex items-center space-x-3.5">
-                        <ButtonEditProject ref={childRef}  parentFunction={handleParentFunction} tableData={packageItem} />
-                        <ButtonDeleteProject ref={childRef}  parentFunction={handleParentFunction} tableData={packageItem} />
+                        <ButtonEditProject
+                          ref={childRef}
+                          parentFunction={handleParentFunction}
+                          tableData={packageItem}
+                        />
+                        <ButtonDeleteProject
+                          ref={childRef}
+                          parentFunction={handleParentFunction}
+                          tableData={packageItem}
+                        />
                         {/* <button className="hover:text-primary">
                           <svg
                             className="fill-current"
