@@ -41,6 +41,7 @@ const ButtonEditTableProject = forwardRef(
   ({ parentFunction, tableData }, ref) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [data, setData] = useState([]);
+    const [dataImage, setDataImage] = useState([]);
     const [imageloader, setImageLoader] = useState();
     const [isLoading, setLoading] = useState(true);
     const [isLoadingModal, setLoadingModal] = useState(false);
@@ -86,8 +87,7 @@ const ButtonEditTableProject = forwardRef(
       if (contentposting.files[0] === undefined) {
         formData.append("contentposting", "");
       } else {
-        console.log("MASUK TOT")
-        formData.append("contentposting", contentposting.files[0]);
+        formData.append("contentposting", contentposting.files[0]);      
       }
       formData.append("_id", tableData._id);
       formData.append("item", event.currentTarget.item.value);
@@ -124,11 +124,16 @@ const ButtonEditTableProject = forwardRef(
       );
       formData.append("contenttext", event.currentTarget.contenttext.value);
       formData.append("postingstatus", event.currentTarget.postingstatus.value);
-      formData.append("created_by_avatar", "profil_ico.png");
+      formData.append("created_by_avatar", tableData.created_by_avatar);
       formData.append("project_id", tableData.project_id);
       formData.append("project_name", tableData.project_name);
-      formData.append("created_by", "Admin1");
-      formData.append("updated_by", "Admin1");
+      formData.append("created_by",  tableData.created_by);
+      formData.append("updated_by", dataImage.full_name);
+      formData.append("updated_by_avatar", dataImage.profile_picture);
+    //   for (var pair of formData.entries()) {
+    //     console.log(pair[0]+ ', ' + pair[1]); 
+    // }
+    console.log(tableData._id)
 
       // const payload = {
       //   item: event.currentTarget.item.value,
@@ -192,6 +197,20 @@ const ButtonEditTableProject = forwardRef(
         setLoading(false);
       };
 
+      fetchData();
+    }, []);
+    useEffect(() => {
+      const fetchData = async () => {
+        setLoading(true);
+        try {
+          const { data: response } = await axios.get("/api/users/me");
+          setDataImage(await response.data.user);          
+        } catch (error: any) {
+          console.error(error.message);
+        }
+        setLoading(false);
+      };
+  
       fetchData();
     }, []);
 

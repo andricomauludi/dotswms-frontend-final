@@ -200,7 +200,7 @@ const TableInside = ({ tableData }) => {
                           No file
                         </p>
                       ) : (
-                        <p>ada</p>
+                        <ShowFileProject tableData={packageItem} />
                       )}
                     </td>
                     <td className="border-b border-[#eee] py-3 px-2 dark:border-strokedark">
@@ -211,7 +211,7 @@ const TableInside = ({ tableData }) => {
                           No file
                         </p>
                       ) : (                        
-                        <p>ada</p>
+                        <ShowContentTableProject tableData={packageItem} />
                       )}
                       </div>
                     </td>

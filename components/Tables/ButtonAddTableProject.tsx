@@ -37,6 +37,7 @@ const ButtonAddTableProject = forwardRef(
   ({ parentFunction, tableData }, ref) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [data, setData] = useState([]);
+    const [dataImage, setDataImage] = useState([]);
     const [imageloader, setImageLoader] = useState();
     const [isLoading, setLoading] = useState(true);
     const [isLoadingModal, setLoadingModal] = useState(false);
@@ -114,11 +115,12 @@ const ButtonAddTableProject = forwardRef(
         "lead_avatar",
         data[event.currentTarget.lead.value]["profile_picture"]
       );
-      formData.append("updated_by_avatar", "profil_ico.png");
+      formData.append("updated_by_avatar", dataImage.profile_picture);
+      formData.append("created_by_avatar", dataImage.profile_picture);
       formData.append("project_id", tableData._id);
       formData.append("project_name", tableData.project_name);
-      formData.append("created_by", "Admin1");
-      formData.append("updated_by", "Admin1");
+      formData.append("created_by", dataImage.full_name);
+      formData.append("updated_by", dataImage.full_name);
 
       // const payload = {
       //   item: event.currentTarget.item.value,
@@ -184,6 +186,21 @@ const ButtonAddTableProject = forwardRef(
         setLoading(false);
       };
 
+      fetchData();
+    }, []);
+
+    useEffect(() => {
+      const fetchData = async () => {
+        setLoading(true);
+        try {
+          const { data: response } = await axios.get("/api/users/me");
+          setDataImage(await response.data.user);          
+        } catch (error: any) {
+          console.error(error.message);
+        }
+        setLoading(false);
+      };
+  
       fetchData();
     }, []);
 
