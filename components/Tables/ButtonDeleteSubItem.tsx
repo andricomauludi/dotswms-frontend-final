@@ -1,13 +1,13 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useState } from "react";
-import {
-  Modal,
-  ModalContent,
-  Button,
-  useDisclosure,
-} from "@nextui-org/react";
+import React, {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useState,
+} from "react";
+import { Modal, ModalContent, Button, useDisclosure } from "@nextui-org/react";
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
-import {Row } from "react-bootstrap";
+import { Row } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { Flip, ToastContainer, toast } from "react-toastify";
@@ -43,7 +43,6 @@ const ButtonDeleteSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
     callParentFunction: handleChildEvent,
   }));
 
-
   const handleOpen = async (size: any) => {
     setSize(size);
     onOpen();
@@ -62,16 +61,16 @@ const ButtonDeleteSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
   };
   const router = useRouter();
 
-  const handleDelete = async () => {   
+  const handleDelete = async () => {
     setLoadingModal(true);
 
     const payload = {
-      _id: tableData._id,     
-    };    
+      _id: tableData._id,
+    };
     try {
       const { data } = await axios.post(
         "/api/workspaces/deletesubitem",
-        payload,      
+        payload
       );
       setLoadingModal(false);
 
@@ -99,8 +98,6 @@ const ButtonDeleteSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
     }
   };
 
-  
-
   // useEffect(() => {
   //   const fetchData = async () => {
   //     setLoading(true);
@@ -119,6 +116,31 @@ const ButtonDeleteSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
 
   // if (isLoading) return <p>Loading...</p>;
   // if (!data) return <p>No profile data</p>;
+  if (isLoadingModal)
+    return (
+      <Modal
+        className="sticky top-0 flex w-full bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none"
+        size={"2xl"}
+        isOpen={isOpen}
+        scrollBehavior={"outside"}
+        backdrop="blur"
+        isDismissable={false}
+        style={{ zIndex: 99999 }}
+      >
+        <ModalContent className="">
+          <div
+            className="text-center"
+            style={{
+              margin: "40px",
+              alignContent: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Spinner label="Loading" color="success" labelColor="success" />
+          </div>
+        </ModalContent>
+      </Modal>
+    );
 
   return (
     <>
@@ -143,37 +165,37 @@ const ButtonDeleteSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
             <div className="w-full max-w-200 rounded-lg bg-white py-12 px-8 dark:bg-boxdark md:py-15 md:px-17.5">
               {/* <h3 className="font-medium text-black dark:text-white">
                 Warning
-              </h3> */}              
-                {/* <!-- Contact Form --> */}
-                <div className="p-6.5">
-                  <div className="mb-4.5">
-                    <div>
-                      <h1 className="text-large text-center text-black dark:text-white">
-                        Are you sure want to delete?
-                      </h1>
-                    </div>
+              </h3> */}
+              {/* <!-- Contact Form --> */}
+              <div className="p-6.5">
+                <div className="mb-4.5">
+                  <div>
+                    <h1 className="text-large text-center text-black dark:text-white">
+                      Are you sure want to delete?
+                    </h1>
                   </div>
                 </div>
-                <Row>
-                  <div className="text-right">
-                    <Button
-                      className=" rounded border text-center"
-                      color="danger"
-                      variant="flat"
-                      onPress={handleDelete}
-                    >
-                      Delete
-                    </Button>
-                    <Button
-                      className=" rounded border text-center"
-                      color="primary"
-                      style={{marginLeft:20}}
-                      onPress={onClose}
-                    >
-                      Cancel
-                    </Button>
-                  </div>
-                </Row>              
+              </div>
+              <Row>
+                <div className="text-right">
+                  <Button
+                    className=" rounded border text-center"
+                    color="danger"
+                    variant="flat"
+                    onPress={handleDelete}
+                  >
+                    Delete
+                  </Button>
+                  <Button
+                    className=" rounded border text-center"
+                    color="primary"
+                    style={{ marginLeft: 20 }}
+                    onPress={onClose}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </Row>
             </div>
           </ModalContent>
         </Modal>
@@ -183,4 +205,3 @@ const ButtonDeleteSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
   );
 });
 export default ButtonDeleteSubItem;
-

@@ -3,13 +3,14 @@ import axios, { Axios } from "axios";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import ButtonAddProject from "./ButtonAddTableProject";
-import ButtonEditProject from "./ButtonEditTableProject";
+import ButtonEditTableProject from "./ButtonEditTableProject";
 import ButtonDeleteProject from "./ButtonDeleteTableProject";
 import Link from "next/link";
 import ShowFileProject from "./ShowFileTableProject";
 import { useDisclosure } from "@nextui-org/react";
 import TableSubItems from "./TableSubItems";
 import ShowContentTableProject from "./ShowContentTableProject";
+import ButtonEditProject from "./ButtonEditProject";
 
 const TableInside = ({ tableData }) => {
   const childRef = useRef(null);
@@ -72,7 +73,7 @@ const TableInside = ({ tableData }) => {
             ref={childRef}
             parentFunction={handleParentFunction}
             tableData={tableData}
-          />
+          />      
         </div>
         <div className="max-w-full overflow-x-auto">
           <table className="w-full sm:table-auto">
@@ -204,8 +205,7 @@ const TableInside = ({ tableData }) => {
                       )}
                     </td>
                     <td className="border-b border-[#eee] py-3 px-2 dark:border-strokedark">
-                      <div className="flex-shrink-0">
-                        {console.log(packageItem.contentposting)}
+                      <div className="flex-shrink-0">                       
                       {packageItem.contentposting === "" ? (
                         <p className="text-black dark:text-white text-xs">
                           No file
@@ -266,7 +266,7 @@ const TableInside = ({ tableData }) => {
                     </td>
                     <td className="border-b border-[#eee] py-3 px-2 dark:border-strokedark">
                       <div className="flex items-center space-x-3.5">
-                        <ButtonEditProject
+                        <ButtonEditTableProject
                           ref={childRef}
                           parentFunction={handleParentFunction}
                           tableData={packageItem}

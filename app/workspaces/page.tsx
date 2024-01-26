@@ -2,7 +2,11 @@
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import ButtonAddGroupProject from "@/components/Tables/ButtonAddGroupProject";
 import ButtonAddProject from "@/components/Tables/ButtonAddSubItem";
+import ButtonDeleteGroupProject from "@/components/Tables/ButtonDeleteGroupProject";
+import ButtonEditGroupProject from "@/components/Tables/ButtonEditGroupProject";
 import TableProject from "@/components/Tables/TableProject";
+import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   Button,
   ButtonGroup,
@@ -63,9 +67,22 @@ const WorkspacePage = () => {
   const selectedOptionValue = Array.from(selectedOption)[0];
   return (
     <>
-      <Breadcrumb pageName="Workspaces" titleName={datas[selectedOptionValue].group_project} />
+      <Breadcrumb
+        pageName="Workspaces"
+        titleName={datas[selectedOptionValue].group_project}
+      />
+      <ButtonEditGroupProject
+        ref={childRef}
+        parentFunction={handleParentFunction}
+        tableData={datas[selectedOptionValue]}
+      />
+      <ButtonDeleteGroupProject
+        ref={childRef}
+        parentFunction={handleParentFunction}
+        tableData={datas[selectedOptionValue]}
+      />
       <div className="flex flex-col gap-5">
-        <div className="text-left">         
+        <div className="text-left">
           {/* <h1>
             <strong>Group Project :</strong>
           </h1> */}
@@ -103,7 +120,10 @@ const WorkspacePage = () => {
                 ))}
               </DropdownMenu>
             </Dropdown>
-            <ButtonAddGroupProject ref={childRef}  parentFunction={handleParentFunction}/>
+            <ButtonAddGroupProject
+              ref={childRef}
+              parentFunction={handleParentFunction}
+            />
           </ButtonGroup>
         </div>
         <TableProject tableData={datas[selectedOptionValue]} />
