@@ -281,7 +281,7 @@ const ButtonAddSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
                   <div className="mb-4.5">
                     <div>
                       <label className="mb-3 block text-black dark:text-white">
-                        Instagram Posting Status
+                        Status
                       </label>
                       <div className="relative z-20 bg-white dark:bg-form-input">
                         <span className="absolute top-1/2 left-4 z-30 -translate-y-1/2">
