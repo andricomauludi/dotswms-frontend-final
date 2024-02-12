@@ -1,5 +1,6 @@
 import ECommerce from "@/components/Dashboard/E-commerce";
 import { Metadata } from "next";
+import LayoutAfter from "../layout";
 
 export const metadata: Metadata = {
   title: "DOTS-WMS",
@@ -10,7 +11,9 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <>
-      <ECommerce />
+      {/* <LayoutAfter> */}
+        <ECommerce />
+      {/* </LayoutAfter> */}
     </>
   );
 }

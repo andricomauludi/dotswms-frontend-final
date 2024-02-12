@@ -82,8 +82,7 @@ const ButtonEditTableProject = forwardRef(
       var formData = new FormData();
       event.preventDefault();
 
-      var contentposting = document.querySelector("#contentposting");
-      console.log(contentposting.files[0] === undefined)
+      var contentposting = document.querySelector("#contentposting");      
       if (contentposting.files[0] === undefined) {
         formData.append("contentposting", "");
       } else {
@@ -132,8 +131,7 @@ const ButtonEditTableProject = forwardRef(
       formData.append("updated_by_avatar", dataImage.profile_picture);
     //   for (var pair of formData.entries()) {
     //     console.log(pair[0]+ ', ' + pair[1]); 
-    // }
-    console.log(tableData._id)
+    // }    
 
       // const payload = {
       //   item: event.currentTarget.item.value,

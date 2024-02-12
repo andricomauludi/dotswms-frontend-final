@@ -12,13 +12,12 @@ export default function Home() {
     const payload = {
       email: event.currentTarget.email.value,
       password: event.currentTarget.password.value,
-    };
-    console.log(payload);
+    };    
     try {
       const { data } = await axios.post("/api/auth/login", payload);
       alert(JSON.stringify(data));
       //redirect the user to dashboard
-      router.push("/");
+      router.push("/");  
     } catch (e) {
       const error = e as AxiosError;
       console.log(error);
