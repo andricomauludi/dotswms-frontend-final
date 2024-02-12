@@ -56,8 +56,7 @@ const TableMyTaskDone = ({ tableData }) => {
   if (!datas) return <p>No My Task Data</p>;
 
   return (
-    <>
-      {console.log(datas)}
+    <>      
       <div className="max-w-full overflow-x-auto">
         <table className="w-full table-auto">
           <thead>

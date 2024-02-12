@@ -47,24 +47,20 @@ export default function RootLayout({
   // }, []);
 
   const [isSuccess, setIsSuccess] = useState<boolean>(false); //untuk membuat state apakah sukses atau nggak untuk fetching cookie, kalo nggak maka nanti di print loading
-  const router = useRouter();
-  console.log("masuk rootlayout")
-  useLayoutEffect(() => {
-    console.log("masuk useeffect")
+  const router = useRouter();  
+  useLayoutEffect(() => {    
     setTimeout(() => setLoading(true), 1000);
     (async () => {
       const { user, error } = await getUser();
       
-      if (error) {
-        console.log("masuk useeffect error")
+      if (error) {        
         setTimeout(() => setLoading(false), 1000);
         router.push("/auth/login"); //akan dikembalikan kalo gaada cookies
         setSidebarOpen(true);
         
         
         return;
-      }
-      console.log("masuk useeffect ga error")
+      }      
       setTimeout(() => setLoading(false), 1000);
 
       //if error didnt happen, if everythins is alright

@@ -18,8 +18,6 @@ import {
 } from "@nextui-org/react";
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
-import styles from "./ButtonAddSubItem.module.css";
-import { Container } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { Flip, ToastContainer, toast } from "react-toastify";
@@ -104,12 +102,11 @@ const ButtonEditSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
           },
         }
       );
-      setLoadingModal(false);
+      await setLoadingModal(false);
 
-      onClose();
-      onClose();
-
-      toast.success("Sub Item Edited!", {
+      await onClose();
+      await onClose();
+      await toast.success("Sub Item Edited!", {
         autoClose: 3000,
         position: "top-right",
         hideProgressBar: false,
@@ -118,9 +115,11 @@ const ButtonEditSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
         draggable: true,
         progress: undefined,
         theme: "colored",
-        transition: Flip,
-        onClose: () => handleChildEvent(),
+        transition: Flip,        
+      
       });
+      await handleChildEvent();
+
       //redirect the user to dashboard
     } catch (e) {
       setLoadingModal(false);

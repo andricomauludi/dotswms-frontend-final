@@ -76,6 +76,7 @@ const ButtonDeleteSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
 
       onClose();
       onClose();
+      handleChildEvent();
 
       toast.success("Sub Item Deleted!", {
         autoClose: 3000,
@@ -87,7 +88,7 @@ const ButtonDeleteSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
         progress: undefined,
         theme: "colored",
         transition: Flip,
-        onClose: () => handleChildEvent(),
+        // onClose: () => handleChildEvent(),
       });
       //redirect the user to dashboard
     } catch (e) {
