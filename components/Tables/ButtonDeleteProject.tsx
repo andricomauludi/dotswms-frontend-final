@@ -77,6 +77,7 @@ const ButtonDeleteProject = forwardRef(
 
         onClose();
         onClose();
+        handleChildEvent()
 
         toast.success("Project Deleted!", {
           autoClose: 3000,
@@ -88,7 +89,7 @@ const ButtonDeleteProject = forwardRef(
           progress: undefined,
           theme: "colored",
           transition: Flip,
-          onClose: () => handleChildEvent(),
+          // onClose: () => handleChildEvent(),
         });
         //redirect the user to dashboard
       } catch (e) {

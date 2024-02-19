@@ -7,7 +7,7 @@ import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import ButtonEditSubItem from "./ButtonEditSubItem";
 import Link from "next/link";
-import ShowFileProject from "./ShowFileTableProject";
+import ShowFileProject from "./ShowContentTextTableProject";
 import { useDisclosure } from "@nextui-org/react";
 import ButtonDeleteSubItem from "./ButtonDeleteSubItem";
 

@@ -1,7 +1,7 @@
 "use client";
-import "./globals.css";
-import "./data-tables-css.css";
-import "./satoshi.css";
+import "../globals.css";
+import "../data-tables-css.css";
+import "../satoshi.css";
 import { useState, useEffect, useLayoutEffect } from "react";
 import Loader from "@/components/common/Loader";
 

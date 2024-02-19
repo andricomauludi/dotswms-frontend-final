@@ -63,7 +63,8 @@ const ButtonAddGroupProject = forwardRef(( {parentFunction} , ref) => {
       // alert("Success");
 
       onClose();
-      onClose();      
+      onClose();  
+      handleChildEvent();    
       
       toast.success("New Group Project Added!", {
         autoClose: 3000,
@@ -75,7 +76,7 @@ const ButtonAddGroupProject = forwardRef(( {parentFunction} , ref) => {
         progress: undefined,
         theme: "colored",
         transition: Flip,
-        onClose: () => handleChildEvent()
+        // onClose: () => handleChildEvent()
       });      
       //redirect the user to dashboard
     } catch (e) {

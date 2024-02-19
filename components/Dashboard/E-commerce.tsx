@@ -45,17 +45,17 @@ const ECommerce: React.FC = () => {
     <>
 {console.log(data)}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
-        <CardDataStats title="Total Project" total={data.project} >
+        <CardDataStats title="On Going Project" total={data.project} >
         {/* <CardDataStats title="Total Group Project" total={data.groupproject} rate="0.43%" levelUp> */}
         <FontAwesomeIcon icon={faBarsProgress}/>
         
         </CardDataStats>
-        <CardDataStats title="Total Table Project" total={data.tableproject} >
+        <CardDataStats title="On Going Item" total={data.tableproject} >
         {/* <CardDataStats title="Total Profit" total="$45,2K" rate="4.35%" levelUp> */}
         <FontAwesomeIcon icon={faListCheck}/>
           
         </CardDataStats>
-        <CardDataStats title="Total subitem" total={data.subitem}>
+        <CardDataStats title="On Going Sub Item" total={data.subitem}>
         {/* <CardDataStats title="Total Product" total="2.450" rate="2.59%" levelUp> */}
         <FontAwesomeIcon icon={faSquareCheck}/>
 

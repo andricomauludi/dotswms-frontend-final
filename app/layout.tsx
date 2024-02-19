@@ -1,5 +1,7 @@
 "use client";
-import { useRouter } from "next/navigation";
+import "./globals.css";
+import "./data-tables-css.css";
+import "./satoshi.css";
 import axios, { AxiosError } from "axios";
 
 interface UserResponse {

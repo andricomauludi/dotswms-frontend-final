@@ -77,7 +77,8 @@ const ButtonDeleteGroupProject = forwardRef(
 
         onClose();
         onClose();
-
+        handleChildEvent();
+                
         toast.success("Group Project Deleted!", {
           autoClose: 3000,
           position: "top-right",
@@ -88,7 +89,7 @@ const ButtonDeleteGroupProject = forwardRef(
           progress: undefined,
           theme: "colored",
           transition: Flip,
-          onClose: () => handleChildEvent(),
+          // onClose: () => handleChildEvent(),
         });
         //redirect the user to dashboard
       } catch (e) {

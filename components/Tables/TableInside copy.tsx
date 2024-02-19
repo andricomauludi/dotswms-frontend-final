@@ -9,7 +9,7 @@ import ButtonAddProject from "./ButtonAddTableProject";
 import ButtonEditProject from "./ButtonEditTableProject";
 import ButtonDeleteProject from "./ButtonDeleteTableProject";
 import Link from "next/link";
-import ShowFileProject from "./ShowFileTableProject";
+import ShowFileProject from "./ShowContentTextTableProject";
 import {
   Accordion,
   AccordionItem,

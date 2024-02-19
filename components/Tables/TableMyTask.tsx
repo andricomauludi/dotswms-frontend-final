@@ -7,7 +7,7 @@ import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import ButtonEditSubItem from "./ButtonEditSubItem";
 import Link from "next/link";
-import ShowFileProject from "./ShowFileTableProject";
+import ShowFileProject from "./ShowContentTextTableProject";
 import { useDisclosure } from "@nextui-org/react";
 import ButtonDeleteSubItem from "./ButtonDeleteSubItem";
 
@@ -70,7 +70,7 @@ const TableMyTask = ({ tableData }) => {
 
   return (
     <>
-      {console.log(datas)}
+      <h1>My Task</h1>
       <div className="max-w-full overflow-x-auto">
         <table className="w-full table-auto">
           <thead>

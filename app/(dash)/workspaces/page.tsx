@@ -71,16 +71,22 @@ const WorkspacePage = () => {
         pageName="Workspaces"
         titleName={datas[selectedOptionValue].group_project}
       />
-      <ButtonEditGroupProject
-        ref={childRef}
-        parentFunction={handleParentFunction}
-        tableData={datas[selectedOptionValue]}
-      />
-      <ButtonDeleteGroupProject
-        ref={childRef}
-        parentFunction={handleParentFunction}
-        tableData={datas[selectedOptionValue]}
-      />
+      <div className="mb-6 flex">
+        <div className="">
+          <ButtonEditGroupProject
+            ref={childRef}
+            parentFunction={handleParentFunction}
+            tableData={datas[selectedOptionValue]}
+          />
+        </div>
+        <div className="ml-2">
+          <ButtonDeleteGroupProject
+            ref={childRef}
+            parentFunction={handleParentFunction}
+            tableData={datas[selectedOptionValue]}
+          />
+        </div>
+      </div>
       <div className="flex flex-col gap-5">
         <div className="text-left">
           {/* <h1>

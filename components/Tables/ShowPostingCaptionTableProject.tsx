@@ -1,31 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Modal,
   ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Button,
   useDisclosure,
-  Image,
-  Chip,
 } from "@nextui-org/react";
-import axios, { AxiosError } from "axios";
-import { useRouter } from "next/navigation";
-import styles from "./ButtonAddProject.module.css";
-import { Container } from "react-bootstrap";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFile } from "@fortawesome/free-solid-svg-icons";
 
-export default function ShowFileProject({ tableData }) {
+export default function ShowPostingCaptionTableProject({ tableData }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [data, setData] = useState();  
+  const [data, setData] = useState();
   const [imageloader, setImageLoader] = useState();
   const [isLoading, setLoading] = useState(true);
   const [size, setSize] = React.useState("5xl");
-  
-  
+
   const handleOpen = async (size: any) => {
     setSize(size);
     onOpen();
@@ -59,7 +48,7 @@ export default function ShowFileProject({ tableData }) {
           // className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
         >
           <FontAwesomeIcon icon={faFile} />
-          Content Text
+          Posting Caption
         </Link>
         <div>
           <Modal
@@ -72,17 +61,28 @@ export default function ShowFileProject({ tableData }) {
           >
             <ModalContent className="">
               <div className="w-full max-w-200 rounded-lg bg-white py-12 px-8 dark:bg-boxdark md:py-15 md:px-17.5">
-                <h3 className="font-medium text-black dark:text-white" style={{paddingBottom:"20px"}}>
-                  Content Text
-                </h3>                
+                <h3
+                  className="font-medium text-black dark:text-white"
+                  style={{ paddingBottom: "20px" }}
+                >
+                  Posting Caption
+                </h3>
                 {/* <embed
                   key={tableData._id}
                   src={`data:application/pdf;base64,${tableData.contenttext}`}
                   height={600}
                   width={900}
-                /> */}                
-                <iframe src={`${tableData.contenttext}`} height={600}
-                  width={900} ></iframe>             
+                /> */}
+                <textarea
+                  name="postingcaption"
+                  rows={15}
+                  disabled
+                  placeholder={tableData.postingcaption}
+                  defaultValue={tableData.postingcaption}
+                  className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                ></textarea>
+                {/* <iframe src={`${tableData.contenttext}`} height={600}
+                  width={900} ></iframe>              */}
               </div>
             </ModalContent>
           </Modal>

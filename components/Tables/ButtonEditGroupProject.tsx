@@ -85,6 +85,7 @@ const ButtonEditGroupProject = forwardRef(
 
         onClose();
         onClose();
+        handleChildEvent();
 
         toast.success("Group Project Edited!", {
           autoClose: 3000,
@@ -96,7 +97,7 @@ const ButtonEditGroupProject = forwardRef(
           progress: undefined,
           theme: "colored",
           transition: Flip,
-          onClose: () => handleChildEvent(),
+          // onClose: () => handleChildEvent(),
         });
         //redirect the user to dashboard
       } catch (e) {

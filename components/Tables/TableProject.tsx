@@ -82,16 +82,22 @@ const TableProject = ({ tableData }) => {
             title={Item.project_name}
             className={`${Item.color_project}`}
           >
-            <ButtonEditProject
-              ref={childRef}
-              parentFunction={handleParentFunction}
-              tableData={Item}
-            />
-            <ButtonDeleteProject
-              ref={childRef}
-              parentFunction={handleParentFunction}
-              tableData={Item}
-            />
+            <div className="mb-6 flex place-content-end mr-2">
+              <div className="">
+                <ButtonEditProject
+                  ref={childRef}
+                  parentFunction={handleParentFunction}
+                  tableData={Item}
+                />
+              </div>
+              <div className="ml-2">
+                <ButtonDeleteProject
+                  ref={childRef}
+                  parentFunction={handleParentFunction}
+                  tableData={Item}
+                />
+              </div>
+            </div>
             <TableInside tableData={Item} />
           </AccordionItem>
         ))}

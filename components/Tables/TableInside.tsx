@@ -6,11 +6,12 @@ import ButtonAddProject from "./ButtonAddTableProject";
 import ButtonEditTableProject from "./ButtonEditTableProject";
 import ButtonDeleteProject from "./ButtonDeleteTableProject";
 import Link from "next/link";
-import ShowFileProject from "./ShowFileTableProject";
+import ShowContentTextTableProject from "./ShowContentTextTableProject";
 import { useDisclosure } from "@nextui-org/react";
 import TableSubItems from "./TableSubItems";
 import ShowContentTableProject from "./ShowContentTableProject";
 import ButtonEditProject from "./ButtonEditProject";
+import ShowPostingCaptionTableProject from "./ShowPostingCaptionTableProject";
 
 const TableInside = ({ tableData }) => {
   const childRef = useRef(null);
@@ -196,13 +197,9 @@ const TableInside = ({ tableData }) => {
                       </p>
                     </td>
                     <td className="border-b border-[#eee] py-3 px-2 dark:border-strokedark">
-                      {packageItem.contenttext === "" ? (
-                        <p className="text-black dark:text-white text-xs">
-                          No file
-                        </p>
-                      ) : (
-                        <ShowFileProject tableData={packageItem} />
-                      )}
+                     
+                        <ShowContentTextTableProject tableData={packageItem} />
+                      
                     </td>
                     <td className="border-b border-[#eee] py-3 px-2 dark:border-strokedark">
                       <div className="flex-shrink-0">                       
@@ -217,7 +214,7 @@ const TableInside = ({ tableData }) => {
                     </td>
                     <td className="border-b border-[#eee] py-3 px-2 dark:border-strokedark">
                       <p className="text-black dark:text-white text-xs">
-                        {packageItem.postingcaption}
+                        <ShowPostingCaptionTableProject tableData={packageItem} />
                       </p>
                     </td>
                     <td className="border-b border-[#eee] py-3 px-2 dark:border-strokedark">

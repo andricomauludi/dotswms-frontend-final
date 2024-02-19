@@ -76,6 +76,7 @@ export default function ShowContentTableProject({ tableData }) {
             backdrop="blur"
           >
             <ModalContent className="">
+              {console.log(tableData)}
               <div className="w-full max-w-200 rounded-lg bg-white py-12 px-8 dark:bg-boxdark md:py-15 md:px-17.5">
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
                   <h3
@@ -88,7 +89,7 @@ export default function ShowContentTableProject({ tableData }) {
                 <div className="flex flex-wrap gap-3">
                   <a
                     style={{ paddingBottom: "20px" }}
-                    download={`${tableData.contentpostingname}`}
+                    download={`${tableData.contentpostingname}`}                    
                     href={`data:image/jpeg;base64,${tableData.contentposting}`}
                   >
                     <Button
