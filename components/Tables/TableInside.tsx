@@ -15,6 +15,7 @@ import ShowPostingCaptionTableProject from "./ShowPostingCaptionTableProject";
 import { useCookies } from "next-client-cookies";
 import { BACKEND_PORT, COOKIE_NAME } from "@/constants";
 import ShowContentPosting from "./ShowContentPosting";
+import ContentPostingList from "./ContentPostingList";
 
 const TableInside = ({ tableData }) => {
   const cookies = useCookies();
@@ -26,6 +27,8 @@ const TableInside = ({ tableData }) => {
   const [size, setSize] = React.useState("5xl");
   const [isLoading, setLoading] = useState(true);
   const [triggerApiCall, setTriggerApiCall] = useState(true);
+
+  var mantab;
 
   const handleOpen = async (size: any) => {
     setSize(size);
@@ -49,6 +52,7 @@ const TableInside = ({ tableData }) => {
         // const { data: response } = await axios.get(
         //   "/api/workspaces/tableproject"
         // );
+        // setData(await response.data.tableproject);
         return await response.data.tableproject;
       } catch (error: any) {
         console.error(error.message);
@@ -84,10 +88,13 @@ const TableInside = ({ tableData }) => {
 
     const fetchBoth = async () => {
       const tableinside = await fetchData();
-      console.log(tableinside);
-      const contentposting = await fetchData2(tableinside[0]._id);
       setData(tableinside);
-      setDataContentPosting(contentposting);
+
+      // console.log(tableinside);
+      // for (let i = 0; i < tableinside.length; i++) {
+      //   const contentposting = await fetchData2(tableinside[i]._id);
+      //   setDataContentPosting((oldArray) => [...oldArray, contentposting]);
+      // }
       setLoading(false);
     };
 
@@ -108,8 +115,8 @@ const TableInside = ({ tableData }) => {
   if (!datas) return <p>No Project data</p>;
 
   return (
-    <>
-      {/* {console.log(cookies.get(COOKIE_NAME))} */}
+    <>      
+    {console.log(datas)}
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
         <div style={{ marginTop: "10px", marginBottom: "20px" }}>
           <ButtonAddProject
@@ -118,6 +125,7 @@ const TableInside = ({ tableData }) => {
             tableData={tableData}
           />
         </div>
+
         <div className="max-w-full overflow-x-auto">
           <table className="w-full sm:table-auto">
             <thead>
@@ -241,33 +249,35 @@ const TableInside = ({ tableData }) => {
                     <td className="border-b border-[#eee] py-3 px-2 dark:border-strokedark">
                       <ShowContentTextTableProject tableData={packageItem} />
                     </td>
+
                     <td className="border-b border-[#eee] py-3 px-2 dark:border-strokedark">
                       <div className="flex-shrink-0">
-                        {dataContentPosting.map(
-                          (contentPostingItem: any, key) => (
+                        <ContentPostingList contentPostingItem={packageItem} />
+                        {/* {dataContentPosting.map((contentPostingItem: any) => {
+                          return (
                             <>
                               {contentPostingItem.file_type === "image/jpg" ? (
                                 <ShowContentPosting
-                                contentPostingItem={contentPostingItem}
-                              />
+                                  contentPostingItem={contentPostingItem}
+                                />
                               ) : contentPostingItem.file_type ===
                                 "image/jpeg" ? (
-                                  <ShowContentPosting
+                                <ShowContentPosting
                                   contentPostingItem={contentPostingItem}
                                 />
                               ) : contentPostingItem.file_type ===
                                 "image/png" ? (
-                                  <ShowContentPosting
+                                <ShowContentPosting
                                   contentPostingItem={contentPostingItem}
                                 />
-                              ) : (                               
+                              ) : (
                                 <ShowContentPosting
-                                contentPostingItem={contentPostingItem}
-                              />
+                                  contentPostingItem={contentPostingItem}
+                                />
                               )}
                             </>
-                          )
-                        )}
+                          );
+                        })} */}
                       </div>
                     </td>
                     <td className="border-b border-[#eee] py-3 px-2 dark:border-strokedark">
