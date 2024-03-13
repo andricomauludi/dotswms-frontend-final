@@ -12,7 +12,8 @@ export default function Home() {
   return (
     <>
       {/* <LayoutAfter> */}
-        <ECommerce />
+      <ECommerce />
+      
       {/* </LayoutAfter> */}
     </>
   );

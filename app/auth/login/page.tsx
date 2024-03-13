@@ -31,7 +31,7 @@ export default function Home() {
       alert(error.message);
     }
   };
-  if (isLoadingModal){
+  if (isLoadingModal) {
     return (
       <main className="flex min-h-screen flex-col items-center justify-between p-24">
         <div
@@ -54,7 +54,7 @@ export default function Home() {
                       />
                     </div>
                     <div className="text-center mt-5 mb-3">
-                      <h1 className="text-white font-bold">Sign in</h1>
+                      <h1 className="text-white font-bold">Sign in</h1>                     
                     </div>
                     {/* <div className="btn-wrapper text-center">
                     <button
@@ -151,7 +151,8 @@ export default function Home() {
           </div>
         </div>
       </main>
-    );}
+    );
+  }
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">

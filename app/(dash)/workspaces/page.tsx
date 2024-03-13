@@ -1,12 +1,10 @@
 "use client";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import ButtonAddGroupProject from "@/components/Tables/ButtonAddGroupProject";
-import ButtonAddProject from "@/components/Tables/ButtonAddSubItem";
 import ButtonDeleteGroupProject from "@/components/Tables/ButtonDeleteGroupProject";
 import ButtonEditGroupProject from "@/components/Tables/ButtonEditGroupProject";
 import TableProject from "@/components/Tables/TableProject";
-import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useCookies } from 'next-client-cookies';
 import {
   Button,
   ButtonGroup,
@@ -18,7 +16,6 @@ import {
 import axios from "axios";
 import { Metadata } from "next";
 import React, { useEffect, useRef, useState } from "react";
-import { Col, Row } from "react-bootstrap";
 export const metadata: Metadata = {
   title: "Workspaces Page | DOTS WMS",
   description: "This is Workspaces page for DOTS WMS",

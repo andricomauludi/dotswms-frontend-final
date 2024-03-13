@@ -9,14 +9,20 @@ import Link from "next/link";
 import ShowContentTextTableProject from "./ShowContentTextTableProject";
 import { useDisclosure } from "@nextui-org/react";
 import TableSubItems from "./TableSubItems";
-import ShowContentTableProject from "./ShowContentTableProject";
+import ShowContentTableProject from "./ShowContentPosting";
 import ButtonEditProject from "./ButtonEditProject";
 import ShowPostingCaptionTableProject from "./ShowPostingCaptionTableProject";
+import { useCookies } from "next-client-cookies";
+import { BACKEND_PORT, COOKIE_NAME } from "@/constants";
+import ShowContentPosting from "./ShowContentPosting";
 
 const TableInside = ({ tableData }) => {
+  const cookies = useCookies();
+
   const childRef = useRef(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [datas, setData] = useState([]);
+  const [dataContentPosting, setDataContentPosting] = useState([]);
   const [size, setSize] = React.useState("5xl");
   const [isLoading, setLoading] = useState(true);
   const [triggerApiCall, setTriggerApiCall] = useState(true);
@@ -43,15 +49,50 @@ const TableInside = ({ tableData }) => {
         // const { data: response } = await axios.get(
         //   "/api/workspaces/tableproject"
         // );
-        setData(await response.data.tableproject);
+        return await response.data.tableproject;
       } catch (error: any) {
         console.error(error.message);
       }
       setLoading(false);
     };
 
+    const fetchData2 = async (datass: any) => {
+      setLoading(true);
+      try {
+        const { data } = await axios.get(
+          BACKEND_PORT + "workspaces/content-posting/" + (await datass),
+          { headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` } }
+        );
+
+        // const payload = {
+        //   id: tableData._id,
+        // };
+        // const { data: response } = await axios.post(
+        //   "/api/workspaces/tableinside",
+        //   payload
+        // );
+        // const { data: response } = await axios.get(
+        //   "/api/workspaces/tableproject"
+        // );
+        return await data.contentPosting;
+        // setData(await response.data.tableproject);
+      } catch (error: any) {
+        console.error(error.message);
+      }
+      setLoading(false);
+    };
+
+    const fetchBoth = async () => {
+      const tableinside = await fetchData();
+      console.log(tableinside);
+      const contentposting = await fetchData2(tableinside[0]._id);
+      setData(tableinside);
+      setDataContentPosting(contentposting);
+      setLoading(false);
+    };
+
     if (triggerApiCall) {
-      fetchData();
+      fetchBoth();
       setTriggerApiCall(false); // Reset the trigger after API call
     }
   }, [triggerApiCall, tableData]);
@@ -68,13 +109,14 @@ const TableInside = ({ tableData }) => {
 
   return (
     <>
+      {/* {console.log(cookies.get(COOKIE_NAME))} */}
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
         <div style={{ marginTop: "10px", marginBottom: "20px" }}>
           <ButtonAddProject
             ref={childRef}
             parentFunction={handleParentFunction}
             tableData={tableData}
-          />      
+          />
         </div>
         <div className="max-w-full overflow-x-auto">
           <table className="w-full sm:table-auto">
@@ -120,7 +162,7 @@ const TableInside = ({ tableData }) => {
               </tr>
             </thead>
             <tbody>
-              {datas.map((packageItem, key) => (
+              {datas.map((packageItem: any, key) => (
                 <>
                   <tr key={key}>
                     <td className="border-b border-[#eee] py-3 px-2 pl-5 dark:border-strokedark xl:pl-5">
@@ -197,24 +239,42 @@ const TableInside = ({ tableData }) => {
                       </p>
                     </td>
                     <td className="border-b border-[#eee] py-3 px-2 dark:border-strokedark">
-                     
-                        <ShowContentTextTableProject tableData={packageItem} />
-                      
+                      <ShowContentTextTableProject tableData={packageItem} />
                     </td>
                     <td className="border-b border-[#eee] py-3 px-2 dark:border-strokedark">
-                      <div className="flex-shrink-0">                       
-                      {packageItem.contentposting === "" ? (
-                        <p className="text-black dark:text-white text-xs">
-                          No file
-                        </p>
-                      ) : (                        
-                        <ShowContentTableProject tableData={packageItem} />
-                      )}
+                      <div className="flex-shrink-0">
+                        {dataContentPosting.map(
+                          (contentPostingItem: any, key) => (
+                            <>
+                              {contentPostingItem.file_type === "image/jpg" ? (
+                                <ShowContentPosting
+                                contentPostingItem={contentPostingItem}
+                              />
+                              ) : contentPostingItem.file_type ===
+                                "image/jpeg" ? (
+                                  <ShowContentPosting
+                                  contentPostingItem={contentPostingItem}
+                                />
+                              ) : contentPostingItem.file_type ===
+                                "image/png" ? (
+                                  <ShowContentPosting
+                                  contentPostingItem={contentPostingItem}
+                                />
+                              ) : (                               
+                                <ShowContentPosting
+                                contentPostingItem={contentPostingItem}
+                              />
+                              )}
+                            </>
+                          )
+                        )}
                       </div>
                     </td>
                     <td className="border-b border-[#eee] py-3 px-2 dark:border-strokedark">
                       <p className="text-black dark:text-white text-xs">
-                        <ShowPostingCaptionTableProject tableData={packageItem} />
+                        <ShowPostingCaptionTableProject
+                          tableData={packageItem}
+                        />
                       </p>
                     </td>
                     <td className="border-b border-[#eee] py-3 px-2 dark:border-strokedark">

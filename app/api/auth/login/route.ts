@@ -25,9 +25,9 @@ export async function POST(request: Request) {
       cookies().set({
         name: COOKIE_NAME,
         value: hasil["accessToken"],
-        httpOnly: true,
+        // httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
+        // sameSite: ,
         maxAge: MAX_AGE,
         path: "/",
       }) 

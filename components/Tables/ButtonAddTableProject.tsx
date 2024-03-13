@@ -85,12 +85,30 @@ const ButtonAddTableProject = forwardRef(
       var formData = new FormData();
       event.preventDefault();
 
-      var contentposting = document.querySelector("#contentposting");
-      if (contentposting.files[0] !== undefined) {
-        formData.append("contentposting", contentposting.files[0]);
+      const contentposting:any = document.querySelector("#contentposting");
+      const contentpostingarray: any = contentposting.files
+
+     
+
+      if (contentposting.files[0] !== undefined) {     
+        // formData.append("contentposting", contentposting.files[0]);
+
+        [...contentpostingarray].forEach((file) => {
+          formData.append("contentposting", file);
+        });
       } else {
         formData.append("contentposting", "");
       }
+
+      console.log(contentposting.files[0])
+      console.log(contentposting.files)
+      
+    //   for (var pair of formData.entries()) {
+    //     console.log(pair[0]+ ', ' + pair[1]); 
+    // }
+    // console.log(contentposting.files)
+    //   throw new Error("ngentot")
+
       formData.append("item", event.currentTarget.item.value);
       formData.append(
         "postingschedule",
@@ -622,6 +640,7 @@ const ButtonAddTableProject = forwardRef(
                               name="contentposting"
                               id="contentposting"
                               type="file"
+                              multiple
                               className="w-full cursor-pointer rounded-lg border-[1.5px] border-stroke bg-transparent font-medium outline-none transition file:mr-5 file:border-collapse file:cursor-pointer file:border-0 file:border-r file:border-solid file:border-stroke file:bg-whiter file:py-3 file:px-5 file:hover:bg-primary file:hover:bg-opacity-10 focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:file:border-form-strokedark dark:file:bg-white/30 dark:file:text-white dark:focus:border-primary"
                             />
                           </div>

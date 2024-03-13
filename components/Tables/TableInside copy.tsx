@@ -22,7 +22,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFile } from "@fortawesome/free-solid-svg-icons/faFile";
 import { faEdit, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import TableSubItems from "./TableSubItems";
-import ShowContentTableProject from "./ShowContentTableProject";
+import ShowContentTableProject from "./ShowContentPosting";
 
 const TableInside = ({ tableData }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
