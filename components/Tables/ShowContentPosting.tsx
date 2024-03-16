@@ -136,13 +136,20 @@ export default function ShowContentPosting({ contentPostingItem }) {
                       </Button>
                     </a>
                   </div>
-                  <div className="flex-shrink-0 text-center">
+                  <div className="flex-shrink-0 text-center place-content-center">
                     <Image
                       src={`data:image/jpg;base64,${data.contentfile}`}
                       alt="Brand"
                       width={400}
-                      className="text-center"
+                      className="text-center place-content-center"
+                      style={{marginLeft:"50%"}}
                     />
+                    <h3
+                      className="font-medium text-black dark:text-white"
+                      style={{ paddingTop: "20px" }}
+                    >
+                      {contentPostingItem.file_name}
+                    </h3>
                     <div>{/* <ShowFileProject /> */}</div>
                   </div>
                 </div>
@@ -201,6 +208,12 @@ export default function ShowContentPosting({ contentPostingItem }) {
                       width={400}
                       className="text-center"
                     />
+                    <h3
+                      className="font-medium text-black dark:text-white"
+                      style={{ paddingTop: "20px" }}
+                    >
+                      {contentPostingItem.file_name}
+                    </h3>
                     <div>{/* <ShowFileProject /> */}</div>
                   </div>
                 </div>
@@ -260,6 +273,12 @@ export default function ShowContentPosting({ contentPostingItem }) {
                       width={400}
                       className="text-center"
                     />
+                    <h3
+                      className="font-medium text-black dark:text-white"
+                      style={{ paddingBottom: "20px" }}
+                    >
+                      {contentPostingItem.file_name}
+                    </h3>
                     <div>{/* <ShowFileProject /> */}</div>
                   </div>
                 </div>
@@ -324,6 +343,12 @@ export default function ShowContentPosting({ contentPostingItem }) {
                         />
                         Your browser does not support the video tag.
                       </video>
+                      <h3
+                        className="font-medium text-black dark:text-white"
+                        style={{ paddingTop: "20px" }}
+                      >
+                        {contentPostingItem.file_name}
+                      </h3>
                     </div>
                     <div>{/* <ShowFileProject /> */}</div>
                   </div>

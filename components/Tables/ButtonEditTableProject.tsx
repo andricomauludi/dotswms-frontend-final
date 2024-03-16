@@ -7,19 +7,12 @@ import React, {
 import {
   Modal,
   ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
   Button,
   useDisclosure,
-  Image,
-  Chip,
   Spinner,
 } from "@nextui-org/react";
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
-import styles from "./ButtonAddProject.module.css";
-import { Container } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faClock,
@@ -29,6 +22,10 @@ import {
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { Flip, ToastContainer, toast } from "react-toastify";
+import CheckboxDeleteFile from "../Checkboxes/CheckboxDeleteFile";
+import { useCookies } from "next-client-cookies";
+import { BACKEND_PORT, COOKIE_NAME } from "@/constants";
+
 
 interface IprofileState {
   //interface merupakan rangka object yang mau kita masukin dari api
@@ -50,10 +47,13 @@ const ButtonEditTableProject = forwardRef(
     let hourpostingtime = myArray[0];
     let minutepostingtime = myArray[1];
 
+    const cookies = useCookies();
+
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [data, setData] = useState([]);
     const [dataImage, setDataImage] = useState([]);
     const [imageloader, setImageLoader] = useState();
+    const [contentDelete, setContentDelete] = useState([]);
     const [isLoading, setLoading] = useState(true);
     const [isLoadingModal, setLoadingModal] = useState(false);
     const [size, setSize] = React.useState("5xl");
@@ -64,6 +64,11 @@ const ButtonEditTableProject = forwardRef(
       // Do something in the child component
       parentFunction(); // Call the parent function
     };
+
+    // const sendDataToParent = (index) => { // the callback. Use a better name
+    //   console.log(index);
+    //   setContentDelete(index);
+    // };
 
     useImperativeHandle(ref, () => ({
       // Expose parent function to parent component
@@ -93,12 +98,19 @@ const ButtonEditTableProject = forwardRef(
       var formData = new FormData();
       event.preventDefault();
 
-      var contentposting = document.querySelector("#contentposting");
-      if (contentposting.files[0] === undefined) {
-        formData.append("contentposting", "");
+      const contentposting: any = document.querySelector("#contentposting");
+      const contentpostingarray: any = contentposting.files;
+
+      if (contentposting.files[0] !== undefined) {
+        // formData.append("contentposting", contentposting.files[0]);
+
+        [...contentpostingarray].forEach((file) => {
+          formData.append("contentposting", file);
+        });
       } else {
-        formData.append("contentposting", contentposting.files[0]);
+        formData.append("contentposting", "");
       }
+
       formData.append("_id", tableData._id);
       formData.append("item", event.currentTarget.item.value);
       formData.append(
@@ -161,6 +173,25 @@ const ButtonEditTableProject = forwardRef(
       //   instagrampostingstatus: event.currentTarget.instagrampostingstatus.value,
       //   tiktokpostingstatus: event.currentTarget.tiktokpostingstatus.value,
       // };
+
+      if (contentDelete) {
+        try {
+          const payload = {
+            id: contentDelete
+          };
+          const { data } = await axios.post(
+            BACKEND_PORT +"workspaces/delete-content-posting",
+            payload,
+            { headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` } }
+          );
+         
+        } catch (e) {          
+          const error = e as AxiosError;
+          console.log(error);
+          alert(error.message);
+        }
+      }
+
 
       try {
         const { data } = await axios.post(
@@ -256,6 +287,9 @@ const ButtonEditTableProject = forwardRef(
           </ModalContent>
         </Modal>
       );
+
+      console.log(contentDelete);
+
 
     return (
       <>
@@ -580,21 +614,33 @@ const ButtonEditTableProject = forwardRef(
                         <div className="mb-4.5">
                           <div>
                             <label className="mb-3 block text-black dark:text-white">
-                              Content Posting
+                              Remove Content Posting
                             </label>
-                            <Image
+                            {/* <Image
                               src={`data:image/jpeg;base64,${tableData.contentposting}`}
                               style={{ marginBottom: "20px" }}
                               alt="Brand"
                               width={200}
                               height={200}
                               onClick={() => handleOpen("5xl")}
+                            /> */}
+                            <CheckboxDeleteFile
+                              itemId={tableData._id}
+                              sendDataToParent={(value) =>
+                                setContentDelete(value)
+                              }
                             />
+                            {/* <Checkbox className="mb-3"  color="danger">Danger</Checkbox> */}
+                            <label className="mt-3 mb-3 block text-black dark:text-white">
+                              Add Content Posting
+                            </label>
+
                             <input
                               name="contentposting"
                               id="contentposting"
                               type="file"
                               className="w-full cursor-pointer rounded-lg border-[1.5px] border-stroke bg-transparent font-medium outline-none transition file:mr-5 file:border-collapse file:cursor-pointer file:border-0 file:border-r file:border-solid file:border-stroke file:bg-whiter file:py-3 file:px-5 file:hover:bg-primary file:hover:bg-opacity-10 focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:file:border-form-strokedark dark:file:bg-white/30 dark:file:text-white dark:focus:border-primary"
+                              multiple
                             />
                           </div>
                         </div>

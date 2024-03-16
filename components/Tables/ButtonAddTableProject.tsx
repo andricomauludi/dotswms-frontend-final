@@ -88,8 +88,6 @@ const ButtonAddTableProject = forwardRef(
       const contentposting:any = document.querySelector("#contentposting");
       const contentpostingarray: any = contentposting.files
 
-     
-
       if (contentposting.files[0] !== undefined) {     
         // formData.append("contentposting", contentposting.files[0]);
 

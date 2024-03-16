@@ -15,8 +15,7 @@ interface UserResponse {
   error: AxiosError | null;
 }
 async function getUser(): Promise<UserResponse> {
-  try {
-    console.log("masuk getUser")
+  try {    
     const { data } = await axios.get("/api/auth/me"); //ngambil api dari auth me    
     return {
       user: data,
