@@ -16,6 +16,8 @@ import {
 import axios from "axios";
 import { Metadata } from "next";
 import React, { useEffect, useRef, useState } from "react";
+import { BACKEND_PORT, COOKIE_NAME } from "@/constants";
+
 export const metadata: Metadata = {
   title: "Workspaces Page | DOTS WMS",
   description: "This is Workspaces page for DOTS WMS",
@@ -23,6 +25,8 @@ export const metadata: Metadata = {
 };
 
 const WorkspacePage = () => {
+  const cookies = useCookies();
+
   const childRef = useRef(null);
   const [datas, setData] = useState([]);
   const [isLoading, setLoading] = useState(true);
@@ -35,9 +39,10 @@ const WorkspacePage = () => {
       try {
         setLoading(true);
         const { data: response } = await axios.get(
-          "/api/workspaces/group-project"
-        );
-        setData(await response.data.groupproject);
+          BACKEND_PORT+"workspaces/all-group-project",
+          { headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` } }
+        );                  
+        setData(await response.groupproject);
       } catch (error: any) {
         console.error(error.message);
       }
