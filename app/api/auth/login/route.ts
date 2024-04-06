@@ -75,9 +75,9 @@ export async function POST(request: Request) {
 
   } catch (e) {
     const error = e as AxiosError;
-    console.log(error.response?.data);
+    console.log(error.response?.data.message);
     const response = {
-      message: error.response
+      message: error.response?.data.message
     };
 
     return new Response(JSON.stringify(response), {
