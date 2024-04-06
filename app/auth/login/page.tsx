@@ -1,7 +1,9 @@
 "use client";
 
+import { BACKEND_PORT, COOKIE_NAME } from "@/constants";
 import { Spinner } from "@nextui-org/react";
 import axios, { AxiosError } from "axios";
+import { useCookies } from "next-client-cookies";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -10,6 +12,7 @@ import { useState } from "react";
 export default function Home() {
   const router = useRouter();
   const [isLoadingModal, setLoadingModal] = useState(false);
+  const cookies = useCookies();
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     setLoadingModal(true);
 
@@ -18,12 +21,40 @@ export default function Home() {
       email: event.currentTarget.email.value,
       password: event.currentTarget.password.value,
     };
+    // try {
+    //   const { data } = await axios.post("/api/auth/login", payload);
+    // // cookies.set('my-cookie', 'my-value')}
+
+    //   // alert(JSON.stringify(data));
+    //   //redirect the user to dashboard
+    //   setLoadingModal(false);
+    //   router.push("/");
+    // } catch (e) {
+    //   setLoadingModal(false);
+    //   const error = e as AxiosError;
+    //   console.log(error);
+    //   alert(error.response?.data.message);
+    // }
+
     try {
-      const { data } = await axios.post("/api/auth/login", payload);
-      // alert(JSON.stringify(data));
-      //redirect the user to dashboard
-      setLoadingModal(false);
-      router.push("/");
+      const { data } = await axios.post(
+        BACKEND_PORT + "users/login",
+        payload
+      );
+      let datatoken = data;
+      let hasil = datatoken;
+
+      try {
+        cookies.set(COOKIE_NAME, hasil["accessToken"]);
+
+        setLoadingModal(false);
+        router.push("/");
+      } catch (e) {
+        setLoadingModal(false);
+        const error = e as AxiosError;
+        console.log(error);
+        alert(error.response?.data.message);
+      }
     } catch (e) {
       setLoadingModal(false);
       const error = e as AxiosError;
@@ -54,7 +85,7 @@ export default function Home() {
                       />
                     </div>
                     <div className="text-center mt-5 mb-3">
-                      <h1 className="text-white font-bold">Sign in</h1>                     
+                      <h1 className="text-white font-bold">Sign in</h1>
                     </div>
                     {/* <div className="btn-wrapper text-center">
                     <button
