@@ -28,7 +28,7 @@ export default function Home() {
       setLoadingModal(false);
       const error = e as AxiosError;
       console.log(error);
-      alert(error.message);
+      alert(error.response?.data);
     }
   };
   if (isLoadingModal) {
