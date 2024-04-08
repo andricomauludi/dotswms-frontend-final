@@ -232,9 +232,10 @@ const ButtonEditTableProject = forwardRef(
         setLoading(true);
         try {
           const { data } = await axios.get(
-            BACKEND_PORT + "users/me",
+            BACKEND_PORT +
+              "users/dropdown-user",
             { headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` } }
-          );          
+          );  
           console.log(data);
           setData(await data.user);        
         } catch (e) {
