@@ -220,10 +220,12 @@ const ButtonAddTableProject = forwardRef(
     useEffect(() => {
       const fetchData = async () => {
         setLoading(true);
-        try {
-          const { data } = await axios.get(BACKEND_PORT + "users/me", {
-            headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` },
-          });          
+        try {         
+          const { data } = await axios.get(
+            BACKEND_PORT +
+              "users/dropdown-user",
+            { headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` } }
+          );       
           console.log(data);
           setData(await data.user);
         } catch (e) {
