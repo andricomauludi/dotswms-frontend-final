@@ -27,6 +27,8 @@ import {
   faTimesCircle,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
+import { BACKEND_PORT, COOKIE_NAME } from "@/constants";
+import { useCookies } from "next-client-cookies";
 
 interface IprofileState {
   //interface merupakan rangka object yang mau kita masukin dari api
@@ -50,6 +52,7 @@ const ButtonAddTableProject = forwardRef(
     const [isLoading, setLoading] = useState(true);
     const [isLoadingModal, setLoadingModal] = useState(false);
     const [size, setSize] = React.useState("5xl");
+    const cookies = useCookies();
 
     const handleChildEvent = () => {
       // Do something in the child component
@@ -85,10 +88,10 @@ const ButtonAddTableProject = forwardRef(
       var formData = new FormData();
       event.preventDefault();
 
-      const contentposting:any = document.querySelector("#contentposting");
-      const contentpostingarray: any = contentposting.files
+      const contentposting: any = document.querySelector("#contentposting");
+      const contentpostingarray: any = contentposting.files;
 
-      if (contentposting.files[0] !== undefined) {     
+      if (contentposting.files[0] !== undefined) {
         // formData.append("contentposting", contentposting.files[0]);
 
         [...contentpostingarray].forEach((file) => {
@@ -98,14 +101,14 @@ const ButtonAddTableProject = forwardRef(
         formData.append("contentposting", "");
       }
 
-      console.log(contentposting.files[0])
-      console.log(contentposting.files)
-      
-    //   for (var pair of formData.entries()) {
-    //     console.log(pair[0]+ ', ' + pair[1]); 
-    // }
-    // console.log(contentposting.files)
-    //   throw new Error("ngentot")
+      console.log(contentposting.files[0]);
+      console.log(contentposting.files);
+
+      //   for (var pair of formData.entries()) {
+      //     console.log(pair[0]+ ', ' + pair[1]);
+      // }
+      // console.log(contentposting.files)
+      //   throw new Error("ngentot")
 
       formData.append("item", event.currentTarget.item.value);
       formData.append(
@@ -124,7 +127,12 @@ const ButtonAddTableProject = forwardRef(
         "contentcategory",
         event.currentTarget.contentcategory.value
       );
-      formData.append("postingtime", event.currentTarget.postingtime1.value+":"+event.currentTarget.postingtime2.value);
+      formData.append(
+        "postingtime",
+        event.currentTarget.postingtime1.value +
+          ":" +
+          event.currentTarget.postingtime2.value
+      );
       formData.append(
         "postingcaption",
         event.currentTarget.postingcaption.value
@@ -160,15 +168,27 @@ const ButtonAddTableProject = forwardRef(
       // };
       // console.log(data[event.currentTarget.lead.value]['full_name']);
       try {
+        // const { data } = await axios.post(
+        //   "/api/workspaces/tableproject",
+        //   formData,
+        //   {
+        //     headers: {
+        //       "Content-Type": "multipart/form-data",
+        //     },
+        //   }
+        // );
+
         const { data } = await axios.post(
-          "/api/workspaces/tableproject",
+          BACKEND_PORT + "workspaces/create-table-project",
           formData,
           {
             headers: {
+              Authorization: `Bearer ${cookies.get(COOKIE_NAME)}`,
               "Content-Type": "multipart/form-data",
             },
           }
         );
+
         setLoadingModal(false);
 
         onClose();
@@ -201,13 +221,18 @@ const ButtonAddTableProject = forwardRef(
       const fetchData = async () => {
         setLoading(true);
         try {
-          const { data: response } = await axios.get(
-            "/api/workspaces/dropdownuser"
-          );
-          setData(await response.data.user);
-        } catch (error: any) {
-          console.error(error.message);
+          const { data } = await axios.get(BACKEND_PORT + "users/me", {
+            headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` },
+          });
+          setImageLoader(`/img/${await data.user.profile_picture}`);
+          console.log(data);
+          setData(await data.user);
+        } catch (e) {
+          const error = e as AxiosError;
+          console.log(error);
+          alert(e);
         }
+
         setLoading(false);
       };
 
@@ -218,8 +243,13 @@ const ButtonAddTableProject = forwardRef(
       const fetchData = async () => {
         setLoading(true);
         try {
-          const { data: response } = await axios.get("/api/users/me");
-          setDataImage(await response.data.user);
+          const { data } = await axios.get(
+            BACKEND_PORT + "users/me",
+            {
+              headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` },
+            }
+          );
+          setDataImage(await data.user);
         } catch (error: any) {
           console.error(error.message);
         }
