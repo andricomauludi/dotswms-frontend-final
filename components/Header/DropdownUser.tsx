@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Buttonlogout from "./ButtonLogout";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import ButtonShowProfile from "./ButtonShowProfile";
 
 const DropdownUser = () => {
@@ -49,8 +49,10 @@ const DropdownUser = () => {
         const { data: response } = await axios.get("/api/users/me");
         setData(await response.data.user);
         setImageLoader(`/img/${await response.data.user.profile_picture}`);
-      } catch (error: any) {
-        console.error(error.message);
+      } catch (e) {
+        setLoading(false);
+        const error = e as AxiosError;
+        console.log(error);      
       }
       setLoading(false);
     };

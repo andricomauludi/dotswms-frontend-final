@@ -14,11 +14,11 @@ import axios from "axios";
 import { Metadata } from "next";
 import React, { useEffect, useState } from "react";
 import { Col, Row } from "react-bootstrap";
-export const metadata: Metadata = {
-  title: "My Task Page | DOTS WMS",
-  description: "This is My Task page for DOTS WMS",
-  // other metadata
-};
+// export const metadata: Metadata = {
+//   title: "My Task Page | DOTS WMS",
+//   description: "This is My Task page for DOTS WMS",
+//   // other metadata
+// };
 
 const MyTaskPage = () => {
   const [datas, setData] = useState([]);

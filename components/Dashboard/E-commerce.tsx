@@ -11,7 +11,7 @@ import CardDataStats from "../CardDataStats";
 // without this the component renders on server and throws an error
 import dynamic from "next/dynamic";
 import CardDataStatsGreen from "../CardDataStatsGreen";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBarsProgress, faListCheck } from "@fortawesome/free-solid-svg-icons";
 import { faSquareCheck } from "@fortawesome/free-solid-svg-icons/faSquareCheck";
@@ -29,8 +29,9 @@ const ECommerce: React.FC = () => {
       try {
         const { data: response } = await axios.get("/api/dashboard/content-card");
         setData(await response.data);      
-      } catch (error: any) {
-        console.error(error.message);
+      } catch (e) {
+        const error = e as AxiosError;
+        console.log(error);      
       }
       setLoading(false);
     };
