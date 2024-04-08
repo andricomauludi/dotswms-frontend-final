@@ -4,6 +4,7 @@ import { Chat } from "@/types/chat";
 import { useEffect, useState } from "react";
 import axios, { AxiosError } from "axios";
 import { BACKEND_PORT, COOKIE_NAME } from "@/constants";
+import { useCookies } from "next-client-cookies";
 
 // const chatData: Chat[] = [
 //   {

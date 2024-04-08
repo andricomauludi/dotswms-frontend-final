@@ -5,6 +5,7 @@ import Buttonlogout from "./ButtonLogout";
 import axios, { AxiosError } from "axios";
 import ButtonShowProfile from "./ButtonShowProfile";
 import { BACKEND_PORT, COOKIE_NAME } from "@/constants";
+import { useCookies } from "next-client-cookies";
 
 const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
