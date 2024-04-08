@@ -13,7 +13,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { Flip, ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useCookies } from "next-client-cookies";
-import { COOKIE_NAME } from "@/constants";
+import { BACKEND_PORT, COOKIE_NAME } from "@/constants";
 
 const ButtonAddGroupProject = forwardRef(( {parentFunction} , ref) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -107,7 +107,7 @@ const ButtonAddGroupProject = forwardRef(( {parentFunction} , ref) => {
 
       try {
         const { data } = await axios.get(
-          process.env.BACKEND_PORT +
+          BACKEND_PORT +
             "users/dropdown-user",
           { headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` } }
         );                

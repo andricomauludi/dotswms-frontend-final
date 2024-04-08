@@ -13,7 +13,7 @@ import {
 import TableInside from "./TableInside";
 import ButtonEditProject from "./ButtonEditProject";
 import ButtonDeleteProject from "./ButtonDeleteProject";
-import { COOKIE_NAME } from "@/constants";
+import { BACKEND_PORT, COOKIE_NAME } from "@/constants";
 import { useCookies } from "next-client-cookies";
 
 const TableProject = ({ tableData }) => {
@@ -53,7 +53,7 @@ const TableProject = ({ tableData }) => {
 
       try {
         const { data } = await axios.get(
-          process.env.BACKEND_PORT +
+          BACKEND_PORT +
             "workspaces/get-project-specific/" +
             tableData._id,
           {
