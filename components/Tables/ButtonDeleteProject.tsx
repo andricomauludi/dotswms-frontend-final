@@ -11,6 +11,8 @@ import { Row } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { Flip, ToastContainer, toast } from "react-toastify";
+import { BACKEND_PORT, COOKIE_NAME } from "@/constants";
+import { useCookies } from "next-client-cookies";
 
 interface IprofileState {
   //interface merupakan rangka object yang mau kita masukin dari api
@@ -33,6 +35,8 @@ const ButtonDeleteProject = forwardRef(
     const [isLoadingModal, setLoadingModal] = useState(false);
     const [isLoading, setLoading] = useState(true);
     const [size, setSize] = React.useState("5xl");
+    const cookies = useCookies();
+
 
     const handleChildEvent = () => {
       // Do something in the child component
@@ -69,10 +73,17 @@ const ButtonDeleteProject = forwardRef(
         _id: tableData._id,
       };
       try {
-        const { data } = await axios.post(
-          "/api/workspaces/deleteproject",
-          payload
-        );
+        // const { data } = await axios.post(
+        //   "/api/workspaces/deleteproject",
+        //   payload
+        // );
+
+        const { data } = await axios.delete(
+          BACKEND_PORT + "workspaces/delete-project/"+tableData._id,
+          {
+            headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}`, 'Content-Type': 'multipart/form-data' },
+          }
+        );    
         setLoadingModal(false);
 
         onClose();
