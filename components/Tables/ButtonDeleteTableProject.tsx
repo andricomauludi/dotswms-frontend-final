@@ -18,7 +18,7 @@ import { Container, Row } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { Flip, ToastContainer, toast } from "react-toastify";
-import { BACKEND_PORT } from "@/constants";
+import { BACKEND_PORT, COOKIE_NAME } from "@/constants";
 import { useCookies } from "next-client-cookies";
 
 interface IprofileState {

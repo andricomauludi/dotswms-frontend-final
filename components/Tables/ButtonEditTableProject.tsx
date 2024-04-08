@@ -195,7 +195,7 @@ const ButtonEditTableProject = forwardRef(
 
       try {
         const { data } = await axios.patch(
-          process.env.BACKEND_PORT + "workspaces/edit-table-project/",
+          BACKEND_PORT + "workspaces/edit-table-project/",
           formData,
           {
             headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}`, 'Content-Type': 'multipart/form-data' },
