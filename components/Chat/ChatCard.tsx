@@ -2,7 +2,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { Chat } from "@/types/chat";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
+import { BACKEND_PORT, COOKIE_NAME } from "@/constants";
 
 // const chatData: Chat[] = [
 //   {
@@ -59,16 +60,37 @@ const ChatCard = () => {
   const [data, setData] = useState();
   const [imageloader, setImageLoader] = useState();
   const [isLoading, setLoading] = useState(true);
+  const cookies = useCookies();
+
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
+      // try {
+      //   const { data: response } = await axios.get("/api/users/all");
+      //   setData(await response.data.user);
+      //   setImageLoader(`/img/${await response.data.user.profile_picture}`);
+      // } catch (error: any) {
+      //   console.error(error.message);
+      // }
+
+
+
       try {
-        const { data: response } = await axios.get("/api/users/all");
-        setData(await response.data.user);
+        const { data } = await axios.get(
+          BACKEND_PORT + "dashboard/get-users-dashboard",
+          { headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` } }
+        );
         setImageLoader(`/img/${await response.data.user.profile_picture}`);
-      } catch (error: any) {
-        console.error(error.message);
+        console.log(data);
+        setData(await data);        
+      } catch (e) {
+        const error = e as AxiosError;
+        console.log(error);
+        alert(e);
       }
+
+
+
       setLoading(false);
     };
 

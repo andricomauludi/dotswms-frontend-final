@@ -4,12 +4,15 @@ import Image from "next/image";
 import Buttonlogout from "./ButtonLogout";
 import axios, { AxiosError } from "axios";
 import ButtonShowProfile from "./ButtonShowProfile";
+import { BACKEND_PORT, COOKIE_NAME } from "@/constants";
 
 const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [data, setData] = useState();
   const [imageloader, setImageLoader] = useState();
   const [isLoading, setLoading] = useState(true);
+  const cookies = useCookies();
+
 
   const trigger = useRef<any>(null);
   const dropdown = useRef<any>(null);
@@ -45,15 +48,32 @@ const DropdownUser = () => {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
+      // try {
+      //   const { data: response } = await axios.get("/api/users/me");
+      //   setData(await response.data.user);
+      // } catch (e) {
+      //   setLoading(false);
+      //   const error = e as AxiosError;
+      //   console.log(error);      
+      // }
+
+
+
       try {
-        const { data: response } = await axios.get("/api/users/me");
-        setData(await response.data.user);
+        const { data } = await axios.get(
+          BACKEND_PORT + "users/me",
+          { headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` } }
+        );
         setImageLoader(`/img/${await response.data.user.profile_picture}`);
+        console.log(data);
+        setData(await data);        
       } catch (e) {
-        setLoading(false);
         const error = e as AxiosError;
-        console.log(error);      
+        console.log(error);
+        alert(e);
       }
+
+
       setLoading(false);
     };
 
