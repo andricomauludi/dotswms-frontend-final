@@ -18,11 +18,11 @@ import { Metadata } from "next";
 import React, { useEffect, useRef, useState } from "react";
 import { BACKEND_PORT, COOKIE_NAME } from "@/constants";
 
-export const metadata: Metadata = {
-  title: "Workspaces Page | DOTS WMS",
-  description: "This is Workspaces page for DOTS WMS",
-  // other metadata
-};
+// export const metadata: Metadata = {
+//   title: "Workspaces Page | DOTS WMS",
+//   description: "This is Workspaces page for DOTS WMS",
+//   // other metadata
+// };
 
 const WorkspacePage = () => {
   const cookies = useCookies();
