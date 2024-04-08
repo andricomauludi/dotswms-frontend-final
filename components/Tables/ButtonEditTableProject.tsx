@@ -194,15 +194,13 @@ const ButtonEditTableProject = forwardRef(
 
 
       try {
-        const { data } = await axios.post(
-          "/api/workspaces/edittableproject",
+        const { data } = await axios.patch(
+          process.env.BACKEND_PORT + "workspaces/edit-table-project/",
           formData,
           {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
+            headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}`, 'Content-Type': 'multipart/form-data' },
           }
-        );
+        );    
         setLoadingModal(false);
 
         onClose();
@@ -233,12 +231,16 @@ const ButtonEditTableProject = forwardRef(
       const fetchData = async () => {
         setLoading(true);
         try {
-          const { data: response } = await axios.get(
-            "/api/workspaces/dropdownuser"
-          );
-          setData(await response.data.user);
-        } catch (error: any) {
-          console.error(error.message);
+          const { data } = await axios.get(
+            BACKEND_PORT + "users/me",
+            { headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` } }
+          );          
+          console.log(data);
+          setData(await data.user);        
+        } catch (e) {
+          const error = e as AxiosError;
+          console.log(error);
+          alert(e);
         }
         setLoading(false);
       };

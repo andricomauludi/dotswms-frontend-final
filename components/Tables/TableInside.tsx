@@ -27,6 +27,8 @@ const TableInside = ({ tableData }) => {
   const [size, setSize] = React.useState("5xl");
   const [isLoading, setLoading] = useState(true);
   const [triggerApiCall, setTriggerApiCall] = useState(true);
+  
+
 
   var mantab;
 
@@ -41,19 +43,17 @@ const TableInside = ({ tableData }) => {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      try {
-        const payload = {
-          _id: tableData._id,
-        };
-        const { data: response } = await axios.post(
-          "/api/workspaces/tableinside",
-          payload
+      try {          
+        const { data } = await axios.get(
+          BACKEND_PORT +
+            "workspaces/all-table-project/"+tableData._id,
+          { headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` } }
         );
         // const { data: response } = await axios.get(
         //   "/api/workspaces/tableproject"
         // );
         // setData(await response.data.tableproject);
-        return await response.data.tableproject;
+        return await data.tableproject;
       } catch (error: any) {
         console.error(error.message);
       }
