@@ -23,6 +23,8 @@ import { Container } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { Flip, ToastContainer, toast } from "react-toastify";
+import { BACKEND_PORT, COOKIE_NAME } from "@/constants";
+import { useCookies } from "next-client-cookies";
 
 const ButtonEditGroupProject = forwardRef(
   ({ parentFunction, tableData }, ref) => {
@@ -33,6 +35,7 @@ const ButtonEditGroupProject = forwardRef(
     const [isLoading, setLoading] = useState(true);
     const [size, setSize] = React.useState("2xl");
     const [type, setType] = useState("text");
+    const cookies = useCookies();
 
     const handleChildEvent = () => {
       // Do something in the child component
@@ -72,15 +75,23 @@ const ButtonEditGroupProject = forwardRef(
       formData.append("description", event.currentTarget.description.value);
 
       try {
-        const { data } = await axios.post(
-          "/api/workspaces/editgroupproject",
+        // const { data } = await axios.post(
+        //   "/api/workspaces/editgroupproject",
+        //   formData,
+        //   {
+        //     headers: {
+        //       "Content-Type": "multipart/form-data",
+        //     },
+        //   }
+        // );
+
+        const { data } = await axios.patch(
+          BACKEND_PORT + "workspaces/edit-group-project/",
           formData,
           {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
+            headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}`, 'Content-Type': 'multipart/form-data' },
           }
-        );
+        );    
         setLoadingModal(false);
 
         onClose();
