@@ -1,5 +1,5 @@
 "use client";
-import axios, { Axios } from "axios";
+import axios, { Axios, AxiosError } from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import ButtonAddProject from "./ButtonAddProject";
 import {
@@ -13,6 +13,8 @@ import {
 import TableInside from "./TableInside";
 import ButtonEditProject from "./ButtonEditProject";
 import ButtonDeleteProject from "./ButtonDeleteProject";
+import { COOKIE_NAME } from "@/constants";
+import { useCookies } from "next-client-cookies";
 
 const TableProject = ({ tableData }) => {
   const childRef = useRef(null);
@@ -22,6 +24,7 @@ const TableProject = ({ tableData }) => {
   const [size, setSize] = React.useState("5xl");
   const [isLoading, setLoading] = useState(true);
   const [triggerApiCall, setTriggerApiCall] = useState(true);
+  const cookies = useCookies();
 
   const handleOpen = async (size: any) => {
     setSize(size);
@@ -35,18 +38,39 @@ const TableProject = ({ tableData }) => {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      const payload = {
-        _id: tableData._id,
-      };
+      // const payload = {
+      //   _id: tableData._id,
+      // };
+      // try {
+      //   const { data: response } = await axios.post(
+      //     "/api/workspaces/all-project",
+      //     payload
+      //   );
+      //   setDataProject(await response.data.groupproject);
+      // } catch (error: any) {
+      //   console.error(error.message);
+      // }
+
       try {
-        const { data: response } = await axios.post(
-          "/api/workspaces/all-project",
-          payload
+        const { data } = await axios.get(
+          process.env.BACKEND_PORT +
+            "workspaces/get-project-specific/" +
+            tableData._id,
+          {
+            headers: {
+              Authorization: `Bearer ${cookies.get(COOKIE_NAME)}`,
+              "Content-Type": "multipart/form-data",
+            },
+          }
         );
-        setDataProject(await response.data.groupproject);
-      } catch (error: any) {
-        console.error(error.message);
+
+        setDataProject(await data.groupproject);
+      } catch (e) {
+        const error = e as AxiosError;
+        console.log(error);
+        console.log(error.message);
       }
+
       setLoading(false);
     };
 

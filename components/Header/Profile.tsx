@@ -5,6 +5,8 @@ import Image from "next/image";
 import { Metadata } from "next";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { BACKEND_PORT, COOKIE_NAME } from "@/constants";
+import { useCookies } from "next-client-cookies";
 export const metadata: Metadata = {
   title: "Profile Page | Next.js E-commerce Dashboard Template",
   description: "This is Profile page for TailAdmin Next.js",
@@ -15,15 +17,23 @@ const Profile = () => {
   const [data, setData] = useState();
   const [imageloader, setImageLoader] = useState();
   const [isLoading, setLoading] = useState(true);
+  const cookies = useCookies();
+
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const { data: response } = await axios.get("/api/users/me");
-        setData(await response.data.user);
-        setImageLoader(`/img/${await response.data.user.profile_picture}`);
-      } catch (error: any) {
-        console.error(error.message);
+        const { data } = await axios.get(
+          BACKEND_PORT + "users/me",
+          { headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` } }
+        );
+        setImageLoader(`/img/${await data.user.profile_picture}`);
+        console.log(data);
+        setData(await data.user);        
+      } catch (e) {
+        const error = e as AxiosError;
+        console.log(error);
+        alert(e);
       }
       setLoading(false);
     };

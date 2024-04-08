@@ -12,6 +12,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { Flip, ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useCookies } from "next-client-cookies";
+import { COOKIE_NAME } from "@/constants";
 
 const ButtonAddGroupProject = forwardRef(( {parentFunction} , ref) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -19,6 +21,8 @@ const ButtonAddGroupProject = forwardRef(( {parentFunction} , ref) => {
   const [isLoading, setLoading] = useState(true);
   const [isLoadingModal, setLoadingModal] = useState(false);
   const [size, setSize] = React.useState("2xl");
+  const cookies = useCookies();
+
 
   const handleChildEvent = () => {
     // Do something in the child component
@@ -90,14 +94,33 @@ const ButtonAddGroupProject = forwardRef(( {parentFunction} , ref) => {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
+      // try {
+      //   const { data: response } = await axios.get(
+      //     "/api/workspaces/dropdownuser"
+      //   );
+      //   setData(await response.data.user);
+      // } catch (error: any) {
+      //   console.error(error.message);
+      // }
+
+
+
       try {
-        const { data: response } = await axios.get(
-          "/api/workspaces/dropdownuser"
-        );
-        setData(await response.data.user);
-      } catch (error: any) {
-        console.error(error.message);
+        const { data } = await axios.get(
+          process.env.BACKEND_PORT +
+            "users/dropdown-user",
+          { headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` } }
+        );                
+    
+        setData(await data.user);
+
+        // console.log(datatoken);
+      } catch (e) {
+        const error = e as AxiosError;
+        console.log(error);
+        alert(e);
       }
+
       setLoading(false);
     };
 

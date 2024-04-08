@@ -16,6 +16,8 @@ import styles from "./ButtonAddProject.module.css";
 import { Container } from "react-bootstrap";
 import Profile from "./Profile";
 import Link from "next/link";
+import { useCookies } from "next-client-cookies";
+import { BACKEND_PORT, COOKIE_NAME } from "@/constants";
 
 interface IprofileState {
   //interface merupakan rangka object yang mau kita masukin dari api
@@ -36,6 +38,8 @@ export default function ButtonShowProfile() {
   const [imageloader, setImageLoader] = useState();
   const [isLoading, setLoading] = useState(true);
   const [size, setSize] = React.useState("5xl");
+  const cookies = useCookies();
+
 
   const handleOpen = async (size: any) => {
     setSize(size);
@@ -59,11 +63,17 @@ export default function ButtonShowProfile() {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const { data: response } = await axios.get("/api/users/me");
-        setData(await response.data.user);
-        setImageLoader(`/img/${await response.data.user.profile_picture}`);
-      } catch (error: any) {
-        console.error(error.message);
+        const { data } = await axios.get(
+          BACKEND_PORT + "users/me",
+          { headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` } }
+        );
+        setImageLoader(`/img/${await data.user.profile_picture}`);
+        console.log(data);
+        setData(await data.user);        
+      } catch (e) {
+        const error = e as AxiosError;
+        console.log(error);
+        alert(e);
       }
       setLoading(false);
     };
