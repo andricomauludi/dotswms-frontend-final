@@ -21,6 +21,8 @@ import { useRouter } from "next/navigation";
 import { Flip, ToastContainer, toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPalette } from "@fortawesome/free-solid-svg-icons";
+import { BACKEND_PORT, COOKIE_NAME } from "@/constants";
+import { useCookies } from "next-client-cookies";
 
 const ButtonAddProject = forwardRef(({ parentFunction, tableData }, ref) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -29,6 +31,8 @@ const ButtonAddProject = forwardRef(({ parentFunction, tableData }, ref) => {
   const [isLoading, setLoading] = useState(true);
   const [isLoadingModal, setLoadingModal] = useState(false);
   const [size, setSize] = React.useState("2xl");
+  const cookies = useCookies();
+
 
   const handleChildEvent = () => {
     // Do something in the child component
@@ -71,15 +75,26 @@ const ButtonAddProject = forwardRef(({ parentFunction, tableData }, ref) => {
     formData.append("updated_by", "admin1");
 
     try {
+      // const { data } = await axios.post(
+      //   "/api/workspaces/addproject",
+      //   formData,
+      //   {
+      //     headers: {
+      //       "Content-Type": "multipart/form-data",
+      //     },
+      //   }
+      // );
+
+
       const { data } = await axios.post(
-        "/api/workspaces/addproject",
+        BACKEND_PORT + "workspaces/create-project",
         formData,
         {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+          headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}`, 'Content-Type': 'multipart/form-data' },
         }
-      );
+      );    
+
+      
       setLoadingModal(false);
 
       onClose();
@@ -111,12 +126,17 @@ const ButtonAddProject = forwardRef(({ parentFunction, tableData }, ref) => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const { data: response } = await axios.get(
-          "/api/workspaces/dropdownuser"
+        const { data } = await axios.get(
+          BACKEND_PORT + "users/me",
+          { headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` } }
         );
-        setData(await response.data.user);
-      } catch (error: any) {
-        console.error(error.message);
+        setImageLoader(`/img/${await data.user.profile_picture}`);
+        console.log(data);
+        setData(await data.user);        
+      } catch (e) {
+        const error = e as AxiosError;
+        console.log(error);
+        alert(e);
       }
       setLoading(false);
     };

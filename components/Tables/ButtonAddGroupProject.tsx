@@ -54,15 +54,24 @@ const ButtonAddGroupProject = forwardRef(( {parentFunction} , ref) => {
     formData.append("updated_by", "admin1");
 
     try {
+      // const { data } = await axios.post(
+      //   "/api/workspaces/group-project",
+      //   formData,
+      //   {
+      //     headers: {
+      //       "Content-Type": "multipart/form-data",
+      //     },
+      //   }
+      // );
+
+
       const { data } = await axios.post(
-        "/api/workspaces/group-project",
+        BACKEND_PORT + "workspaces/create-group-project",
         formData,
         {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+          headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}`, 'Content-Type': 'multipart/form-data' },
         }
-      );
+      );    
       setLoadingModal(false);
       // alert("Success");
 
