@@ -15,52 +15,66 @@ import axios, { AxiosError } from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBarsProgress, faListCheck } from "@fortawesome/free-solid-svg-icons";
 import { faSquareCheck } from "@fortawesome/free-solid-svg-icons/faSquareCheck";
+import { useCookies } from "next-client-cookies";
+import { BACKEND_PORT, COOKIE_NAME } from "@/constants";
 const MapOne = dynamic(() => import("../Maps/MapOne"), {
   ssr: false,
 });
 
-
 const ECommerce: React.FC = () => {
   const [data, setData] = useState();
   const [isLoading, setLoading] = useState(true);
+  const cookies = useCookies();
+
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
+      // try {
+      //   const { data: response } = await axios.get("/api/dashboard/content-card");
+      //   setData(await response.data);
+      // } catch (e) {
+      //   const error = e as AxiosError;
+      //   console.log(error);
+      // }
+
       try {
-        const { data: response } = await axios.get("/api/dashboard/content-card");
-        setData(await response.data);      
+        const { data } = await axios.get(
+          BACKEND_PORT + "dashboard/get-contents-card",
+          { headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` } }
+        );
+        console.log(data);
+        setData(await data);        
       } catch (e) {
         const error = e as AxiosError;
-        console.log(error);      
+        console.log(error);
+        alert(e);
       }
+
       setLoading(false);
     };
-  
+
     fetchData();
   }, []);
-  
+
   if (isLoading) return <p>Loading...</p>;
   if (!data) return <p>No profile data</p>;
 
   return (
     <>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
-        <CardDataStats title="On Going Project" total={data.project.count} >
-        {/* <CardDataStats title="Total Group Project" total={data.groupproject} rate="0.43%" levelUp> */}
-        <FontAwesomeIcon icon={faBarsProgress}/>
-        
+        <CardDataStats title="On Going Project" total={data.project.count}>
+          {/* <CardDataStats title="Total Group Project" total={data.groupproject} rate="0.43%" levelUp> */}
+          <FontAwesomeIcon icon={faBarsProgress} />
         </CardDataStats>
-        <CardDataStats title="On Going Item" total={data.tableproject.count} >
-        {/* <CardDataStats title="Total Profit" total="$45,2K" rate="4.35%" levelUp> */}
-        <FontAwesomeIcon icon={faListCheck}/>
-          
+        <CardDataStats title="On Going Item" total={data.tableproject.count}>
+          {/* <CardDataStats title="Total Profit" total="$45,2K" rate="4.35%" levelUp> */}
+          <FontAwesomeIcon icon={faListCheck} />
         </CardDataStats>
         <CardDataStats title="On Going Sub Item" total={data.subitem.count}>
-        {/* <CardDataStats title="Total Product" total="2.450" rate="2.59%" levelUp> */}
-        <FontAwesomeIcon icon={faSquareCheck}/>
-
+          {/* <CardDataStats title="Total Product" total="2.450" rate="2.59%" levelUp> */}
+          <FontAwesomeIcon icon={faSquareCheck} />
         </CardDataStats>
-                  
+
         <CardDataStatsGreen title="Total Users" total={data.user}>
           <svg
             className="fill-primary dark:fill-white"
