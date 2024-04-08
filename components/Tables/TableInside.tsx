@@ -53,6 +53,7 @@ const TableInside = ({ tableData }) => {
         //   "/api/workspaces/tableproject"
         // );
         // setData(await response.data.tableproject);
+        console.log(data)
         return await data.tableproject;
       } catch (error: any) {
         console.error(error.message);

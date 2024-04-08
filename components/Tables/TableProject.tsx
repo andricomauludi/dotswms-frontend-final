@@ -63,6 +63,7 @@ const TableProject = ({ tableData }) => {
             },
           }
         );
+        console.log(data);
 
         setDataProject(await data.groupproject);
       } catch (e) {
