@@ -102,6 +102,8 @@ const ButtonAddSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
           headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}`, 'Content-Type': 'multipart/form-data' },
         }
       );    
+
+      console.log(data)
   
       setLoadingModal(false);
 
