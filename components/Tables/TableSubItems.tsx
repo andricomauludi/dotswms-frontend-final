@@ -52,7 +52,7 @@ const TableSubItems = ({ tableData }) => {
 
         const { data } = await axios.get(
           BACKEND_PORT +
-            "workspaces/all-sub-item/"+tableData._id,
+            "workspaces/all-sub-item/"+tableData,
           { headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` } }
         );
         // const { data: response } = await axios.get(
