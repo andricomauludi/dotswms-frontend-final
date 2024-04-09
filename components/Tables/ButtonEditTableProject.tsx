@@ -252,8 +252,10 @@ const ButtonEditTableProject = forwardRef(
       const fetchData = async () => {
         setLoading(true);
         try {
-          const { data: response } = await axios.get("/api/users/me");
-          setDataImage(await response.data.user);
+          const { data } = await axios.get(BACKEND_PORT + "users/me", {
+            headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` },
+          });
+          setDataImage(await data.user);
         } catch (error: any) {
           console.error(error.message);
         }
