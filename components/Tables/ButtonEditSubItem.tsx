@@ -21,6 +21,8 @@ import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faListCheck, faUser } from "@fortawesome/free-solid-svg-icons";
 import { Flip, ToastContainer, toast } from "react-toastify";
+import { useCookies } from "next-client-cookies";
+import { BACKEND_PORT, COOKIE_NAME } from "@/constants";
 
 const ButtonEditSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -30,6 +32,8 @@ const ButtonEditSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
   const [isLoading, setLoading] = useState(true);
   const [size, setSize] = React.useState("2xl");
   const [type, setType] = useState("text");
+  const cookies = useCookies();
+
 
   const handleChildEvent = () => {
     // Do something in the child component
@@ -93,15 +97,13 @@ const ButtonEditSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
     formData.append("updated_by", "Admin1");
 
     try {
-      const { data } = await axios.post(
-        "/api/workspaces/editsubitem",
+      const { data } = await axios.patch(
+        BACKEND_PORT + "workspaces/edit-sub-item/",
         formData,
         {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+          headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}`, 'Content-Type': 'multipart/form-data' },
         }
-      );
+      );    
       await setLoadingModal(false);
 
       await onClose();
@@ -132,11 +134,13 @@ const ButtonEditSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      try {
-        const { data: response } = await axios.get(
-          "/api/workspaces/dropdownuser"
+      try {       
+        const { data } = await axios.get(
+          BACKEND_PORT +
+            "users/dropdown-user",
+          { headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` } }
         );
-        setData(await response.data.user);
+        setData(await data.user);
       } catch (error: any) {
         console.error(error.message);
       }

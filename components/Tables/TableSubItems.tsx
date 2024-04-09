@@ -1,5 +1,5 @@
 "use client";
-import { COOKIE_NAME } from "@/constants";
+import { BACKEND_PORT, COOKIE_NAME } from "@/constants";
 import { Package } from "@/types/package";
 import axios, { Axios } from "axios";
 import { cookies } from "next/headers";
@@ -26,6 +26,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import ButtonAddSubItem from "./ButtonAddSubItem";
 import ButtonDeleteSubItem from "./ButtonDeleteSubItem";
+import { useCookies } from "next-client-cookies";
 
 const TableSubItems = ({ tableData }) => {
   const childRef = useRef(null);
@@ -34,6 +35,8 @@ const TableSubItems = ({ tableData }) => {
   const [size, setSize] = React.useState("5xl");
   const [isLoading, setLoading] = useState(true);
   const [triggerApiCall, setTriggerApiCall] = useState(true);
+  const cookies = useCookies();
+
 
   const handleOpen = async (size: any) => {
     setSize(size);
@@ -46,14 +49,16 @@ const TableSubItems = ({ tableData }) => {
         const payload = {
           _id: tableData,
         };
-        const { data: response } = await axios.post(
-          "/api/workspaces/tablesubitems",
-          payload
+
+        const { data } = await axios.get(
+          BACKEND_PORT +
+            "workspaces/all-sub-item/"+tableData._id,
+          { headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` } }
         );
         // const { data: response } = await axios.get(
         //   "/api/workspaces/tableproject"
         // );
-        setData(await response.data.subItem);
+        setData(await data.subItem);
       } catch (error: any) {
         console.error(error.message);
       }

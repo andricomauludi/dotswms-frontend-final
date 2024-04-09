@@ -16,6 +16,8 @@ import { useRouter } from "next/navigation";
 import { Flip, ToastContainer, toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faListCheck, faUser } from "@fortawesome/free-solid-svg-icons";
+import { BACKEND_PORT, COOKIE_NAME } from "@/constants";
+import { useCookies } from "next-client-cookies";
 
 const ButtonAddSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -23,6 +25,8 @@ const ButtonAddSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
   const [imageloader, setImageLoader] = useState();
   const [isLoadingModal, setLoadingModal] = useState(false);
   const [isLoading, setLoading] = useState(true);
+  const cookies = useCookies();
+
   const [size, setSize] = React.useState("2xl");
 
   const handleChildEvent = () => {
@@ -89,12 +93,16 @@ const ButtonAddSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
     //   instagrampostingstatus: event.currentTarget.instagrampostingstatus.value,
     //   tiktokpostingstatus: event.currentTarget.tiktokpostingstatus.value,
     // };
-    try {
-      const { data } = await axios.post("/api/workspaces/subitem", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+    try { 
+
+      const { data } = await axios.post(
+        BACKEND_PORT + "workspaces/create-sub-item",
+        formData,
+        {
+          headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}`, 'Content-Type': 'multipart/form-data' },
+        }
+      );    
+  
       setLoadingModal(false);
 
       onClose();
@@ -125,11 +133,13 @@ const ButtonAddSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      try {
-        const { data: response } = await axios.get(
-          "/api/workspaces/dropdownuser"
+      try {      
+        const { data } = await axios.get(
+          BACKEND_PORT +
+            "users/dropdown-user",
+          { headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` } }
         );
-        setData(await response.data.user);
+        setData(await data.user);
       } catch (error: any) {
         console.error(error.message);
       }
