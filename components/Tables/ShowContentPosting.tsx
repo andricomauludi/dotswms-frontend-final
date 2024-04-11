@@ -338,7 +338,7 @@ export default function ShowContentPosting({ contentPostingItem }) {
                         className="place-items-center"
                       >
                         <source
-                          src={`http://localhost:3001/workspaces/stream-video/${contentPostingItem.file_name}`}
+                          src={BACKEND_PORT +`workspaces/stream-video/${contentPostingItem.file_name}`}
                           type="video/mp4"
                         />
                         Your browser does not support the video tag.
