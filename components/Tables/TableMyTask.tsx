@@ -1,5 +1,5 @@
 "use client";
-import { COOKIE_NAME } from "@/constants";
+import { BACKEND_PORT, COOKIE_NAME } from "@/constants";
 import { Package } from "@/types/package";
 import axios, { Axios } from "axios";
 import { cookies } from "next/headers";
@@ -10,6 +10,7 @@ import Link from "next/link";
 import ShowFileProject from "./ShowContentTextTableProject";
 import { useDisclosure } from "@nextui-org/react";
 import ButtonDeleteSubItem from "./ButtonDeleteSubItem";
+import { useCookies } from "next-client-cookies";
 
 const TableMyTask = ({ tableData }) => {
   const childRef = useRef(null);
@@ -19,28 +20,31 @@ const TableMyTask = ({ tableData }) => {
   const [size, setSize] = React.useState("5xl");
   const [isLoading, setLoading] = useState(true);
   const [triggerApiCall, setTriggerApiCall] = useState(true);
+  const cookies = useCookies();
+
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const payload = {
-          email: tableData.email,
-        };
-        const { data: response } = await axios.post("/api/mytask/all", payload);
-        setData(await response.data.subItem);
+  
+        const { data } = await axios.get(
+          BACKEND_PORT +
+            "workspaces/my-task/"+tableData.email,
+          { headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` } }
+        );
+        setData(await data.subItem);
       } catch (error: any) {
         console.error(error.message);
       }
-      try {
-        const payload = {
-          email: tableData.email,
-        };
-        const { data: response } = await axios.post(
-          "/api/mytask/done-all",
-          payload
+      try {       
+        const { data } = await axios.get(
+          BACKEND_PORT +
+            "workspaces/my-task-done/"+tableData.email,
+          { headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` } }
         );
-        setDataDone(await response.data.subItem);
+      
+        setDataDone(await data.subItem);
       } catch (error: any) {
         console.error(error.message);
       }
