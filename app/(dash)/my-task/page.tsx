@@ -2,6 +2,7 @@
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import TableMyTask from "@/components/Tables/TableMyTask";
 import TableMyTaskDone from "@/components/Tables/TableMyTaskDone";
+import { BACKEND_PORT, COOKIE_NAME } from "@/constants";
 import {
   Button,
   ButtonGroup,
@@ -12,6 +13,7 @@ import {
 } from "@nextui-org/react";
 import axios from "axios";
 import { Metadata } from "next";
+import { useCookies } from "next-client-cookies";
 import React, { useEffect, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 // export const metadata: Metadata = {
@@ -23,15 +25,19 @@ import { Col, Row } from "react-bootstrap";
 const MyTaskPage = () => {
   const [datas, setData] = useState([]);
   const [isLoading, setLoading] = useState(true);
+  const cookies = useCookies();
+
 
   const [selectedOption, setSelectedOption] = React.useState(new Set([0]));
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      try {
-        const { data: response } = await axios.get("/api/users/me");
-        setData(await response.data.user);
+      try {       
+        const { data } = await axios.get(BACKEND_PORT + "users/me", {
+          headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` },
+        });
+        setData(await data.user);
       } catch (error: any) {
         console.error(error.message);
       }
