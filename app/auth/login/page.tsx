@@ -3,7 +3,6 @@
 import { BACKEND_PORT, COOKIE_NAME } from "@/constants";
 import { Spinner } from "@nextui-org/react";
 import axios, { AxiosError } from "axios";
-axios.defaults.withCredentials = true;
 import { useCookies } from "next-client-cookies";
 import Image from "next/image";
 import Link from "next/link";
