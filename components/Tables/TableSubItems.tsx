@@ -27,8 +27,12 @@ import {
 import ButtonAddSubItem from "./ButtonAddSubItem";
 import ButtonDeleteSubItem from "./ButtonDeleteSubItem";
 import { useCookies } from "next-client-cookies";
+import { io } from 'socket.io-client';
+
 
 const TableSubItems = ({ tableData }) => {
+  const socket = io(BACKEND_PORT); // Connect to the Socket.IO serve
+
   const childRef = useRef(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [datas, setData] = useState([]);
@@ -65,10 +69,18 @@ const TableSubItems = ({ tableData }) => {
       setLoading(false);
     };
 
+    socket.on('subItemData', (newData) => {
+      setData(newData);      
+
+    });    
+
     if (triggerApiCall) {
       fetchData();
       setTriggerApiCall(false); // Reset the trigger after API call
     }
+    return () => {
+      socket.off('subItemData');      
+    };
   }, [triggerApiCall, tableData]);
 
   const handleParentFunction = () => {

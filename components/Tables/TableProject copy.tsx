@@ -15,11 +15,10 @@ import ButtonEditProject from "./ButtonEditProject";
 import ButtonDeleteProject from "./ButtonDeleteProject";
 import { BACKEND_PORT, COOKIE_NAME } from "@/constants";
 import { useCookies } from "next-client-cookies";
-import { io } from 'socket.io-client';
+
 
 
 const TableProject = ({ tableData }) => {
-  const socket = io(BACKEND_PORT); // Connect to the Socket.IO serve
   const childRef = useRef(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [datas, setData] = useState([]);
@@ -29,12 +28,24 @@ const TableProject = ({ tableData }) => {
   const [triggerApiCall, setTriggerApiCall] = useState(true);
   const cookies = useCookies();
 
+  const handleOpen = async (size: any) => {
+    setSize(size);
+    onOpen();
+  };
+  const handleOpen2 = async (size: any) => {
+    setSize(size);
+    onOpen();
+  };
+
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);
+      setLoading(true);     
+
       try {
         const { data } = await axios.get(
-          BACKEND_PORT + "workspaces/get-project-specific/" + tableData._id,
+          BACKEND_PORT +
+            "workspaces/get-project-specific/" +
+            tableData._id,
           {
             headers: {
               Authorization: `Bearer ${cookies.get(COOKIE_NAME)}`,
@@ -42,31 +53,29 @@ const TableProject = ({ tableData }) => {
             },
           }
         );
-        setDataProject(data.groupproject);
+        console.log(data);
+
+        setDataProject(await data.groupproject);
       } catch (e) {
-        console.log(e.message);
+        const error = e as AxiosError;
+        console.log(error);
+        console.log(error.message);
       }
+
       setLoading(false);
     };
-  
-    fetchData();
 
-    // Listen for real-time data updates
-    socket.on('groupProjectData', (newData) => {
-      setDataProject(newData);      
-
-    });    
-  
     if (triggerApiCall) {
       fetchData();
       setTriggerApiCall(false); // Reset the trigger after API call
     }
-    return () => {
-      socket.off('groupProjectData');      
-    };
-  }, [triggerApiCall,tableData]);
+    fetchData();
+  }, [triggerApiCall, tableData]);
 
   const handleParentFunction = () => {
+    // Your logic or function here
+
+    // Set the trigger to true to re-run the useEffect
     setTriggerApiCall(true);
   };
 

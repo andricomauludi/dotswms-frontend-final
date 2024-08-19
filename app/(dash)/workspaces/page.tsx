@@ -4,7 +4,7 @@ import ButtonAddGroupProject from "@/components/Tables/ButtonAddGroupProject";
 import ButtonDeleteGroupProject from "@/components/Tables/ButtonDeleteGroupProject";
 import ButtonEditGroupProject from "@/components/Tables/ButtonEditGroupProject";
 import TableProject from "@/components/Tables/TableProject";
-import { useCookies } from 'next-client-cookies';
+import { useCookies } from "next-client-cookies";
 import {
   Button,
   ButtonGroup,
@@ -39,9 +39,9 @@ const WorkspacePage = () => {
       try {
         setLoading(true);
         const { data: response } = await axios.get(
-          BACKEND_PORT+"workspaces/all-group-project",
+          BACKEND_PORT + "workspaces/all-group-project",
           { headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` } }
-        );                  
+        );
         setData(await response.groupproject);
       } catch (error: any) {
         console.error(error.message);
@@ -55,15 +55,28 @@ const WorkspacePage = () => {
     }
   }, [triggerApiCall]);
 
-  if (isLoading) return <p>Loading...</p>;
-  if (!datas) return <p>No profile data</p>;
-
   const handleParentFunction = () => {
     // Your logic or function here
 
     // Set the trigger to true to re-run the useEffect
     setTriggerApiCall(true);
   };
+  
+  if (isLoading) return <p>Loading...</p>;
+  if (!datas || datas.length === 0)
+    return (
+  <>
+  <h1>
+    Add Group Project
+  </h1>
+      <ButtonAddGroupProject
+        ref={childRef}
+        parentFunction={handleParentFunction}
+      />
+  </>
+    );
+
+  
 
   // Convert the Set to an Array and get the first value.
   const selectedOptionValue = Array.from(selectedOption)[0];
@@ -71,7 +84,10 @@ const WorkspacePage = () => {
     <>
       <Breadcrumb
         pageName="Workspaces"
-        titleName={datas[selectedOptionValue].group_project}
+        titleName={
+          datas[selectedOptionValue]?.group_project ||
+          "No Group Project Selected"
+        }
       />
       <div className="mb-6 flex">
         <div className="">
@@ -95,7 +111,9 @@ const WorkspacePage = () => {
             <strong>Group Project :</strong>
           </h1> */}
           <ButtonGroup variant="flat">
-            <Button>{datas[selectedOptionValue].group_project}</Button>
+            <Button>
+              {datas[selectedOptionValue]?.group_project || "No Group Project"}
+            </Button>
             <Dropdown placement="bottom-end">
               <DropdownTrigger>
                 <Button isIconOnly>

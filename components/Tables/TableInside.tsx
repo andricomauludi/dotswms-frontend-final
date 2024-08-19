@@ -16,8 +16,11 @@ import { useCookies } from "next-client-cookies";
 import { BACKEND_PORT, COOKIE_NAME } from "@/constants";
 import ShowContentPosting from "./ShowContentPosting";
 import ContentPostingList from "./ContentPostingList";
+import { io } from "socket.io-client";
 
 const TableInside = ({ tableData }) => {
+  const socket = io(BACKEND_PORT); // Connect to the Socket.IO serve
+
   const cookies = useCookies();
 
   const childRef = useRef(null);
@@ -27,8 +30,6 @@ const TableInside = ({ tableData }) => {
   const [size, setSize] = React.useState("5xl");
   const [isLoading, setLoading] = useState(true);
   const [triggerApiCall, setTriggerApiCall] = useState(true);
-  
-
 
   var mantab;
 
@@ -43,17 +44,16 @@ const TableInside = ({ tableData }) => {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      try {          
+      try {
         const { data } = await axios.get(
-          BACKEND_PORT +
-            "workspaces/all-table-project/"+tableData._id,
+          BACKEND_PORT + "workspaces/all-table-project/" + tableData._id,
           { headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` } }
         );
         // const { data: response } = await axios.get(
         //   "/api/workspaces/tableproject"
         // );
         // setData(await response.data.tableproject);
-        console.log(data)
+        console.log(data);
         return await data.tableproject;
       } catch (error: any) {
         console.error(error.message);
@@ -103,6 +103,12 @@ const TableInside = ({ tableData }) => {
       fetchBoth();
       setTriggerApiCall(false); // Reset the trigger after API call
     }
+    socket.on("tableProjectData", (newData) => {
+      setData(newData);
+    });
+    return () => {
+      socket.off("tableProjectData");
+    };
   }, [triggerApiCall, tableData]);
 
   const handleParentFunction = () => {
@@ -116,7 +122,7 @@ const TableInside = ({ tableData }) => {
   if (!datas) return <p>No Project data</p>;
 
   return (
-    <>          
+    <>
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
         <div style={{ marginTop: "10px", marginBottom: "20px" }}>
           <ButtonAddProject
