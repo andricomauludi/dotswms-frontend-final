@@ -29,6 +29,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { BACKEND_PORT, COOKIE_NAME } from "@/constants";
 import { useCookies } from "next-client-cookies";
+import io from "socket.io-client";
 
 interface IprofileState {
   //interface merupakan rangka object yang mau kita masukin dari api
@@ -42,6 +43,8 @@ interface IprofileState {
   profile_picture: string;
   role: string;
 }
+
+const socket = io(BACKEND_PORT); // Replace with your backend URL
 
 const ButtonAddTableProject = forwardRef(
   ({ parentFunction, tableData }, ref) => {
@@ -194,21 +197,7 @@ const ButtonAddTableProject = forwardRef(
         setLoadingModal(false);
 
         onClose();
-        onClose();
-        handleChildEvent();
-
-        toast.success("New Item Added!", {
-          autoClose: 3000,
-          position: "top-right",
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-          transition: Flip,
-          // onClose: () => handleChildEvent(),
-        });
+        onClose();        
 
         //redirect the user to dashboard
       } catch (e) {
@@ -240,6 +229,17 @@ const ButtonAddTableProject = forwardRef(
       };
 
       fetchData();
+    }, []);
+    
+    useEffect(() => {
+      socket.on("newTableProject", (newProject) => {
+        // Handle the new project data as needed, e.g., updating state or UI
+        console.log("New project added:", newProject);
+      });
+  
+      return () => {
+        socket.off("newTableProject");
+      };
     }, []);
 
     useEffect(() => {

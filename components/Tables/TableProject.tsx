@@ -56,6 +56,22 @@ const TableProject = ({ tableData }) => {
       setDataProject(newData);      
 
     });    
+    socket.on('newProject', (newProject) => {
+      setDataProject((prevData) => [...prevData, newProject]);
+    });
+    socket.on('projectDeleted', (deletedProject) => {
+      setDataProject((prevData) =>
+        prevData.filter((project) => project._id !== deletedProject.projectId)
+      );    
+    });
+    // Listen for project edits
+  socket.on('projectEdited', (updatedProject) => {
+    setDataProject((prevData) =>
+      prevData.map((project) =>
+        project._id === updatedProject._id ? updatedProject : project
+      )
+    );   
+  });
   
     if (triggerApiCall) {
       fetchData();
@@ -63,8 +79,11 @@ const TableProject = ({ tableData }) => {
     }
     return () => {
       socket.off('groupProjectData');      
+      socket.off('newProject');
+      socket.off('projectDeleted');
+      socket.off('projectEdited');
     };
-  }, [triggerApiCall,tableData]);
+  }, [tableData]);
 
   const handleParentFunction = () => {
     setTriggerApiCall(true);

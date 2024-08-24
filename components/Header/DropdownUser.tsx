@@ -6,8 +6,12 @@ import axios, { AxiosError } from "axios";
 import ButtonShowProfile from "./ButtonShowProfile";
 import { BACKEND_PORT, COOKIE_NAME } from "@/constants";
 import { useCookies } from "next-client-cookies";
+import { useRouter } from "next/navigation";
+
 
 const DropdownUser = () => {
+  const router = useRouter();
+
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [data, setData] = useState();
   const [imageloader, setImageLoader] = useState();
@@ -71,7 +75,7 @@ const DropdownUser = () => {
       } catch (e) {
         const error = e as AxiosError;
         console.log(error);
-        alert(e);
+        router.push("/auth/login");      
       }
 
 

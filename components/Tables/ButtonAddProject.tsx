@@ -23,8 +23,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPalette } from "@fortawesome/free-solid-svg-icons";
 import { BACKEND_PORT, COOKIE_NAME } from "@/constants";
 import { useCookies } from "next-client-cookies";
+import { io } from 'socket.io-client';
 
 const ButtonAddProject = forwardRef(({ parentFunction, tableData }, ref) => {
+  const socket = io(BACKEND_PORT);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [data, setData] = useState([]);
   const [imageloader, setImageLoader] = useState();
@@ -75,45 +77,37 @@ const ButtonAddProject = forwardRef(({ parentFunction, tableData }, ref) => {
     formData.append("updated_by", "admin1");
 
     try {
-      // const { data } = await axios.post(
-      //   "/api/workspaces/addproject",
-      //   formData,
-      //   {
-      //     headers: {
-      //       "Content-Type": "multipart/form-data",
-      //     },
-      //   }
-      // );
-
-
       const { data } = await axios.post(
         BACKEND_PORT + "workspaces/create-project",
         formData,
         {
-          headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}`, 'Content-Type': 'multipart/form-data' },
+          headers: { 
+            Authorization: `Bearer ${cookies.get(COOKIE_NAME)}`, 
+            'Content-Type': 'multipart/form-data' 
+          },
         }
-      );    
-
-      
+      );
+  
+      // Trigger real-time update
+      socket.emit('newProject', data.result);
+  
       setLoadingModal(false);
-
-      onClose();
-      onClose();
-      handleChildEvent();
-
-      toast.success("New Project Added!", {
-        autoClose: 3000,
-        position: "top-right",
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        transition: Flip,
-        // onClose: () => handleChildEvent()
-      });
-      //redirect the user to dashboard
+  
+      onClose(); // Assuming this closes the modal
+      handleChildEvent(); // Possibly to refresh or trigger parent component updates
+  
+      // toast.success("New Project Added!", {
+      //   autoClose: 3000,
+      //   position: "top-right",
+      //   hideProgressBar: false,
+      //   closeOnClick: true,
+      //   pauseOnHover: true,
+      //   draggable: true,
+      //   progress: undefined,
+      //   theme: "colored",
+      //   transition: Flip,
+      // });
+  
     } catch (e) {
       setLoadingModal(false);
       const error = e as AxiosError;
@@ -123,25 +117,17 @@ const ButtonAddProject = forwardRef(({ parentFunction, tableData }, ref) => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const { data } = await axios.get(
-          BACKEND_PORT + "users/me",
-          { headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` } }
-        );
-        setImageLoader(`/img/${await data.user.profile_picture}`);
-        console.log(data);
-        setData(await data.user);        
-      } catch (e) {
-        const error = e as AxiosError;
-        console.log(error);
-        alert(e);
-      }
+    setLoading(false);
+    socket.on('newProject', (newProject) => {
+      console.log('New project received:', newProject);
+      setData((prevData) => [...prevData, newProject]);
+    });
+  
+    return () => {
+      socket.off('newProject');
       setLoading(false);
-    };
 
-    fetchData();
+    };
   }, []);
 
   if (isLoading) return <p>Loading...</p>;

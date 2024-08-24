@@ -19,8 +19,7 @@ const Buttonlogout = () => {
     setLoadingModal(true);
     onOpen();
     try {
-      const { data } = await axios.post("/api/auth/logout");
-      alert(JSON.stringify(data));
+      const { data } = await axios.post("/api/auth/logout");      
       console.log(data.status);
       if (data.status == 404) {
         await setLoadingModal(false);
@@ -40,7 +39,7 @@ const Buttonlogout = () => {
 
       const error = e as AxiosError;
       console.log(error);
-      alert(error.message);
+      router.push("/auth/login");
     }
   };
   if (isLoadingModal)

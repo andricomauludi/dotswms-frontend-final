@@ -100,18 +100,7 @@ const ButtonEditProject = forwardRef(({ parentFunction, tableData }, ref) => {
       onClose();
       handleChildEvent()
 
-      toast.success("Project Edited!", {
-        autoClose: 3000,
-        position: "top-right",
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        transition: Flip,
-        // onClose: () => handleChildEvent(),
-      });
+    
       //redirect the user to dashboard
     } catch (e) {
       setLoadingModal(false);

@@ -1,10 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import ChartOne from "../Charts/ChartOne";
-import ChartThree from "../Charts/ChartThree";
-import ChartTwo from "../Charts/ChartTwo";
 import ChatCard from "../Chat/ChatCard";
-import TableOne from "../Tables/TableOne";
 import CardDataStats from "../CardDataStats";
 // import Map from "../Maps/TestMap";
 
@@ -17,11 +13,15 @@ import { faBarsProgress, faListCheck } from "@fortawesome/free-solid-svg-icons";
 import { faSquareCheck } from "@fortawesome/free-solid-svg-icons/faSquareCheck";
 import { useCookies } from "next-client-cookies";
 import { BACKEND_PORT, COOKIE_NAME } from "@/constants";
+import { useRouter } from "next/navigation";
+
 const MapOne = dynamic(() => import("../Maps/MapOne"), {
   ssr: false,
 });
 
 const ECommerce: React.FC = () => {
+  const router = useRouter();
+
   const [data, setData] = useState();
   const [isLoading, setLoading] = useState(true);
   const cookies = useCookies();
@@ -47,7 +47,8 @@ const ECommerce: React.FC = () => {
       } catch (e) {
         const error = e as AxiosError;
         console.log(error);
-        alert(e);
+        router.push("/auth/login");      
+
       }
 
       setLoading(false);

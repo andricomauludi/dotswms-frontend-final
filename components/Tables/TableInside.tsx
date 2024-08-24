@@ -103,12 +103,21 @@ const TableInside = ({ tableData }) => {
       fetchBoth();
       setTriggerApiCall(false); // Reset the trigger after API call
     }
-    socket.on("tableProjectData", (newData) => {
-      setData(newData);
-    });
-    return () => {
-      socket.off("tableProjectData");
-    };
+   // Listen for real-time data updates
+   socket.on("tableProjectData", (newData) => {
+    setData(newData);
+    console.log("ini table project data"+newData)
+  });
+  socket.on('newTableProject', (newProject) => {
+    setData((prevData) => [...prevData, newProject]);
+    console.log("ini new table project"+newProject)
+
+  }); 
+  // Clean up the socket listener on component unmount
+  return () => {
+    socket.off("tableProjectData");
+    socket.off("newTableProject");
+  };
   }, [triggerApiCall, tableData]);
 
   const handleParentFunction = () => {
