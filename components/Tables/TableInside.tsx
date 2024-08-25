@@ -53,7 +53,6 @@ const TableInside = ({ tableData }) => {
         //   "/api/workspaces/tableproject"
         // );
         // setData(await response.data.tableproject);
-        console.log(data);
         return await data.tableproject;
       } catch (error: any) {
         console.error(error.message);
@@ -103,21 +102,39 @@ const TableInside = ({ tableData }) => {
       fetchBoth();
       setTriggerApiCall(false); // Reset the trigger after API call
     }
-   // Listen for real-time data updates
-   socket.on("tableProjectData", (newData) => {
-    setData(newData);
-    console.log("ini table project data"+newData)
-  });
-  socket.on('newTableProject', (newProject) => {
-    setData((prevData) => [...prevData, newProject]);
-    console.log("ini new table project"+newProject)
-
-  }); 
-  // Clean up the socket listener on component unmount
-  return () => {
-    socket.off("tableProjectData");
-    socket.off("newTableProject");
-  };
+    // Listen for real-time data updates
+    socket.on("tableProjectData", (newData) => {
+      setData(newData);
+    });
+    socket.on("newTableProject", (newProject) => {
+      console.log(newProject);
+      setData((prevData) => {
+        // If the existing data is empty, add the new project directly
+        if (prevData.length === 0) {
+          return [newProject];
+        }
+    
+        // Check if there's a project with the same project_id
+        const matchingProject = prevData.find(
+          (project) => project.project_id === newProject.project_id
+        );
+    
+        // If a matching project is found, add the new project to the data
+        if (matchingProject) {
+          return [...prevData, newProject];
+        }
+    
+        // If no matching project is found, return the existing data unchanged
+        return prevData;
+      });
+    });
+    
+   
+    // Clean up the socket listener on component unmount
+    return () => {
+      socket.off("tableProjectData");
+      socket.off("newTableProject");
+    };
   }, [triggerApiCall, tableData]);
 
   const handleParentFunction = () => {
