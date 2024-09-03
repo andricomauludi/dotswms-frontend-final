@@ -27,8 +27,7 @@ import {
 import ButtonAddSubItem from "./ButtonAddSubItem";
 import ButtonDeleteSubItem from "./ButtonDeleteSubItem";
 import { useCookies } from "next-client-cookies";
-import { io } from 'socket.io-client';
-
+import { io } from "socket.io-client";
 
 const TableSubItems = ({ tableData }) => {
   const socket = io(BACKEND_PORT); // Connect to the Socket.IO serve
@@ -41,7 +40,6 @@ const TableSubItems = ({ tableData }) => {
   const [triggerApiCall, setTriggerApiCall] = useState(true);
   const cookies = useCookies();
 
-
   const handleOpen = async (size: any) => {
     setSize(size);
     onOpen();
@@ -51,12 +49,11 @@ const TableSubItems = ({ tableData }) => {
       setLoading(true);
       try {
         const payload = {
-          _id: tableData,
+          _id: tableData._id,
         };
 
         const { data } = await axios.get(
-          BACKEND_PORT +
-            "workspaces/all-sub-item/"+tableData,
+          BACKEND_PORT + "workspaces/all-sub-item/" + tableData._id,
           { headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` } }
         );
         // const { data: response } = await axios.get(
@@ -69,19 +66,54 @@ const TableSubItems = ({ tableData }) => {
       setLoading(false);
     };
 
-    socket.on('subItemData', (newData) => {
-      setData(newData);      
+    socket.on("subItemData", (newData) => {
+      setData(newData);
+    });
+    socket.on('subItemDeleted', (deletedProject) => {
+      setData((prevData) =>
+        prevData.filter((project) => project._id !== deletedProject.projectId)
+      );    
+    });
+    socket.on("newSubItem", (newProject) => {
+      console.log(newProject);
+      setData((prevData) => {
+        // If the existing data is empty, add the new project directly
+        if (prevData.length === 0) {
+          return [newProject];
+        }
 
-    });    
+        // Check if there's a project with the same project_id
+        const matchingProject = prevData.find(
+          (project) => project.table_project_id === newProject.table_project_id
+        );
+
+        // If a matching project is found, add the new project to the data
+        if (matchingProject) {
+          return [...prevData, newProject];
+        }
+
+        // If no matching project is found, return the existing data unchanged
+        return prevData;
+      });
+    });
+    socket.on('subItemEdited', (updatedProject) => {
+      setData((prevData) =>
+        prevData.map((project) =>
+          project._id === updatedProject._id ? updatedProject : project
+        )
+      );   
+    });
 
     if (triggerApiCall) {
       fetchData();
       setTriggerApiCall(false); // Reset the trigger after API call
     }
     return () => {
-      socket.off('subItemData');      
+      socket.off("subItemData");
+      socket.off("newSubItem");
+      socket.off("subItemEdited");
     };
-  }, [triggerApiCall, tableData]);
+  }, [triggerApiCall, tableData._id]);
 
   const handleParentFunction = () => {
     // Your logic or function here

@@ -66,8 +66,7 @@ const ButtonEditSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     setLoadingModal(true);
     var formData = new FormData();
-    event.preventDefault();
-    console.log(data);
+    event.preventDefault();    
 
     formData.append("_id", tableData._id);
     formData.append("subitem", event.currentTarget.subitem.value);
@@ -108,19 +107,19 @@ const ButtonEditSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
 
       await onClose();
       await onClose();
-      handleChildEvent();
+      // handleChildEvent();
 
-      await toast.success("Sub Item Edited!", {
-        autoClose: 3000,
-        position: "top-right",
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        transition: Flip,
-      });
+      // await toast.success("Sub Item Edited!", {
+      //   autoClose: 3000,
+      //   position: "top-right",
+      //   hideProgressBar: false,
+      //   closeOnClick: true,
+      //   pauseOnHover: true,
+      //   draggable: true,
+      //   progress: undefined,
+      //   theme: "colored",
+      //   transition: Flip,
+      // });
       // await handleChildEvent();
 
       //redirect the user to dashboard

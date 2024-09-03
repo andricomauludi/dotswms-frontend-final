@@ -18,6 +18,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faListCheck, faUser } from "@fortawesome/free-solid-svg-icons";
 import { BACKEND_PORT, COOKIE_NAME } from "@/constants";
 import { useCookies } from "next-client-cookies";
+import io from "socket.io-client";
+
+
+const socket = io(BACKEND_PORT); // Replace with your backend URL
 
 const ButtonAddSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -76,10 +80,10 @@ const ButtonAddSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
       "avatar",
       data[event.currentTarget.owner.value]["profile_picture"]
     );
-    formData.append("table_project_id", tableData);
-    formData.append("table_project_name", "Konten Tiktok Dokter Petra");
+    formData.append("table_project_id", tableData._id);
+    formData.append("table_project_name", tableData.item);
     formData.append("created_by", "Admin1");
-    formData.append("updated_by", "Admin1");
+    formData.append("updated_by", "Admin1");    
 
     // const payload = {
     //   item: event.currentTarget.item.value,
@@ -109,20 +113,20 @@ const ButtonAddSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
 
       onClose();
       onClose();
-      handleChildEvent();
+      // handleChildEvent();
 
-      toast.success("New Sub Item Added!", {
-        autoClose: 3000,
-        position: "top-right",
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        transition: Flip,
-        // onClose: () => handleChildEvent(),
-      });
+      // toast.success("New Sub Item Added!", {
+      //   autoClose: 3000,
+      //   position: "top-right",
+      //   hideProgressBar: false,
+      //   closeOnClick: true,
+      //   pauseOnHover: true,
+      //   draggable: true,
+      //   progress: undefined,
+      //   theme: "colored",
+      //   transition: Flip,
+      //   // onClose: () => handleChildEvent(),
+      // });
       //redirect the user to dashboard
     } catch (e) {
       setLoadingModal(false);
@@ -149,6 +153,36 @@ const ButtonAddSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
     };
 
     fetchData();
+  }, []);
+
+  useEffect(() => {
+    socket.on("newSubItem", (newProject) => {
+      console.log(newProject);
+      setData((prevData) => {
+        // If the existing data is empty, add the new project directly
+        if (prevData.length === 0) {
+          return [newProject];
+        }
+    
+        // Check if there's a project with the same project_id
+        const matchingProject = prevData.find(
+          (project) => project.table_project_id === newProject.table_project_id
+        );
+    
+        // If a matching project is found, add the new project to the data
+        if (matchingProject) {
+          return [...prevData, newProject];
+        }
+    
+        // If no matching project is found, return the existing data unchanged
+        return prevData;
+      });
+    });
+    
+    // Clean up the socket listener on component unmount
+    return () => {
+      socket.off("newSubItem");
+    };
   }, []);
 
   if (isLoading) return <p>Loading...</p>;

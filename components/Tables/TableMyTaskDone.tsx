@@ -1,4 +1,14 @@
 "use client";
+
+
+
+// ======================================
+// ====SUDAH TIDAK TERPAKAI==============
+// ====================================== 
+
+
+
+
 import { COOKIE_NAME } from "@/constants";
 import { Package } from "@/types/package";
 import axios, { Axios } from "axios";
@@ -19,27 +29,7 @@ const TableMyTaskDone = ({ tableData }) => {
   const [isLoading, setLoading] = useState(true);
   const [triggerApiCall, setTriggerApiCall] = useState(true);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const payload = {
-          email: tableData.email,
-        };
-        const { data: response } = await axios.post(
-          "/api/mytask/done-all",
-          payload
-        );
-        setData(await response.data.subItem);
-      } catch (error: any) {
-        console.error(error.message);
-      }
-      setLoading(false);
-    };
-
-    fetchData();
-  }, [triggerApiCall, tableData]);
-
+ 
   const handleOpen = async (size: any) => {
     setSize(size);
     onOpen();
@@ -57,6 +47,7 @@ const TableMyTaskDone = ({ tableData }) => {
 
   return (
     <>      
+    {console.log(datas)}
       <div className="max-w-full overflow-x-auto">
         <table className="w-full table-auto">
           <thead>

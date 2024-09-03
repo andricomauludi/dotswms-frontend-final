@@ -11,6 +11,9 @@ import ShowFileProject from "./ShowContentTextTableProject";
 import { useDisclosure } from "@nextui-org/react";
 import ButtonDeleteSubItem from "./ButtonDeleteSubItem";
 import { useCookies } from "next-client-cookies";
+import io from "socket.io-client";
+
+const socket = io(BACKEND_PORT); // Replace BACKEND_PORT with your actual backend URL
 
 const TableMyTask = ({ tableData }) => {
   const childRef = useRef(null);
@@ -55,6 +58,30 @@ const TableMyTask = ({ tableData }) => {
       fetchData();
       setTriggerApiCall(false); // Reset the trigger after API call
     }
+    socket.on('taskUpdated', (updatedTasks) => {
+      console.log('Received updated tasks:', updatedTasks);
+      setData(updatedTasks);
+    });
+
+    socket.on('taskDoneUpdated', (updatedTasksDone) => {
+      console.log('Received updated done tasks:', updatedTasksDone);
+      setDataDone(updatedTasksDone);
+    });
+
+    socket.on('subItemEdited', (updatedProject) => {
+      setData((prevData) =>
+        prevData.map((project) =>
+          project._id === updatedProject._id ? updatedProject : project
+        )
+      );   
+    });
+    
+
+    return () => {
+      socket.off('taskUpdated');
+      socket.off("subItemData");
+      socket.off('taskDoneUpdated');
+    };
   }, [triggerApiCall, tableData]);
 
   const handleOpen = async (size: any) => {

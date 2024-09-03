@@ -67,8 +67,7 @@ export default function ButtonShowProfile() {
           BACKEND_PORT + "users/me",
           { headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` } }
         );
-        setImageLoader(`/img/${await data.user.profile_picture}`);
-        console.log(data);
+        setImageLoader(`/img/${await data.user.profile_picture}`);        
         setData(await data.user);        
       } catch (e) {
         const error = e as AxiosError;

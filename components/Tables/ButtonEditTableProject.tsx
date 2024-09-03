@@ -26,7 +26,6 @@ import CheckboxDeleteFile from "../Checkboxes/CheckboxDeleteFile";
 import { useCookies } from "next-client-cookies";
 import { BACKEND_PORT, COOKIE_NAME } from "@/constants";
 
-
 interface IprofileState {
   //interface merupakan rangka object yang mau kita masukin dari api
   _id: string;
@@ -66,7 +65,6 @@ const ButtonEditTableProject = forwardRef(
     };
 
     // const sendDataToParent = (index) => { // the callback. Use a better name
-    //   console.log(index);
     //   setContentDelete(index);
     // };
 
@@ -81,7 +79,6 @@ const ButtonEditTableProject = forwardRef(
       // try {
       //   const { data } = await axios.get("/api/users/me");
       //   const profiles: IprofileState[] = await data.data.user;
-      //   console.log(profiles);
       //   if (data.status == 404) {
       //     alert(data.message);
       //   }
@@ -174,51 +171,56 @@ const ButtonEditTableProject = forwardRef(
       //   tiktokpostingstatus: event.currentTarget.tiktokpostingstatus.value,
       // };
 
+      // Log FormData contents
+      for (let [key, value] of formData.entries()) {
+        console.log(`${key}: ${value}`);
+      }
       if (contentDelete) {
         try {
           const payload = {
-            id: contentDelete
+            id: contentDelete,
           };
           const { data } = await axios.post(
-            BACKEND_PORT +"workspaces/delete-content-posting",
+            BACKEND_PORT + "workspaces/delete-content-posting",
             payload,
             { headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` } }
           );
-         
-        } catch (e) {          
+        } catch (e) {
           const error = e as AxiosError;
           console.log(error);
           alert(error.message);
         }
       }
 
-
       try {
         const { data } = await axios.patch(
           BACKEND_PORT + "workspaces/edit-table-project/",
           formData,
           {
-            headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}`, 'Content-Type': 'multipart/form-data' },
+            headers: {
+              Authorization: `Bearer ${cookies.get(COOKIE_NAME)}`,
+              "Content-Type": "multipart/form-data",
+            },
           }
-        );    
+        );
         setLoadingModal(false);
 
         onClose();
         onClose();
-        handleChildEvent();
+        // handleChildEvent();
 
-        toast.success("Item Edited!", {
-          autoClose: 3000,
-          position: "top-right",
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-          transition: Flip,
-          // onClose: () => handleChildEvent(),
-        });
+        // toast.success("Item Edited!", {
+        //   autoClose: 3000,
+        //   position: "top-right",
+        //   hideProgressBar: false,
+        //   closeOnClick: true,
+        //   pauseOnHover: true,
+        //   draggable: true,
+        //   progress: undefined,
+        //   theme: "colored",
+        //   transition: Flip,
+        //   // onClose: () => handleChildEvent(),
+        // });
       } catch (e) {
         setLoadingModal(false);
         const error = e as AxiosError;
@@ -232,12 +234,10 @@ const ButtonEditTableProject = forwardRef(
         setLoading(true);
         try {
           const { data } = await axios.get(
-            BACKEND_PORT +
-              "users/dropdown-user",
+            BACKEND_PORT + "users/dropdown-user",
             { headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` } }
-          );  
-          console.log(data);
-          setData(await data.user);        
+          );
+          setData(await data.user);
         } catch (e) {
           const error = e as AxiosError;
           console.log(error);
@@ -292,9 +292,6 @@ const ButtonEditTableProject = forwardRef(
           </ModalContent>
         </Modal>
       );
-
-      console.log(contentDelete);
-
 
     return (
       <>

@@ -96,20 +96,20 @@ const ButtonDeleteTableProject = forwardRef(
 
         onClose();
         onClose();
-        handleChildEvent()
+        // handleChildEvent()
 
-        toast.success("Item Deleted!", {
-          autoClose: 3000,
-          position: "top-right",
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-          transition: Flip,
-          // onClose: () => handleChildEvent(),
-        });
+        // toast.success("Item Deleted!", {
+        //   autoClose: 3000,
+        //   position: "top-right",
+        //   hideProgressBar: false,
+        //   closeOnClick: true,
+        //   pauseOnHover: true,
+        //   draggable: true,
+        //   progress: undefined,
+        //   theme: "colored",
+        //   transition: Flip,
+        //   // onClose: () => handleChildEvent(),
+        // });
         //redirect the user to dashboard
       } catch (e) {
         setLoadingModal(false);

@@ -102,9 +102,16 @@ const TableInside = ({ tableData }) => {
       fetchBoth();
       setTriggerApiCall(false); // Reset the trigger after API call
     }
+
+    
     // Listen for real-time data updates
     socket.on("tableProjectData", (newData) => {
       setData(newData);
+    });
+    socket.on('tableProjectDeleted', (deletedProject) => {
+      setData((prevData) =>
+        prevData.filter((project) => project._id !== deletedProject.projectId)
+      );    
     });
     socket.on("newTableProject", (newProject) => {
       console.log(newProject);
@@ -128,12 +135,23 @@ const TableInside = ({ tableData }) => {
         return prevData;
       });
     });
+    socket.on('tableProjectEdited', (updatedProject) => {
+      setData((prevData) =>
+        prevData.map((project) =>
+          project._id === updatedProject._id ? updatedProject : project
+        )
+      );   
+    });
     
    
     // Clean up the socket listener on component unmount
     return () => {
       socket.off("tableProjectData");
       socket.off("newTableProject");
+      socket.off('tableProjectDeleted');
+      socket.off('tableProjectEdited');
+
+
     };
   }, [triggerApiCall, tableData]);
 
@@ -369,7 +387,7 @@ const TableInside = ({ tableData }) => {
                           ref={childRef}
                           parentFunction={handleParentFunction}
                           tableData={packageItem}
-                        />
+                        />                        
                         <ButtonDeleteProject
                           ref={childRef}
                           parentFunction={handleParentFunction}
@@ -443,7 +461,7 @@ const TableInside = ({ tableData }) => {
                       </div>
                     </td>
                   </tr>
-                  <TableSubItems tableData={packageItem._id} />
+                  <TableSubItems tableData={packageItem} />                 
                 </>
               ))}
             </tbody>

@@ -70,7 +70,7 @@ const DropdownUser = () => {
           { headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` } }
         );
         setImageLoader(`/img/${await data.user.profile_picture}`);
-        console.log(data);
+      
         setData(await data.user);        
       } catch (e) {
         const error = e as AxiosError;
