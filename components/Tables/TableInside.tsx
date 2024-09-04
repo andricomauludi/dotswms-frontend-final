@@ -46,114 +46,62 @@ const TableInside = ({ tableData }) => {
       setLoading(true);
       try {
         const { data } = await axios.get(
-          BACKEND_PORT + "workspaces/all-table-project/" + tableData._id,
+          `${BACKEND_PORT}workspaces/all-table-project/${tableData._id}`,
           { headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` } }
         );
-        // const { data: response } = await axios.get(
-        //   "/api/workspaces/tableproject"
-        // );
-        // setData(await response.data.tableproject);
-        return await data.tableproject;
-      } catch (error: any) {
-        console.error(error.message);
+        setData(data.tableproject);
+      } catch (error) {
+        console.error("Error fetching table projects:", error.message);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
-    };
-
-    const fetchData2 = async (datass: any) => {
-      setLoading(true);
-      try {
-        const { data } = await axios.get(
-          BACKEND_PORT + "workspaces/content-posting/" + (await datass),
-          { headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` } }
-        );
-
-        // const payload = {
-        //   id: tableData._id,
-        // };
-        // const { data: response } = await axios.post(
-        //   "/api/workspaces/tableinside",
-        //   payload
-        // );
-        // const { data: response } = await axios.get(
-        //   "/api/workspaces/tableproject"
-        // );
-        return await data.contentPosting;
-        // setData(await response.data.tableproject);
-      } catch (error: any) {
-        console.error(error.message);
-      }
-      setLoading(false);
-    };
-
-    const fetchBoth = async () => {
-      const tableinside = await fetchData();
-      setData(tableinside);
-
-      // console.log(tableinside);
-      // for (let i = 0; i < tableinside.length; i++) {
-      //   const contentposting = await fetchData2(tableinside[i]._id);
-      //   setDataContentPosting((oldArray) => [...oldArray, contentposting]);
-      // }
-      setLoading(false);
     };
 
     if (triggerApiCall) {
-      fetchBoth();
+      fetchData();
       setTriggerApiCall(false); // Reset the trigger after API call
     }
 
-    
     // Listen for real-time data updates
     socket.on("tableProjectData", (newData) => {
       setData(newData);
     });
-    socket.on('tableProjectDeleted', (deletedProject) => {
+
+    socket.on("tableProjectDeleted", (deletedProject) => {
       setData((prevData) =>
         prevData.filter((project) => project._id !== deletedProject.projectId)
-      );    
+      );
     });
+
     socket.on("newTableProject", (newProject) => {
       console.log(newProject);
       setData((prevData) => {
-        // If the existing data is empty, add the new project directly
         if (prevData.length === 0) {
           return [newProject];
         }
-    
-        // Check if there's a project with the same project_id
         const matchingProject = prevData.find(
           (project) => project.project_id === newProject.project_id
         );
-    
-        // If a matching project is found, add the new project to the data
-        if (matchingProject) {
-          return [...prevData, newProject];
-        }
-    
-        // If no matching project is found, return the existing data unchanged
-        return prevData;
+        return matchingProject ? [...prevData, newProject] : prevData;
       });
     });
-    socket.on('tableProjectEdited', (updatedProject) => {
+
+    socket.on("tableProjectEdited", (updatedProject) => {
       setData((prevData) =>
         prevData.map((project) =>
           project._id === updatedProject._id ? updatedProject : project
         )
-      );   
+      );
     });
-    
-   
+
     // Clean up the socket listener on component unmount
     return () => {
       socket.off("tableProjectData");
       socket.off("newTableProject");
-      socket.off('tableProjectDeleted');
-      socket.off('tableProjectEdited');
-
-
+      socket.off("tableProjectDeleted");
+      socket.off("tableProjectEdited");
     };
-  }, [triggerApiCall, tableData]);
+  }, [triggerApiCall, tableData._id]); // Only listen for changes to tableData._id or triggerApiCall
 
   const handleParentFunction = () => {
     // Your logic or function here
@@ -387,7 +335,7 @@ const TableInside = ({ tableData }) => {
                           ref={childRef}
                           parentFunction={handleParentFunction}
                           tableData={packageItem}
-                        />                        
+                        />
                         <ButtonDeleteProject
                           ref={childRef}
                           parentFunction={handleParentFunction}
@@ -461,7 +409,7 @@ const TableInside = ({ tableData }) => {
                       </div>
                     </td>
                   </tr>
-                  <TableSubItems tableData={packageItem} />                 
+                  <TableSubItems tableData={packageItem} />
                 </>
               ))}
             </tbody>
