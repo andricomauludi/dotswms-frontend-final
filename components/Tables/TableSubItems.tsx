@@ -180,7 +180,7 @@ const TableSubItems = ({ tableData }) => {
                             </h5>
                           </td>
                           <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                            <div
+                            {/* <div
                               className="relative"
                               style={{
                                 width: "48px",
@@ -195,13 +195,8 @@ const TableSubItems = ({ tableData }) => {
                                 style={{ margin: "auto", borderRadius: "50%" }}
                                 alt="profile"
                               />
-                            </div>
-                            {/* <Image
-                      src={`data:image/jpeg;base64,${packageItem.avatar}`}
-                      alt="Brand"
-                      width={48}
-                      height={48}
-                    /> */}
+                            </div> */}
+                         
                             <p className="hidden text-black dark:text-white sm:block text-xs">
                               {packageItem.owner}
                             </p>

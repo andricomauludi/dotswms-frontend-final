@@ -187,7 +187,7 @@ const TableInside = ({ tableData }) => {
                       </p>
                     </td>
                     <td className="border-b border-[#eee] py-3 px-2 dark:border-strokedark">
-                      <div
+                      {/* <div
                         className="relative"
                         style={{
                           width: "48px",
@@ -202,13 +202,7 @@ const TableInside = ({ tableData }) => {
                           style={{ margin: "auto", borderRadius: "50%" }}
                           alt="profile"
                         />
-                      </div>
-                      {/* <Image
-                      src={`data:image/jpeg;base64,${packageItem.avatar}`}
-                      alt="Brand"
-                      width={48}
-                      height={48}
-                    /> */}
+                      </div>                      */}
                       <p className="hidden text-black dark:text-white sm:block text-xs">
                         {packageItem.lead_name}
                       </p>
@@ -303,7 +297,7 @@ const TableInside = ({ tableData }) => {
                       </p>
                     </td>
                     <td className="border-b border-[#eee] py-3 px-2 dark:border-strokedark">
-                      <div
+                      {/* <div
                         className="relative"
                         style={{
                           width: "48px",
@@ -318,13 +312,8 @@ const TableInside = ({ tableData }) => {
                           style={{ margin: "auto", borderRadius: "50%" }}
                           alt="profile"
                         />
-                      </div>
-                      {/* <Image
-                      src={`data:image/jpeg;base64,${packageItem.avatar}`}
-                      alt="Brand"
-                      width={48}
-                      height={48}
-                    /> */}
+                      </div> */}
+                
                       <p className="hidden text-black dark:text-white sm:block text-xs">
                         {packageItem.updated_by}
                       </p>
