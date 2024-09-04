@@ -244,32 +244,7 @@ const TableInside = ({ tableData }) => {
 
                     <td className="border-b border-[#eee] py-3 px-2 dark:border-strokedark">
                       <div className="flex-shrink-0">
-                        <ContentPostingList contentPostingItem={packageItem} />
-                        {/* {dataContentPosting.map((contentPostingItem: any) => {
-                          return (
-                            <>
-                              {contentPostingItem.file_type === "image/jpg" ? (
-                                <ShowContentPosting
-                                  contentPostingItem={contentPostingItem}
-                                />
-                              ) : contentPostingItem.file_type ===
-                                "image/jpeg" ? (
-                                <ShowContentPosting
-                                  contentPostingItem={contentPostingItem}
-                                />
-                              ) : contentPostingItem.file_type ===
-                                "image/png" ? (
-                                <ShowContentPosting
-                                  contentPostingItem={contentPostingItem}
-                                />
-                              ) : (
-                                <ShowContentPosting
-                                  contentPostingItem={contentPostingItem}
-                                />
-                              )}
-                            </>
-                          );
-                        })} */}
+                        <ContentPostingList contentPostingItem={packageItem} />                        
                       </div>
                     </td>
                     <td className="border-b border-[#eee] py-3 px-2 dark:border-strokedark">

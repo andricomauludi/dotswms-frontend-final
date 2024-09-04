@@ -108,8 +108,10 @@ const TableSubItems = ({ tableData }) => {
       fetchData();
       setTriggerApiCall(false); // Reset the trigger after API call
     }
-    return () => {
+     // Clean up the socket listeners on component unmount
+     return () => {
       socket.off("subItemData");
+      socket.off("subItemDeleted");
       socket.off("newSubItem");
       socket.off("subItemEdited");
     };
@@ -131,7 +133,7 @@ const TableSubItems = ({ tableData }) => {
         <td colSpan={13}>
           <Accordion isCompact>
             <AccordionItem
-              key="2"
+              key={tableData._id}
               aria-label="Sub Items"
               startContent={<FontAwesomeIcon icon={faArrowAltCircleDown} />}
               className="bg-gray-2 text-left dark:bg-meta-4"
