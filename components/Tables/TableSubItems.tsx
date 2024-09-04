@@ -66,7 +66,8 @@ const TableSubItems = ({ tableData }) => {
       setLoading(false);
     };
 
-    socket.on("subItemData", (newData) => {
+    // Listen for updates only for the specific `table_project_id`
+    socket.on(`subItemData_${tableData._id}`, (newData) => {
       setData(newData);
     });
     socket.on('subItemDeleted', (deletedProject) => {
@@ -74,28 +75,10 @@ const TableSubItems = ({ tableData }) => {
         prevData.filter((project) => project._id !== deletedProject.projectId)
       );    
     });
-    socket.on("newSubItem", (newProject) => {
-      console.log(newProject);
-      setData((prevData) => {
-        // If the existing data is empty, add the new project directly
-        if (prevData.length === 0) {
-          return [newProject];
-        }
-
-        // Check if there's a project with the same project_id
-        const matchingProject = prevData.find(
-          (project) => project.table_project_id === newProject.table_project_id
-        );
-
-        // If a matching project is found, add the new project to the data
-        if (matchingProject) {
-          return [...prevData, newProject];
-        }
-
-        // If no matching project is found, return the existing data unchanged
-        return prevData;
-      });
+    socket.on(`newSubItem_${tableData._id}`, (newProject) => {
+      setData((prevData) => [...prevData, newProject]);
     });
+
     socket.on('subItemEdited', (updatedProject) => {
       setData((prevData) =>
         prevData.map((project) =>
@@ -175,7 +158,7 @@ const TableSubItems = ({ tableData }) => {
                   <tbody>
                     {datas.map((packageItem, key) => (
                       <>
-                        <tr key={key}>
+                        <tr key={packageItem._id}>
                           <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
                             <h5 className="font-medium text-black dark:text-white text-xs">
                               {packageItem.subitem}
