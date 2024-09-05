@@ -20,7 +20,9 @@
 *.pem
 
 # Ignore the assets folder
-
+/assets/
+*.env
+/constants/
 
 # debug
 npm-debug.log*
