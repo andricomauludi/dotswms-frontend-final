@@ -19,12 +19,12 @@ const Settings = () => {
             <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
               <div className="border-b border-stroke py-4 px-7 dark:border-strokedark">
                 <h3 className="font-medium text-black dark:text-white">
-                  Personal Information
+                  Change Password
                 </h3>
               </div>
               <div className="p-7">
                 <form action="#">
-                  <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
+                  {/* <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
                     <div className="w-full sm:w-1/2">
                       <label
                         className="mb-3 block text-sm font-medium text-black dark:text-white"
@@ -130,13 +130,12 @@ const Settings = () => {
                       />
                     </div>
                   </div>
-
                   <div className="mb-5.5">
                     <label
                       className="mb-3 block text-sm font-medium text-black dark:text-white"
                       htmlFor="Username"
                     >
-                      Username
+                      Birthday
                     </label>
                     <input
                       className="w-full rounded border border-stroke bg-gray py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
@@ -153,7 +152,7 @@ const Settings = () => {
                       className="mb-3 block text-sm font-medium text-black dark:text-white"
                       htmlFor="Username"
                     >
-                      BIO
+                      Address
                     </label>
                     <div className="relative">
                       <span className="absolute left-4.5 top-4">
@@ -196,6 +195,37 @@ const Settings = () => {
                         defaultValue="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque posuere fermentum urna, eu condimentum mauris tempus ut. Donec fermentum blandit aliquet."
                       ></textarea>
                     </div>
+                  </div> */}
+                  <div className="mb-4.5">
+                    <label className="mb-2.5 block text-black dark:text-white">
+                      Old Password
+                    </label>
+                    <input
+                      type="password"
+                      placeholder="Enter old password"
+                      className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                    />
+                  </div>
+                  <div className="mb-4.5">
+                    <label className="mb-2.5 block text-black dark:text-white">
+                      New Password
+                    </label>
+                    <input
+                      type="password"
+                      placeholder="Enter new password"
+                      className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                    />
+                  </div>
+
+                  <div className="mb-5.5">
+                    <label className="mb-2.5 block text-black dark:text-white">
+                      Re-type Password
+                    </label>
+                    <input
+                      type="password"
+                      placeholder="Re-enter new password"
+                      className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                    />
                   </div>
 
                   <div className="flex justify-end gap-4.5">
