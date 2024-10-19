@@ -104,8 +104,8 @@ const ButtonAddTableProject = forwardRef(
         formData.append("contentposting", "");
       }
 
-      console.log(contentposting.files[0]);
-      console.log(contentposting.files);
+      // console.log(contentposting.files[0]);
+      // console.log(contentposting.files);
 
       //   for (var pair of formData.entries()) {
       //     console.log(pair[0]+ ', ' + pair[1]);

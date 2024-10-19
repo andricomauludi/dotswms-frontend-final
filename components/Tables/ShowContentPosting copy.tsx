@@ -106,9 +106,22 @@ export default function ShowContentPosting({ contentPostingItem }) {
         console.log(response);
         const url = window.URL.createObjectURL(new Blob([response.data]));
 
+        // Determine the media type based on the response headers or file extension
+        const contentType = response.data["type"];
+        if (contentType.startsWith("text/")) {
+          setMediaType("image");
+        } else if (contentType.startsWith("video/")) {
+          setMediaType("video");
+        } else {
+          setError("Unsupported file type");
+          return;
+        }
+
         setMediaUrl(url);
-      } catch (error: any) {
-        console.error(error.message);
+        setError(""); // Clear previous errors
+      } catch (err) {
+        setError("Error fetching the file. Please check the file ID.");
+        console.error(err);
       }
       setLoading(false);
     };
@@ -167,11 +180,19 @@ export default function ShowContentPosting({ contentPostingItem }) {
                     </a> */}
                   </div>
                   <div className="flex-shrink-0 text-center place-content-center">
-                    <img
-                      src={mediaUrl}
-                      alt="Fetched content"
-                      style={{ maxWidth: "600px", maxHeight: "400px" }}
-                    />
+                    {mediaUrl && mediaType === "image" && (
+                      <img
+                        src={mediaUrl}
+                        alt="Fetched content"
+                        style={{ maxWidth: "600px", maxHeight: "400px" }}
+                      />
+                    )}
+                    {mediaUrl && mediaType === "video" && (
+                      <video controls width="600">
+                        <source src={mediaUrl} type="video/mp4" />
+                        Your browser does not support the video tag.
+                      </video>
+                    )}
                     <h3
                       className="font-medium text-black dark:text-white"
                       style={{ paddingTop: "20px" }}
@@ -207,16 +228,38 @@ export default function ShowContentPosting({ contentPostingItem }) {
                       Content Posting
                     </h3>
                   </div>
-                  <div className="flex flex-wrap gap-3"></div>
+                  <div className="flex flex-wrap gap-3">
+                    <a
+                      style={{ paddingBottom: "20px" }}
+                      download={`${contentPostingItem.file_name}`}
+                      href={`data:image/jpeg;base64,${data.contentfile}`}
+                    >
+                      <Button
+                        key={"5xl"}
+                        onPress={() => handleOpen("5xl")}
+                        color="primary"
+                        style={{
+                          backgroundImage:
+                            "linear-gradient(to right, green , yellow)",
+                          color: "black",
+                        }}
+                        // variant="bordered"
+                      >
+                        <FontAwesomeIcon icon={faDownload} />
+                        Download
+                      </Button>
+                    </a>
+                  </div>
                   <div className="flex-shrink-0 text-center">
-                    <img
-                      src={mediaUrl}
-                      alt="Fetched content"
-                      style={{ maxWidth: "600px", maxHeight: "400px" }}
+                    <Image
+                      src={`data:image/jpeg;base64,${data.contentfile}`}
+                      alt="Brand"
+                      width={400}
+                      className="text-center"
                     />
                     <h3
                       className="font-medium text-black dark:text-white"
-                      style={{ paddingBottom: "20px" }}
+                      style={{ paddingTop: "20px" }}
                     >
                       {contentPostingItem.file_name}
                     </h3>
@@ -250,12 +293,34 @@ export default function ShowContentPosting({ contentPostingItem }) {
                       Content Posting
                     </h3>
                   </div>
-                  <div className="flex flex-wrap gap-3"></div>
+                  <div className="flex flex-wrap gap-3">
+                    <a
+                      style={{ paddingBottom: "20px" }}
+                      download={`${contentPostingItem.file_name}`}
+                      href={`data:image/png;base64,${data.contentfile}`}
+                    >
+                      <Button
+                        key={"5xl"}
+                        onPress={() => handleOpen("5xl")}
+                        color="primary"
+                        style={{
+                          backgroundImage:
+                            "linear-gradient(to right, green , yellow)",
+                          color: "black",
+                        }}
+                        // variant="bordered"
+                      >
+                        <FontAwesomeIcon icon={faDownload} />
+                        Download
+                      </Button>
+                    </a>
+                  </div>
                   <div className="flex-shrink-0 text-center">
-                    <img
-                      src={mediaUrl}
-                      alt="Fetched content"
-                      style={{ maxWidth: "600px", maxHeight: "400px" }}
+                    <Image
+                      src={`data:image/png;base64,${data.contentfile}`}
+                      alt="Brand"
+                      width={400}
+                      className="text-center"
                     />
                     <h3
                       className="font-medium text-black dark:text-white"
@@ -292,19 +357,51 @@ export default function ShowContentPosting({ contentPostingItem }) {
                       Content Posting
                     </h3>
                   </div>
-                  <div className="flex flex-wrap gap-3"></div>
-                  <div className="flex-shrink-0 text-center">
-                    <video controls width="600">
-                      <source src={mediaUrl} type="video/mp4" />
-                      Your browser does not support the video tag.
-                    </video>
-
-                    <h3
-                      className="font-medium text-black dark:text-white"
+                  <div className="flex flex-wrap gap-3">
+                    {/* <a
                       style={{ paddingBottom: "20px" }}
+                      download={`${contentPostingItem.file_name}`}
+                      href={`data:image/png;base64,${data.contentfile}`}
                     >
-                      {contentPostingItem.file_name}
-                    </h3>
+                      <Button
+                        key={"5xl"}
+                        onPress={() => handleOpen("5xl")}
+                        color="primary"
+                        style={{
+                          backgroundImage:
+                            "linear-gradient(to right, green , yellow)",
+                          color: "black",
+                        }}
+                        // variant="bordered"
+                      >
+                        <FontAwesomeIcon icon={faDownload} />
+                        Download
+                      </Button>
+                    </a> */}
+                  </div>
+                  <div className="flex-shrink-0 text-center place-content-center">
+                    <div className="place-items-center">
+                      <video
+                        controls
+                        width="400"
+                        className="place-items-center"
+                      >
+                        <source
+                          src={
+                            BACKEND_PORT +
+                            `workspaces/stream-video/${contentPostingItem.file_name}`
+                          }
+                          type="video/mp4"
+                        />
+                        Your browser does not support the video tag.
+                      </video>
+                      <h3
+                        className="font-medium text-black dark:text-white"
+                        style={{ paddingTop: "20px" }}
+                      >
+                        {contentPostingItem.file_name}
+                      </h3>
+                    </div>
                     <div>{/* <ShowFileProject /> */}</div>
                   </div>
                 </div>

@@ -42,7 +42,7 @@ export async function GET(){
 
         return NextResponse.json(
             {
-              message: "Something went wrong",
+              message: "Something went wrong : "+e,
             },
             {
               status: 400,

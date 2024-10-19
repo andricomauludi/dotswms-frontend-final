@@ -22,20 +22,7 @@ export default function Home() {
       email: event.currentTarget.email.value,
       password: event.currentTarget.password.value,
     };
-    // try {
-    //   const { data } = await axios.post("/api/auth/login", payload);
-    // // cookies.set('my-cookie', 'my-value')}
 
-    //   // alert(JSON.stringify(data));
-    //   //redirect the user to dashboard
-    //   setLoadingModal(false);
-    //   router.push("/");
-    // } catch (e) {
-    //   setLoadingModal(false);
-    //   const error = e as AxiosError;
-    //   console.log(error);
-    //   alert(error.response?.data.message);
-    // }
 
     try {
       const { data } = await axios.post(
