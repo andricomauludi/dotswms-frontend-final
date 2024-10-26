@@ -12,6 +12,8 @@ import { useDisclosure } from "@nextui-org/react";
 import ButtonDeleteSubItem from "./ButtonDeleteSubItem";
 import { useCookies } from "next-client-cookies";
 import io from "socket.io-client";
+import ButtonEditMyTask from "./ButtonEditMyTask";
+import ButtonDeleteMyTask from "./ButtonDeleteMyTask";
 
 const socket = io(BACKEND_PORT); // Replace BACKEND_PORT with your actual backend URL
 
@@ -37,6 +39,7 @@ const TableMyTask = ({ tableData }) => {
           { headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` } }
         );
         setData(await data.subItem);
+        console.log(data.subItem)
       } catch (error: any) {
         console.error(error.message);
       }
@@ -48,6 +51,7 @@ const TableMyTask = ({ tableData }) => {
         );
       
         setDataDone(await data.subItem);
+        console.log(data.subItem)
       } catch (error: any) {
         console.error(error.message);
       }
@@ -58,41 +62,11 @@ const TableMyTask = ({ tableData }) => {
       fetchData();
       setTriggerApiCall(false); // Reset the trigger after API call
     }
-    socket.on('taskUpdated', (updatedTasks) => {
-      console.log('Received updated tasks:', updatedTasks);
-      setData(updatedTasks);
-    });
-
-    socket.on('taskDoneUpdated', (updatedTasksDone) => {
-      console.log('Received updated done tasks:', updatedTasksDone);
-      setDataDone(updatedTasksDone);
-    });
-
-    socket.on('subItemEdited', (updatedProject) => {
-      setData((prevData) =>
-        prevData.map((project) =>
-          project._id === updatedProject._id ? updatedProject : project
-        )
-      );   
-    });
-    
-
-    return () => {
-      socket.off('taskUpdated');
-      socket.off("subItemData");
-      socket.off('taskDoneUpdated');
-    };
+   
   }, [triggerApiCall, tableData]);
 
-  const handleOpen = async (size: any) => {
-    setSize(size);
-    onOpen();
-  };
 
   const handleParentFunction = () => {
-    // Your logic or function here
-
-    // Set the trigger to true to re-run the useEffect
     setTriggerApiCall(true);
   };
 
@@ -157,7 +131,7 @@ const TableMyTask = ({ tableData }) => {
                     </h5>
                   </td>
                   <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                    <div
+                    {/* <div
                       className="relative"
                       style={{
                         width: "48px",
@@ -172,7 +146,7 @@ const TableMyTask = ({ tableData }) => {
                         style={{ margin: "auto", borderRadius: "50%" }}
                         alt="profile"
                       />
-                    </div>
+                    </div> */}
                     {/* <Image
                       src={`data:image/jpeg;base64,${packageItem.avatar}`}
                       alt="Brand"
@@ -205,12 +179,12 @@ const TableMyTask = ({ tableData }) => {
                   </td>
                   <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                     <div className="flex items-center space-x-3.5">
-                      <ButtonEditSubItem
+                      <ButtonEditMyTask
                         ref={childRef}
                         parentFunction={handleParentFunction}
                         tableData={packageItem}
                       />
-                      <ButtonDeleteSubItem
+                      <ButtonDeleteMyTask
                         ref={childRef}
                         parentFunction={handleParentFunction}
                         tableData={packageItem}
@@ -224,6 +198,7 @@ const TableMyTask = ({ tableData }) => {
         </table>
       </div>
       <h1>My Task (Done)</h1>
+      <p>The displayed task is limited to the latest 15 tasks to avoid excessive data.</p>
       <div className="max-w-full overflow-x-auto">
         <table className="w-full table-auto">
           <thead>
@@ -279,7 +254,7 @@ const TableMyTask = ({ tableData }) => {
                     </h5>
                   </td>
                   <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                    <div
+                    {/* <div
                       className="relative"
                       style={{
                         width: "48px",
@@ -294,7 +269,7 @@ const TableMyTask = ({ tableData }) => {
                         style={{ margin: "auto", borderRadius: "50%" }}
                         alt="profile"
                       />
-                    </div>
+                    </div> */}
                     {/* <Image
                       src={`data:image/jpeg;base64,${packageItem.avatar}`}
                       alt="Brand"
@@ -327,12 +302,12 @@ const TableMyTask = ({ tableData }) => {
                   </td>
                   <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                     <div className="flex items-center space-x-3.5">
-                      <ButtonEditSubItem
+                      <ButtonEditMyTask
                         ref={childRef}
                         parentFunction={handleParentFunction}
                         tableData={packageItem}
                       />
-                      <ButtonDeleteSubItem
+                      <ButtonDeleteMyTask
                         ref={childRef}
                         parentFunction={handleParentFunction}
                         tableData={packageItem}

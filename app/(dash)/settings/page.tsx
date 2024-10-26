@@ -167,8 +167,7 @@ const Settings = () => {
           </div>
         </ModalContent>
       </Modal>
-
-      {console.log(datas.email)}
+      
       <div className="mx-auto max-w-270">
         <Breadcrumb pageName="Settings" titleName="Settings" />
 

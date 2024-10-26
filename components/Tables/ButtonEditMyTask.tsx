@@ -7,31 +7,33 @@ import React, {
 import {
   Modal,
   ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
   Button,
   useDisclosure,
+  Image,
+  Chip,
   Spinner,
 } from "@nextui-org/react";
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
-import { Flip, ToastContainer, toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faListCheck, faUser } from "@fortawesome/free-solid-svg-icons";
-import { BACKEND_PORT, COOKIE_NAME } from "@/constants";
+import { faEdit, faListCheck, faUser } from "@fortawesome/free-solid-svg-icons";
+import { Flip, ToastContainer, toast } from "react-toastify";
 import { useCookies } from "next-client-cookies";
-import io from "socket.io-client";
+import { BACKEND_PORT, COOKIE_NAME } from "@/constants";
 
-
-const socket = io(BACKEND_PORT); // Replace with your backend URL
-
-const ButtonAddSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
+const ButtonEditMyTask = forwardRef(({ parentFunction, tableData }, ref) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [data, setData] = useState([]);
   const [imageloader, setImageLoader] = useState();
   const [isLoadingModal, setLoadingModal] = useState(false);
   const [isLoading, setLoading] = useState(true);
+  const [size, setSize] = React.useState("2xl");
+  const [type, setType] = useState("text");
   const cookies = useCookies();
 
-  const [size, setSize] = React.useState("2xl");
 
   const handleChildEvent = () => {
     // Do something in the child component
@@ -64,57 +66,50 @@ const ButtonAddSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     setLoadingModal(true);
     var formData = new FormData();
-    event.preventDefault();
+    event.preventDefault();    
+
+    formData.append("_id", tableData._id);
     formData.append("subitem", event.currentTarget.subitem.value);
-    formData.append(
-      "owner",
-      data[event.currentTarget.owner.value]["full_name"]
-    );
-    formData.append(
-      "owner_email",
-      data[event.currentTarget.owner.value]["email"]
-    );
+    if (
+      event.currentTarget.owner.value == 0 ||
+      event.currentTarget.owner.value == 1
+    ) {
+      formData.append(
+        "owner",
+        data[event.currentTarget.owner.value]["full_name"]
+      );
+
+      formData.append(
+        "owner_email",
+        data[event.currentTarget.owner.value]["email"]
+      );
+      formData.append(
+        "avatar",
+        data[event.currentTarget.owner.value]["profile_picture"]
+      );
+    }
     formData.append("date", event.currentTarget.date.value);
     formData.append("status", event.currentTarget.status.value);
-    formData.append(
-      "avatar",
-      data[event.currentTarget.owner.value]["profile_picture"]
-    );
-    formData.append("table_project_id", tableData._id);
-    formData.append("table_project_name", tableData.item);
+    formData.append("table_project_id", tableData.table_project_id);
+    formData.append("table_project_name", tableData.table_project_name);
     formData.append("created_by", "Admin1");
-    formData.append("updated_by", "Admin1");    
+    formData.append("updated_by", "Admin1");
 
-    // const payload = {
-    //   item: event.currentTarget.item.value,
-    //   postingschedule: event.currentTarget.postingschedule.value,
-    //   lead: event.currentTarget.lead.value,
-    //   contentcategory: event.currentTarget.contentcategory.value,
-    //   postingtime: event.currentTarget.postingtime.value,
-    //   postingcaption: event.currentTarget.postingcaption.value,
-    //   contenttextlink: event.currentTarget.contenttextlink.value,
-    //   contentposting: event.currentTarget.contentposting.value,
-    //   instagrampostingstatus: event.currentTarget.instagrampostingstatus.value,
-    //   tiktokpostingstatus: event.currentTarget.tiktokpostingstatus.value,
-    // };
-    try { 
-
-      const { data } = await axios.post(
-        BACKEND_PORT + "workspaces/create-sub-item",
+    try {
+      const { data } = await axios.patch(
+        BACKEND_PORT + "workspaces/edit-sub-item/",
         formData,
         {
           headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}`, 'Content-Type': 'multipart/form-data' },
         }
       );    
+      await setLoadingModal(false);
 
-  
-      setLoadingModal(false);
-
-      onClose();
-      onClose();
+      await onClose();
+      await onClose();
       // handleChildEvent();
 
-      // toast.success("New Sub Item Added!", {
+      // await toast.success("Sub Item Edited!", {
       //   autoClose: 3000,
       //   position: "top-right",
       //   hideProgressBar: false,
@@ -124,8 +119,9 @@ const ButtonAddSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
       //   progress: undefined,
       //   theme: "colored",
       //   transition: Flip,
-      //   // onClose: () => handleChildEvent(),
       // });
+      await handleChildEvent();
+
       //redirect the user to dashboard
     } catch (e) {
       setLoadingModal(false);
@@ -134,11 +130,10 @@ const ButtonAddSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
       alert(error.message);
     }
   };
-
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      try {      
+      try {       
         const { data } = await axios.get(
           BACKEND_PORT +
             "users/dropdown-user",
@@ -154,36 +149,12 @@ const ButtonAddSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    socket.on("newSubItem", (newProject) => {
-      setData((prevData) => {
-        // If the existing data is empty, add the new project directly
-        if (prevData.length === 0) {
-          return [newProject];
-        }
-    
-        // Check if there's a project with the same project_id
-        const matchingProject = prevData.find(
-          (project) => project.table_project_id === newProject.table_project_id
-        );
-    
-        // If a matching project is found, add the new project to the data
-        if (matchingProject) {
-          return [...prevData, newProject];
-        }
-    
-        // If no matching project is found, return the existing data unchanged
-        return prevData;
-      });
-    });
-    
-    // Clean up the socket listener on component unmount
-    return () => {
-      socket.off("newSubItem");
-    };
-  }, []);
-
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading)
+    return (
+      <Button color="default" isLoading>
+        Loading
+      </Button>
+    );
   if (!data) return <p>No profile data</p>;
   if (isLoadingModal)
     return (
@@ -213,19 +184,13 @@ const ButtonAddSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
 
   return (
     <>
-      <div className="flex flex-wrap gap-3">
-        <Button
-          key={"2xl"}
-          onPress={() => handleOpen("2xl")}
-          style={{
-            backgroundImage: "linear-gradient(to right, green , yellow)",
-            color: "black",
-          }}
-          // variant="bordered"
-        >
-          Add Sub Item
-        </Button>
-      </div>
+      <button className="hover:text-warning">
+        <FontAwesomeIcon
+          icon={faEdit}
+          key={"5xl"}
+          onClick={() => handleOpen("5xl")}
+        />
+      </button>
       <div>
         <Modal
           className="sticky top-0 z-999 flex w-full bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none"
@@ -234,12 +199,11 @@ const ButtonAddSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
           onClose={onClose}
           scrollBehavior={"outside"}
           backdrop="blur"
-          isDismissable={false}
         >
           <ModalContent className="">
             <div className="w-full max-w-200 rounded-lg bg-white py-12 px-8 dark:bg-boxdark md:py-15 md:px-17.5">
               <h3 className="font-medium text-black dark:text-white">
-                Add Sub Item
+                Edit Sub Item
               </h3>
               <form onSubmit={handleSubmit}>
                 {/* <!-- Contact Form --> */}
@@ -247,13 +211,12 @@ const ButtonAddSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
                   <div className="mb-4.5">
                     <label className="mb-2.5 block text-black dark:text-white">
                       Sub Item
-                      {/* <span className="text-meta-1">*</span> */}
                     </label>
                     <input
                       name="subitem"
                       id="item"
                       type="text"
-                      placeholder="Enter the sub item"
+                      defaultValue={tableData.subitem}
                       className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                     />
                   </div>
@@ -268,8 +231,12 @@ const ButtonAddSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
                         </span>
                         <select
                           name="owner"
+                          defaultValue={tableData.owner}
                           className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input"
                         >
+                          <option hidden value={tableData.owner}>
+                            {tableData.owner}
+                          </option>
                           {data.map((item, key) => (
                             <>
                               <option value={key}>{item.full_name}</option>
@@ -304,13 +271,17 @@ const ButtonAddSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
                       </label>
                       <div className="relative z-20 bg-white dark:bg-form-input">
                         <span className="absolute top-1/2 left-4 z-30 -translate-y-1/2">
-                        <FontAwesomeIcon icon={faListCheck} />
-
+                          <FontAwesomeIcon icon={faListCheck} />
                         </span>
                         <select
                           name="status"
+                          defaultValue={tableData.status}
                           className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input"
                         >
+                          <option hidden value={tableData.status}>
+                            {tableData.status}
+                          </option>
+
                           <option value="not yet">Not Yet</option>
                           <option value="done">Done</option>
                           <option value="on progress">on progress</option>
@@ -345,7 +316,10 @@ const ButtonAddSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
                         <input
                           name="date"
                           id="date"
-                          type="date"
+                          type={type}
+                          onFocus={() => setType("date")}
+                          onBlur={() => setType("text")}
+                          defaultValue={tableData.date}
                           className="custom-input-date custom-input-date-1 w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                         />
                       </div>
@@ -355,10 +329,13 @@ const ButtonAddSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
 
                 <Button
                   type="submit"
-                  className="block w-full rounded border border-primary bg-primary p-3 text-center font-medium text-white transition hover:bg-opacity-90"
-                  color="primary"
+                  className="block w-full rounded p-3 text-center font-medium text-white transition hover:bg-opacity-90"
+                  style={{
+                    backgroundImage:
+                      "linear-gradient(to right, green , yellow)",
+                  }}
                 >
-                  Add Sub Item
+                  Edit Sub Item
                 </Button>
               </form>
             </div>
@@ -372,7 +349,7 @@ const ButtonAddSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
         >
           <div style={{zIndex:1000001}} className="w-full max-w-142.5 rounded-lg bg-white py-12 px-8 text-center dark:bg-boxdark md:py-15 md:px-17.5">
             <h3 className="pb-2 text-xl font-bold text-black dark:text-white sm:text-2xl">
-              Ysour Message Sent Successfully
+              Your Message Sent Successfully
             </h3>
             <span className="mx-auto mb-6 inline-block h-1 w-22.5 rounded bg-primary"></span>
             <p className="mb-10 font-medium">
@@ -398,4 +375,4 @@ const ButtonAddSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
     </>
   );
 });
-export default ButtonAddSubItem;
+export default ButtonEditMyTask;

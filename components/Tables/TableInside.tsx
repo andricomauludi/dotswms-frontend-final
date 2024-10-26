@@ -74,7 +74,6 @@ const TableInside = ({ tableData }) => {
     });
 
     socket.on("newTableProject", (newProject) => {
-      console.log(newProject);
       setData((prevData) => {
         if (prevData.length === 0) {
           return [newProject];

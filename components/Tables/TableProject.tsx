@@ -99,7 +99,9 @@ const TableProject = ({ tableData }) => {
         parentFunction={handleParentFunction}
         tableData={tableData}
       />
-      <Accordion variant="splitted">
+      <Accordion variant="splitted" 
+      // selectionMode="multiple"
+      >
         {dataproject.map((Item, key) => (
           <AccordionItem
             key={key}

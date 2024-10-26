@@ -32,23 +32,16 @@ export default function ContentPostingList({ contentPostingItem }) {
   const [data, setData] = useState([]);
   const [imageloader, setImageLoader] = useState();
   const [isLoading, setLoading] = useState(true);
-  const [size, setSize] = React.useState("5xl");
 
-  const handleOpen = async (size: any) => {
+  const [selectedItemId, setSelectedItemId] = useState(null);
+  const [mediaType, setMediaType] = useState("");
+  const [size, setSize] = useState("5xl");
+
+  const handleOpen = (id, type, size) => {
+    setSelectedItemId(id);
+    setMediaType(type);
     setSize(size);
     onOpen();
-    // try {
-    //   const { data } = await axios.get("/api/users/me");
-    //   const profiles: IprofileState[] = await data.data.user;
-    //   console.log(profiles);
-    //   if (data.status == 404) {
-    //     alert(data.message);
-    //   }
-    // } catch (e) {
-    //   const error = e as AxiosError;
-    //   console.log(error);
-    //   alert(error.message);
-    // }
   };
   // const router = useRouter();
   // if (!data) return <p>No profile data</p>;
@@ -73,7 +66,6 @@ export default function ContentPostingList({ contentPostingItem }) {
         //   "/api/workspaces/tableproject"
         // );
         setData(await data.contentPosting);
-        console.log(data)
         // setData(await response.data.tableproject);
       } catch (error: any) {
         console.error(error.message);
@@ -89,21 +81,51 @@ export default function ContentPostingList({ contentPostingItem }) {
 
   return (
     <>
-      {data.map((contentPostingItem: any) => {
-        return (
-          <>
-            {contentPostingItem.file_type === "image/jpg" ? (
-              <ShowContentPosting contentPostingItem={contentPostingItem} />
-            ) : contentPostingItem.file_type === "image/jpeg" ? (
-              <ShowContentPosting contentPostingItem={contentPostingItem} />
-            ) : contentPostingItem.file_type === "image/png" ? (
-              <ShowContentPosting contentPostingItem={contentPostingItem} />
-            ) : (
-              <ShowContentPosting contentPostingItem={contentPostingItem} />
-            )}
-          </>
-        );
-      })}
+      {data.map((contentPostingItem) => (
+        <div id={contentPostingItem.id} key={contentPostingItem.id}>          
+          {["image/jpg", "image/jpeg", "image/png"].includes(
+            contentPostingItem.file_type
+          ) ? (
+            <p className="text-black dark:text-white">
+              <FontAwesomeIcon
+                icon={faImage}
+                onClick={() =>
+                  handleOpen(
+                    contentPostingItem.id,
+                    contentPostingItem.file_type,
+                    "5xl"
+                  )
+                }
+              />
+              <ShowContentPosting
+                contentPostingItem={contentPostingItem}
+                isOpen={isOpen && selectedItemId === contentPostingItem.id}
+                onClose={onClose}
+                size={size}
+              />
+            </p>
+          ) : (
+            <p className="text-black dark:text-white">
+              <FontAwesomeIcon
+                icon={faVideo}
+                onClick={() =>
+                  handleOpen(
+                    contentPostingItem.id,
+                    contentPostingItem.file_type,
+                    "5xl"
+                  )
+                }
+              />
+              <ShowContentPosting
+                contentPostingItem={contentPostingItem}
+                isOpen={isOpen && selectedItemId === contentPostingItem.id}
+                onClose={onClose}
+                size={size}
+              />
+            </p>
+          )}
+        </div>
+      ))}
     </>
   );
 }

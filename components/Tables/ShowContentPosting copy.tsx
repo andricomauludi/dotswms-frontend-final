@@ -56,37 +56,6 @@ export default function ShowContentPosting({ contentPostingItem }) {
   // if (!data) return <p>No profile data</p>;
 
   useEffect(() => {
-    // const fetchData2 = async () => {
-    //   setLoading(true);
-    //   try {
-    //     const payload = {
-    //       file_name: contentPostingItem.file_name,
-    //       file_type: contentPostingItem.file_type,
-    //     };
-    //     const { data } = await axios.post(
-    //       BACKEND_PORT + "workspaces/show-content-posting",
-    //       payload,
-    //       { headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` }, responseType:'blob' }
-    //     );
-
-    //     // const payload = {
-    //     //   id: tableData._id,
-    //     // };
-    //     // const { data: response } = await axios.post(
-    //     //   "/api/workspaces/tableinside",
-    //     //   payload
-    //     // );
-    //     // const { data: response } = await axios.get(
-    //     //   "/api/workspaces/tableproject"
-    //     // );
-    //     setData(await data);
-    //   } catch (error: any) {
-    //     console.error(error.message);
-    //   }
-    //   setLoading(false);
-    // };
-
-    // fetchData2();
 
     const handleFetchFile = async () => {
       try {
@@ -103,25 +72,11 @@ export default function ShowContentPosting({ contentPostingItem }) {
             responseType: "blob",
           }
         );
-        console.log(response);
         const url = window.URL.createObjectURL(new Blob([response.data]));
 
-        // Determine the media type based on the response headers or file extension
-        const contentType = response.data["type"];
-        if (contentType.startsWith("text/")) {
-          setMediaType("image");
-        } else if (contentType.startsWith("video/")) {
-          setMediaType("video");
-        } else {
-          setError("Unsupported file type");
-          return;
-        }
-
         setMediaUrl(url);
-        setError(""); // Clear previous errors
-      } catch (err) {
-        setError("Error fetching the file. Please check the file ID.");
-        console.error(err);
+      } catch (error: any) {
+        console.error(error.message);
       }
       setLoading(false);
     };
@@ -180,19 +135,11 @@ export default function ShowContentPosting({ contentPostingItem }) {
                     </a> */}
                   </div>
                   <div className="flex-shrink-0 text-center place-content-center">
-                    {mediaUrl && mediaType === "image" && (
-                      <img
-                        src={mediaUrl}
-                        alt="Fetched content"
-                        style={{ maxWidth: "600px", maxHeight: "400px" }}
-                      />
-                    )}
-                    {mediaUrl && mediaType === "video" && (
-                      <video controls width="600">
-                        <source src={mediaUrl} type="video/mp4" />
-                        Your browser does not support the video tag.
-                      </video>
-                    )}
+                    <img
+                      src={mediaUrl}
+                      alt="Fetched content"
+                      style={{ maxWidth: "600px", maxHeight: "400px" }}
+                    />
                     <h3
                       className="font-medium text-black dark:text-white"
                       style={{ paddingTop: "20px" }}
@@ -228,38 +175,16 @@ export default function ShowContentPosting({ contentPostingItem }) {
                       Content Posting
                     </h3>
                   </div>
-                  <div className="flex flex-wrap gap-3">
-                    <a
-                      style={{ paddingBottom: "20px" }}
-                      download={`${contentPostingItem.file_name}`}
-                      href={`data:image/jpeg;base64,${data.contentfile}`}
-                    >
-                      <Button
-                        key={"5xl"}
-                        onPress={() => handleOpen("5xl")}
-                        color="primary"
-                        style={{
-                          backgroundImage:
-                            "linear-gradient(to right, green , yellow)",
-                          color: "black",
-                        }}
-                        // variant="bordered"
-                      >
-                        <FontAwesomeIcon icon={faDownload} />
-                        Download
-                      </Button>
-                    </a>
-                  </div>
+                  <div className="flex flex-wrap gap-3"></div>
                   <div className="flex-shrink-0 text-center">
-                    <Image
-                      src={`data:image/jpeg;base64,${data.contentfile}`}
-                      alt="Brand"
-                      width={400}
-                      className="text-center"
+                    <img
+                      src={mediaUrl}
+                      alt="Fetched content"
+                      style={{ maxWidth: "600px", maxHeight: "400px" }}
                     />
                     <h3
                       className="font-medium text-black dark:text-white"
-                      style={{ paddingTop: "20px" }}
+                      style={{ paddingBottom: "20px" }}
                     >
                       {contentPostingItem.file_name}
                     </h3>
@@ -293,34 +218,12 @@ export default function ShowContentPosting({ contentPostingItem }) {
                       Content Posting
                     </h3>
                   </div>
-                  <div className="flex flex-wrap gap-3">
-                    <a
-                      style={{ paddingBottom: "20px" }}
-                      download={`${contentPostingItem.file_name}`}
-                      href={`data:image/png;base64,${data.contentfile}`}
-                    >
-                      <Button
-                        key={"5xl"}
-                        onPress={() => handleOpen("5xl")}
-                        color="primary"
-                        style={{
-                          backgroundImage:
-                            "linear-gradient(to right, green , yellow)",
-                          color: "black",
-                        }}
-                        // variant="bordered"
-                      >
-                        <FontAwesomeIcon icon={faDownload} />
-                        Download
-                      </Button>
-                    </a>
-                  </div>
+                  <div className="flex flex-wrap gap-3"></div>
                   <div className="flex-shrink-0 text-center">
-                    <Image
-                      src={`data:image/png;base64,${data.contentfile}`}
-                      alt="Brand"
-                      width={400}
-                      className="text-center"
+                    <img
+                      src={mediaUrl}
+                      alt="Fetched content"
+                      style={{ maxWidth: "600px", maxHeight: "400px" }}
                     />
                     <h3
                       className="font-medium text-black dark:text-white"
@@ -357,51 +260,19 @@ export default function ShowContentPosting({ contentPostingItem }) {
                       Content Posting
                     </h3>
                   </div>
-                  <div className="flex flex-wrap gap-3">
-                    {/* <a
+                  <div className="flex flex-wrap gap-3"></div>
+                  <div className="flex-shrink-0 text-center">
+                    <video controls width="600">
+                      <source src={mediaUrl} type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+
+                    <h3
+                      className="font-medium text-black dark:text-white"
                       style={{ paddingBottom: "20px" }}
-                      download={`${contentPostingItem.file_name}`}
-                      href={`data:image/png;base64,${data.contentfile}`}
                     >
-                      <Button
-                        key={"5xl"}
-                        onPress={() => handleOpen("5xl")}
-                        color="primary"
-                        style={{
-                          backgroundImage:
-                            "linear-gradient(to right, green , yellow)",
-                          color: "black",
-                        }}
-                        // variant="bordered"
-                      >
-                        <FontAwesomeIcon icon={faDownload} />
-                        Download
-                      </Button>
-                    </a> */}
-                  </div>
-                  <div className="flex-shrink-0 text-center place-content-center">
-                    <div className="place-items-center">
-                      <video
-                        controls
-                        width="400"
-                        className="place-items-center"
-                      >
-                        <source
-                          src={
-                            BACKEND_PORT +
-                            `workspaces/stream-video/${contentPostingItem.file_name}`
-                          }
-                          type="video/mp4"
-                        />
-                        Your browser does not support the video tag.
-                      </video>
-                      <h3
-                        className="font-medium text-black dark:text-white"
-                        style={{ paddingTop: "20px" }}
-                      >
-                        {contentPostingItem.file_name}
-                      </h3>
-                    </div>
+                      {contentPostingItem.file_name}
+                    </h3>
                     <div>{/* <ShowFileProject /> */}</div>
                   </div>
                 </div>

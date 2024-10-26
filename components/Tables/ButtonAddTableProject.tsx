@@ -217,7 +217,6 @@ const ButtonAddTableProject = forwardRef(
               "users/dropdown-user",
             { headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` } }
           );       
-          console.log(data);
           setData(await data.user);
         } catch (e) {
           const error = e as AxiosError;
@@ -233,7 +232,6 @@ const ButtonAddTableProject = forwardRef(
     
     useEffect(() => {
       socket.on("newTableProject", (newProject) => {
-        console.log(newProject);
         setData((prevData) => {
           // If the existing data is empty, add the new project directly
           if (prevData.length === 0) {

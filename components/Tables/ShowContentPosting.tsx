@@ -2,13 +2,9 @@ import React, { useEffect, useState } from "react";
 import {
   Modal,
   ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Button,
   useDisclosure,
-  Image,
-  Chip,
+  Button,
+  Spinner,
 } from "@nextui-org/react";
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
@@ -19,6 +15,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faDownload,
   faImage,
+  faSignOutAlt,
   faVideo,
 } from "@fortawesome/free-solid-svg-icons";
 import { BACKEND_PORT, COOKIE_NAME } from "@/constants";
@@ -31,100 +28,66 @@ export default function ShowContentPosting({ contentPostingItem }) {
   const [data, setData] = useState();
   const [imageloader, setImageLoader] = useState();
   const [isLoading, setLoading] = useState(true);
+  const [isLoadingLink, setLoadingLink] = useState(true);
   const [mediaUrl, setMediaUrl] = useState("");
   const [mediaType, setMediaType] = useState(""); // To track media type (image or video)
   const [size, setSize] = React.useState("5xl");
   const [error, setError] = useState("");
-
-  const handleOpen = async (size: any) => {
-    setSize(size);
+  const handleOpen = async (size) => {
+    setLoading(true); // Set loading to true when modal opens
     onOpen();
-    // try {
-    //   const { data } = await axios.get("/api/users/me");
-    //   const profiles: IprofileState[] = await data.data.user;
-    //   console.log(profiles);
-    //   if (data.status == 404) {
-    //     alert(data.message);
-    //   }
-    // } catch (e) {
-    //   const error = e as AxiosError;
-    //   console.log(error);
-    //   alert(error.message);
-    // }
+
+    try {
+      const payload = {
+        file_name: contentPostingItem.file_name,
+        file_type: contentPostingItem.file_type,
+      };
+      const data = await axios.post(
+        BACKEND_PORT + "workspaces/show-content-posting-link",
+        payload,
+        {
+          headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` },
+        }
+      );
+      console.log(data.data.fileUrl);
+      setData(await data.data.fileUrl);
+    } catch (error) {
+      console.error(error);
+      setError("Failed to fetch file."); // Set error message
+    } finally {
+      setLoadingLink(false); // Set loading to false after fetching
+    }
+
+    try {
+      const payload = {
+        file_name: contentPostingItem.file_name,
+        file_type: contentPostingItem.file_type,
+      };
+      const response = await axios.post(
+        BACKEND_PORT + "workspaces/show-content-posting",
+        payload,
+        {
+          headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` },
+          responseType: "blob",
+        }
+      );
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      setMediaUrl(url);
+    } catch (error) {
+      console.error(error);
+      setError("Failed to fetch file."); // Set error message
+    } finally {
+      setLoading(false); // Set loading to false after fetching
+    }
   };
-  // const router = useRouter();
-  // if (!data) return <p>No profile data</p>;
-
-  useEffect(() => {
-    // const fetchData2 = async () => {
-    //   setLoading(true);
-    //   try {
-    //     const payload = {
-    //       file_name: contentPostingItem.file_name,
-    //       file_type: contentPostingItem.file_type,
-    //     };
-    //     const { data } = await axios.post(
-    //       BACKEND_PORT + "workspaces/show-content-posting",
-    //       payload,
-    //       { headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` }, responseType:'blob' }
-    //     );
-
-    //     // const payload = {
-    //     //   id: tableData._id,
-    //     // };
-    //     // const { data: response } = await axios.post(
-    //     //   "/api/workspaces/tableinside",
-    //     //   payload
-    //     // );
-    //     // const { data: response } = await axios.get(
-    //     //   "/api/workspaces/tableproject"
-    //     // );
-    //     setData(await data);
-    //   } catch (error: any) {
-    //     console.error(error.message);
-    //   }
-    //   setLoading(false);
-    // };
-
-    // fetchData2();
-
-    const handleFetchFile = async () => {
-      try {
-        setLoading(true);
-        const payload = {
-          file_name: contentPostingItem.file_name,
-          file_type: contentPostingItem.file_type,
-        };
-        const response = await axios.post(
-          BACKEND_PORT + "workspaces/show-content-posting",
-          payload,
-          {
-            headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` },
-            responseType: "blob",
-          }
-        );
-        console.log(response);
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-
-        setMediaUrl(url);
-      } catch (error: any) {
-        console.error(error.message);
-      }
-      setLoading(false);
-    };
-
-    handleFetchFile();
-  }, [contentPostingItem]);
-
-  if (isLoading) return <p>Loading...</p>;
-  // if (!data) return <p>Error</p>;
 
   return (
     <>
-      {contentPostingItem.file_type === "image/jpg" ? (
+      {contentPostingItem.file_type === "image/jpg" ||
+      contentPostingItem.file_type === "image/jpeg" ||
+      contentPostingItem.file_type === "image/png" ? (
         <p className="text-black dark:text-white">
           <FontAwesomeIcon icon={faImage} onClick={() => handleOpen("5xl")} />
-
           <div>
             <Modal
               className="sticky top-0 z-999 flex w-full bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none"
@@ -134,137 +97,90 @@ export default function ShowContentPosting({ contentPostingItem }) {
               scrollBehavior={"outside"}
               backdrop="blur"
             >
-              <ModalContent className="">
-                <div className="w-full max-w-200 rounded-lg bg-white py-12 px-8 dark:bg-boxdark md:py-15 md:px-17.5">
-                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
-                    <h3
-                      className="font-medium text-black dark:text-white"
-                      style={{ paddingBottom: "20px" }}
-                    >
-                      Content Posting
-                    </h3>
-                  </div>
-                  <div className="flex flex-wrap gap-3">
-                    {/* <a
-                      style={{ paddingBottom: "20px" }}
-                      download={`${contentPostingItem.file_name}`}
-                      href={`data:image/jpg;base64,${data.contentfile}`}
-                    >
-                      <Button
-                        key={"5xl"}
-                        onPress={() => handleOpen("5xl")}
-                        color="primary"
-                        style={{
-                          backgroundImage:
-                            "linear-gradient(to right, green , yellow)",
-                          color: "black",
-                        }}
-                        // variant="bordered"
+              <ModalContent>
+                <div className="w-full max-w-200 rounded-lg bg-white py-12 px-8 dark:bg-boxdark md:py-15 md:px-17.5 text-center">
+                  <h3
+                    className="font-medium text-black dark:text-white"
+                    style={{ paddingBottom: "20px" }}
+                  >
+                    Content Posting
+                  </h3>
+                  {isLoading ? (
+                    <Spinner
+                      label="Fetching file, please wait..."
+                      color="success"
+                      labelColor="success"
+                    />
+                  ) : error ? (
+                    <p className="text-red-500">{error}</p>
+                  ) : (
+                    <div className="flex-shrink-0 text-center">
+                      {contentPostingItem.file_type.includes("image") && (
+                        <img
+                          src={mediaUrl}
+                          alt="Fetched content"
+                          style={{
+                            maxWidth: "600px",
+                            maxHeight: "400px",
+                            margin: "0 auto",
+                          }} // Center the image
+                        />
+                      )}
+                      {contentPostingItem.file_type === "video/mp4" && (
+                        <video controls width="600">
+                          <source src={mediaUrl} type="video/mp4" />
+                          Your browser does not support the video tag.
+                        </video>
+                      )}
+                      <h3
+                        className="font-medium text-black dark:text-white"
+                        style={{ paddingTop:"20px",paddingBottom: "20px" }}
                       >
-                        <FontAwesomeIcon icon={faDownload} />
-                        Download
-                      </Button>
-                    </a> */}
-                  </div>
-                  <div className="flex-shrink-0 text-center place-content-center">
-                    <img
-                      src={mediaUrl}
-                      alt="Fetched content"
-                      style={{ maxWidth: "600px", maxHeight: "400px" }}
+                        {contentPostingItem.file_name_real}
+                      </h3>
+                    </div>
+                  )}
+                  {!isLoadingLink ? (
+                    data && (
+                      <>
+                        <h3
+                          className="font-medium text-black dark:text-white"
+                          style={{ paddingBottom: "20px", paddingTop: "20px" }}
+                        >
+                          If loading takes too long, you can access this file
+                          via Google Drive
+                        </h3>
+                        <a
+                          href={data}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <Button
+                            color="primary"
+                            style={{
+                              backgroundImage:
+                                "linear-gradient(to right, green , yellow)",
+                              color: "black",
+                            }}
+                          >
+                            <FontAwesomeIcon icon={faSignOutAlt} /> Go to Google
+                            Drive
+                          </Button>
+                        </a>
+                        <p
+                          style={{paddingTop: "20px" }}
+                        >
+                          You can download the file in Google Drive too
+                        </p>
+                      </>
+                    )
+                  ) : (
+                    <Spinner
+                      label="Fetching link, please wait..."
+                      color="success"
+                      labelColor="success"
                     />
-                    <h3
-                      className="font-medium text-black dark:text-white"
-                      style={{ paddingTop: "20px" }}
-                    >
-                      {contentPostingItem.file_name}
-                    </h3>
-                    <div>{/* <ShowFileProject /> */}</div>
-                  </div>
-                </div>
-              </ModalContent>
-            </Modal>
-          </div>
-        </p>
-      ) : contentPostingItem.file_type === "image/jpeg" ? (
-        <p className="text-black dark:text-white">
-          <FontAwesomeIcon icon={faImage} onClick={() => handleOpen("5xl")} />
-          <div>
-            <Modal
-              className="sticky top-0 z-999 flex w-full bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none"
-              size={"5xl"}
-              isOpen={isOpen}
-              onClose={onClose}
-              scrollBehavior={"outside"}
-              backdrop="blur"
-            >
-              <ModalContent className="">
-                <div className="w-full max-w-200 rounded-lg bg-white py-12 px-8 dark:bg-boxdark md:py-15 md:px-17.5">
-                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
-                    <h3
-                      className="font-medium text-black dark:text-white"
-                      style={{ paddingBottom: "20px" }}
-                    >
-                      Content Posting
-                    </h3>
-                  </div>
-                  <div className="flex flex-wrap gap-3"></div>
-                  <div className="flex-shrink-0 text-center">
-                    <img
-                      src={mediaUrl}
-                      alt="Fetched content"
-                      style={{ maxWidth: "600px", maxHeight: "400px" }}
-                    />
-                    <h3
-                      className="font-medium text-black dark:text-white"
-                      style={{ paddingBottom: "20px" }}
-                    >
-                      {contentPostingItem.file_name}
-                    </h3>
-                    <div>{/* <ShowFileProject /> */}</div>
-                  </div>
-                </div>
-              </ModalContent>
-            </Modal>
-          </div>
-        </p>
-      ) : contentPostingItem.file_type === "image/png" ? (
-        <p className="text-black dark:text-white">
-          <FontAwesomeIcon icon={faImage} onClick={() => handleOpen("5xl")} />
-
-          <div>
-            <Modal
-              className="sticky top-0 z-999 flex w-full bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none"
-              size={"5xl"}
-              isOpen={isOpen}
-              onClose={onClose}
-              scrollBehavior={"outside"}
-              backdrop="blur"
-            >
-              <ModalContent className="">
-                <div className="w-full max-w-200 rounded-lg bg-white py-12 px-8 dark:bg-boxdark md:py-15 md:px-17.5">
-                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
-                    <h3
-                      className="font-medium text-black dark:text-white"
-                      style={{ paddingBottom: "20px" }}
-                    >
-                      Content Posting
-                    </h3>
-                  </div>
-                  <div className="flex flex-wrap gap-3"></div>
-                  <div className="flex-shrink-0 text-center">
-                    <img
-                      src={mediaUrl}
-                      alt="Fetched content"
-                      style={{ maxWidth: "600px", maxHeight: "400px" }}
-                    />
-                    <h3
-                      className="font-medium text-black dark:text-white"
-                      style={{ paddingBottom: "20px" }}
-                    >
-                      {contentPostingItem.file_name}
-                    </h3>
-                    <div>{/* <ShowFileProject /> */}</div>
-                  </div>
+                  )}
                 </div>
               </ModalContent>
             </Modal>
@@ -282,31 +198,81 @@ export default function ShowContentPosting({ contentPostingItem }) {
               scrollBehavior={"outside"}
               backdrop="blur"
             >
-              <ModalContent className="">
-                <div className="w-full max-w-200 rounded-lg bg-white py-12 px-8 dark:bg-boxdark md:py-15 md:px-17.5">
-                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
-                    <h3
-                      className="font-medium text-black dark:text-white"
-                      style={{ paddingBottom: "20px" }}
-                    >
-                      Content Posting
-                    </h3>
-                  </div>
-                  <div className="flex flex-wrap gap-3"></div>
-                  <div className="flex-shrink-0 text-center">
-                    <video controls width="600">
-                      <source src={mediaUrl} type="video/mp4" />
-                      Your browser does not support the video tag.
-                    </video>
-
-                    <h3
-                      className="font-medium text-black dark:text-white"
-                      style={{ paddingBottom: "20px" }}
-                    >
-                      {contentPostingItem.file_name}
-                    </h3>
-                    <div>{/* <ShowFileProject /> */}</div>
-                  </div>
+              <ModalContent>
+                <div className="w-full max-w-200 rounded-lg bg-white py-12 px-8 dark:bg-boxdark md:py-15 md:px-17.5 text-center">
+                  <h3
+                    className="font-medium text-black dark:text-white"
+                    style={{ paddingBottom: "20px" }}
+                  >
+                    Content Posting
+                  </h3>
+                  {isLoading ? (
+                    <Spinner
+                      label="Fetching file, please wait..."
+                      color="success"
+                      labelColor="success"
+                    />
+                  ) : error ? (
+                    <p className="text-red-500">{error}</p>
+                  ) : (
+                    <div className="flex-shrink-0 text-center">
+                      <video
+                        controls
+                        width="600"
+                        style={{ display: "block", margin: "0 auto" }}
+                      >
+                        <source src={mediaUrl} type="video/mp4" />
+                        Your browser does not support the video tag.
+                      </video>
+                      <h3
+                        className="font-medium text-black dark:text-white"
+                        style={{paddingTop:"20px", paddingBottom: "20px" }}
+                      >
+                        {contentPostingItem.file_name}
+                      </h3>
+                    </div>
+                  )}
+                  {!isLoadingLink ? (
+                    data && (
+                      <>
+                        <h3
+                          className="font-medium text-black dark:text-white"
+                          style={{ paddingBottom: "20px", paddingTop: "20px" }}
+                        >
+                          If loading takes too long, you can access this file
+                          via Google Drive
+                        </h3>
+                        <a
+                          href={data}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <Button
+                            color="primary"
+                            style={{
+                              backgroundImage:
+                                "linear-gradient(to right, green , yellow)",
+                              color: "black",
+                            }}
+                          >
+                            <FontAwesomeIcon icon={faSignOutAlt} /> Go to Google
+                            Drive
+                          </Button>
+                        </a>
+                        <p                        
+                          style={{paddingTop: "20px" }}
+                        >
+                         You can download the file in Google Drive too
+                        </p>
+                      </>
+                    )
+                  ) : (
+                    <Spinner
+                      label="Fetching link, please wait..."
+                      color="success"
+                      labelColor="success"
+                    />
+                  )}
                 </div>
               </ModalContent>
             </Modal>

@@ -106,7 +106,7 @@ const DropdownUser = () => {
         <span className="h-12 w-12 rounded-full" style={{width:48, height:48, position: 'relative'}}>  
                
             <Image
-              src={`/images/user/${data.profile_picture}`}
+              src={`/images/avatar/${data.profile_picture}`}
               alt="User"                                                                                    
               style={{
                 borderRadius: "50%",     

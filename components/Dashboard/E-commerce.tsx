@@ -42,7 +42,6 @@ const ECommerce: React.FC = () => {
           BACKEND_PORT + "dashboard/get-contents-card",
           { headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` } }
         );
-        console.log(data);
         setData(await data);        
       } catch (e) {
         const error = e as AxiosError;

@@ -66,38 +66,42 @@ const TableSubItems = ({ tableData }) => {
       setLoading(false);
     };
 
-    // Listen for updates only for the specific `table_project_id`
-    socket.on(`subItemData_${tableData._id}`, (newData) => {
-      setData(newData);
-    });
-    socket.on('subItemDeleted', (deletedProject) => {
+    const handleNewSubItem = (newProject) => {
+      setData((prevData) => [...prevData, newProject]);
+    };
+
+    const handleSubItemDeleted = (deletedProject) => {
       setData((prevData) =>
         prevData.filter((project) => project._id !== deletedProject.projectId)
-      );    
-    });
-    socket.on(`newSubItem_${tableData._id}`, (newProject) => {
-      setData((prevData) => [...prevData, newProject]);
-    });
+      );
+    };
 
-    socket.on('subItemEdited', (updatedProject) => {
+    const handleSubItemEdited = (updatedProject) => {
       setData((prevData) =>
         prevData.map((project) =>
           project._id === updatedProject._id ? updatedProject : project
         )
-      );   
-    });
+      );
+    };
+
+    // Register socket listeners
+    socket.on(`subItemData_${tableData._id}`, setData);
+    socket.on("subItemDeleted", handleSubItemDeleted);
+    socket.on(`newSubItem_${tableData._id}`, handleNewSubItem);
+    socket.on("subItemEdited", handleSubItemEdited);
 
     if (triggerApiCall) {
       fetchData();
       setTriggerApiCall(false); // Reset the trigger after API call
     }
+      
      // Clean up the socket listeners on component unmount
      return () => {
-      socket.off("subItemData");
-      socket.off("subItemDeleted");
-      socket.off("newSubItem");
-      socket.off("subItemEdited");
-    };
+      socket.off(`subItemData_${tableData._id}`);
+      socket.off('subItemDeleted', handleSubItemDeleted);
+      socket.off(`newSubItem_${tableData._id}`, handleNewSubItem);
+      socket.off('subItemEdited', handleSubItemEdited);
+  };
   }, [triggerApiCall, tableData._id]);
 
   const handleParentFunction = () => {
@@ -181,7 +185,7 @@ const TableSubItems = ({ tableData }) => {
                                 alt="profile"
                               />
                             </div> */}
-                         
+
                             <p className="hidden text-black dark:text-white sm:block text-xs">
                               {packageItem.owner}
                             </p>

@@ -20,12 +20,10 @@ const Buttonlogout = () => {
     onOpen();
     try {
       const { data } = await axios.post("/api/auth/logout");      
-      console.log(data.status);
       if (data.status == 404) {
         await setLoadingModal(false);
         onClose();
         // alert(data.message);
-        console.log(data.message);
       } else {
         await setLoadingModal(false);
         onClose();

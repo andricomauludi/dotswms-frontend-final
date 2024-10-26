@@ -52,8 +52,7 @@ const TableProject = ({ tableData }) => {
               "Content-Type": "multipart/form-data",
             },
           }
-        );
-        console.log(data);
+        );        
 
         setDataProject(await data.groupproject);
       } catch (e) {

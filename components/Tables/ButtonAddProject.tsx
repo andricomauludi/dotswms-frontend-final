@@ -119,7 +119,6 @@ const ButtonAddProject = forwardRef(({ parentFunction, tableData }, ref) => {
   useEffect(() => {
     setLoading(false);
     socket.on('newProject', (newProject) => {
-      console.log('New project received:', newProject);
       setData((prevData) => [...prevData, newProject]);
     });
   
