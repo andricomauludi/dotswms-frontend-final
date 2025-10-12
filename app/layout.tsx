@@ -4,7 +4,7 @@ import "./data-tables-css.css";
 import "./satoshi.css";
 import axios, { AxiosError } from "axios";
 
-import { CookiesProvider } from 'next-client-cookies/server';
+// import { CookiesProvider } from 'next-client-cookies/server';
 
 interface UserResponse {
   user: string | null;
@@ -20,6 +20,7 @@ export default function RootLayout({
 
   return (    
       <html lang="en">
+      
        {children}
       </html>    
   );
