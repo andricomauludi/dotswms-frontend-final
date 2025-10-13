@@ -81,7 +81,7 @@ const ChatCard = () => {
           BACKEND_PORT + "dashboard/get-users-dashboard",
           { headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` } }
         );
-        setImageLoader(`/img/${await data.user.profile_picture}`);
+        setImageLoader(`/image/avatar/${await data.user.profile_picture}`);
         setData(await data.user);        
       } catch (e) {
         const error = e as AxiosError;
@@ -113,7 +113,7 @@ const ChatCard = () => {
           >
             <div className="relative h-14 w-14 rounded-full">
               <Image
-                src={`data:image/jpeg;base64,${item.profile_picture}`}
+               src={`/images/avatar/${item.profile_picture}`}
                 alt="User"
                 style={{
                   borderRadius: "50%",

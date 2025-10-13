@@ -69,7 +69,7 @@ const DropdownUser = () => {
           BACKEND_PORT + "users/me",
           { headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` } }
         );
-        setImageLoader(`/img/${await data.user.profile_picture}`);
+        setImageLoader(`/images/avatar/${await data.user.profile_picture}`);
       
         setData(await data.user);        
       } catch (e) {
@@ -115,7 +115,8 @@ const DropdownUser = () => {
 
               }}
               layout="fill"
-            />          
+            />     
+             
         </span>
 
         <svg
