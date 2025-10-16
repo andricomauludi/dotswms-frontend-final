@@ -1,19 +1,15 @@
-# Gunakan image node yang lebih ramping (misalnya node:18-alpine)
-FROM node:18-alpine
-
+# Stage 1: Build
+FROM node:18-alpine AS builder
 WORKDIR /app
-
-# Copy hanya package.json dan package-lock.json untuk mengurangi cache yang terbuang
 COPY package*.json ./
-
-# Install dependencies
-RUN npm install --production --legacy-peer-deps
-
-# Copy semua file ke dalam container
+RUN npm ci --only=production
 COPY . .
+RUN npm run build
 
-# Pastikan port yang diekspos sesuai dengan aplikasi
+# Stage 2: Runtime
+FROM node:18-alpine
+WORKDIR /app
+ENV NODE_ENV=production
+COPY --from=builder /app ./
 EXPOSE 3000
-
-# Gunakan array JSON untuk CMD
-CMD ["npm", "run", "dev"]
+CMD ["npm", "start"]
