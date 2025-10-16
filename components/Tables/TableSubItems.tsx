@@ -27,10 +27,9 @@ import {
 import ButtonAddSubItem from "./ButtonAddSubItem";
 import ButtonDeleteSubItem from "./ButtonDeleteSubItem";
 import { useCookies } from "next-client-cookies";
-import { io } from "socket.io-client";
+import {socket} from "@/lib/socket"; // ✅ gunakan socket global
 
 const TableSubItems = ({ tableData }) => {
-  const socket = io(BACKEND_PORT); // Connect to the Socket.IO serve
 
   const childRef = useRef(null);
   const { isOpen, onOpen, onClose } = useDisclosure();

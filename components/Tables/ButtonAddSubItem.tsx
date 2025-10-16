@@ -18,9 +18,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faListCheck, faUser } from "@fortawesome/free-solid-svg-icons";
 import { BACKEND_PORT, COOKIE_NAME } from "@/constants";
 import { useCookies } from "next-client-cookies";
-import io from "socket.io-client";
+import {socket} from "@/lib/socket"; // ✅ gunakan socket global
 
-const socket = io(BACKEND_PORT); // Replace with your backend URL
 
 const ButtonAddSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
   const { isOpen, onOpen, onClose } = useDisclosure();

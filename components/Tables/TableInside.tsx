@@ -16,11 +16,9 @@ import { useCookies } from "next-client-cookies";
 import { BACKEND_PORT, COOKIE_NAME } from "@/constants";
 import ShowContentPosting from "./ShowContentPosting";
 import ContentPostingList from "./ContentPostingList";
-import { io } from "socket.io-client";
+import { socket } from "@/lib/socket"; // ✅ gunakan socket global
 
 const TableInside = ({ tableData }) => {
-  const socket = io(BACKEND_PORT); // Connect to the Socket.IO serve
-
   const cookies = useCookies();
 
   const childRef = useRef(null);

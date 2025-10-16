@@ -29,7 +29,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { BACKEND_PORT, COOKIE_NAME } from "@/constants";
 import { useCookies } from "next-client-cookies";
-import io from "socket.io-client";
+import {socket} from "@/lib/socket"; // ✅ gunakan socket global
 
 interface IprofileState {
   //interface merupakan rangka object yang mau kita masukin dari api
@@ -44,7 +44,6 @@ interface IprofileState {
   role: string;
 }
 
-const socket = io(BACKEND_PORT); // Replace with your backend URL
 
 const ButtonAddTableProject = forwardRef(
   ({ parentFunction, tableData }, ref) => {

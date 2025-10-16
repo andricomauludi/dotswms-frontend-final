@@ -23,10 +23,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPalette } from "@fortawesome/free-solid-svg-icons";
 import { BACKEND_PORT, COOKIE_NAME } from "@/constants";
 import { useCookies } from "next-client-cookies";
-import { io } from 'socket.io-client';
+import {socket} from "@/lib/socket"; // ✅ gunakan socket global
 
-const ButtonAddProject = forwardRef(({ parentFunction, tableData }, ref) => {
-  const socket = io(BACKEND_PORT);
+
+const ButtonAddProject = forwardRef(({ parentFunction, tableData }, ref) => {  
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [data, setData] = useState([]);
   const [imageloader, setImageLoader] = useState();
