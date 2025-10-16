@@ -34,7 +34,6 @@ const ButtonEditSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
   const [type, setType] = useState("text");
   const cookies = useCookies();
 
-
   const handleChildEvent = () => {
     // Do something in the child component
     parentFunction(); // Call the parent function
@@ -66,7 +65,7 @@ const ButtonEditSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     setLoadingModal(true);
     var formData = new FormData();
-    event.preventDefault();    
+    event.preventDefault();
 
     formData.append("_id", tableData._id);
     formData.append("subitem", event.currentTarget.subitem.value);
@@ -100,9 +99,12 @@ const ButtonEditSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
         BACKEND_PORT + "workspaces/edit-sub-item/",
         formData,
         {
-          headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}`, 'Content-Type': 'multipart/form-data' },
+          headers: {
+            Authorization: `Bearer ${cookies.get(COOKIE_NAME)}`,
+            "Content-Type": "multipart/form-data",
+          },
         }
-      );    
+      );
       await setLoadingModal(false);
 
       await onClose();
@@ -133,12 +135,10 @@ const ButtonEditSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      try {       
-        const { data } = await axios.get(
-          BACKEND_PORT +
-            "users/dropdown-user",
-          { headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` } }
-        );
+      try {
+        const { data } = await axios.get(BACKEND_PORT + "users/dropdown-user", {
+          headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` },
+        });
         setData(await data.user);
       } catch (error: any) {
         console.error(error.message);
@@ -237,10 +237,10 @@ const ButtonEditSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
                           <option hidden value={tableData.owner}>
                             {tableData.owner}
                           </option>
-                          {data.map((item, key) => (
-                            <>
-                              <option value={key}>{item.full_name}</option>
-                            </>
+                          {data.map((item,key) => (
+                            <option key={item._id} value={key}>
+                              {item.full_name}
+                            </option>
                           ))}
                         </select>
                         <span className="absolute top-1/2 right-4 z-20 -translate-y-1/2">

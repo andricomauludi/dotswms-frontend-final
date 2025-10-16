@@ -111,11 +111,11 @@ const TableSubItems = ({ tableData }) => {
     setTriggerApiCall(true);
   };
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <tr><td>Loading...</td></tr>;
   // if (!datas) return <p>No Project data</p>;
 
   return (
-    <>
+ 
       <tr>
         <td colSpan={13}>
           <Accordion isCompact>
@@ -160,8 +160,7 @@ const TableSubItems = ({ tableData }) => {
                     </tr>
                   </thead>
                   <tbody>
-                    {datas.map((packageItem, key) => (
-                      <>
+                    {datas.map((packageItem, key) => (                    
                         <tr key={packageItem._id}>
                           <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
                             <h5 className="font-medium text-black dark:text-white text-xs">
@@ -225,7 +224,7 @@ const TableSubItems = ({ tableData }) => {
                             </div>
                           </td>
                         </tr>
-                      </>
+                      
                     ))}
                   </tbody>
                 </table>
@@ -234,7 +233,6 @@ const TableSubItems = ({ tableData }) => {
           </Accordion>
         </td>
       </tr>
-    </>
   );
 };
 

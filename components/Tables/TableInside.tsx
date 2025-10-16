@@ -168,8 +168,8 @@ const TableInside = ({ tableData }) => {
             </thead>
             <tbody>
               {datas.map((packageItem: any, key) => (
-                <>
-                  <tr key={key}>
+                <React.Fragment key={packageItem._id || key}>
+                  <tr key={packageItem._id}>
                     <td className="border-b border-[#eee] py-3 px-2 pl-5 dark:border-strokedark xl:pl-5">
                       <h5 className="text-xs text-black dark:text-white">
                         {packageItem.item}
@@ -243,15 +243,15 @@ const TableInside = ({ tableData }) => {
 
                     <td className="border-b border-[#eee] py-3 px-2 dark:border-strokedark">
                       <div className="flex-shrink-0">
-                        <ContentPostingList contentPostingItem={packageItem} />                        
+                        <ContentPostingList contentPostingItem={packageItem} />
                       </div>
                     </td>
                     <td className="border-b border-[#eee] py-3 px-2 dark:border-strokedark">
-                      <p className="text-black dark:text-white text-xs">
+                      <div className="text-black dark:text-white text-xs">
                         <ShowPostingCaptionTableProject
                           tableData={packageItem}
                         />
-                      </p>
+                      </div>
                     </td>
                     <td className="border-b border-[#eee] py-3 px-2 dark:border-strokedark">
                       <p
@@ -287,7 +287,7 @@ const TableInside = ({ tableData }) => {
                           alt="profile"
                         />
                       </div> */}
-                
+
                       <p className="hidden text-black dark:text-white sm:block text-xs">
                         {packageItem.updated_by}
                       </p>
@@ -373,7 +373,7 @@ const TableInside = ({ tableData }) => {
                     </td>
                   </tr>
                   <TableSubItems tableData={packageItem} />
-                </>
+                </React.Fragment>
               ))}
             </tbody>
           </table>

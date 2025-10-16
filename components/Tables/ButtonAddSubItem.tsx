@@ -20,7 +20,6 @@ import { BACKEND_PORT, COOKIE_NAME } from "@/constants";
 import { useCookies } from "next-client-cookies";
 import io from "socket.io-client";
 
-
 const socket = io(BACKEND_PORT); // Replace with your backend URL
 
 const ButtonAddSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
@@ -83,7 +82,7 @@ const ButtonAddSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
     formData.append("table_project_id", tableData._id);
     formData.append("table_project_name", tableData.item);
     formData.append("created_by", "Admin1");
-    formData.append("updated_by", "Admin1");    
+    formData.append("updated_by", "Admin1");
 
     // const payload = {
     //   item: event.currentTarget.item.value,
@@ -97,17 +96,18 @@ const ButtonAddSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
     //   instagrampostingstatus: event.currentTarget.instagrampostingstatus.value,
     //   tiktokpostingstatus: event.currentTarget.tiktokpostingstatus.value,
     // };
-    try { 
-
+    try {
       const { data } = await axios.post(
         BACKEND_PORT + "workspaces/create-sub-item",
         formData,
         {
-          headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}`, 'Content-Type': 'multipart/form-data' },
+          headers: {
+            Authorization: `Bearer ${cookies.get(COOKIE_NAME)}`,
+            "Content-Type": "multipart/form-data",
+          },
         }
-      );    
+      );
 
-  
       setLoadingModal(false);
 
       onClose();
@@ -138,12 +138,10 @@ const ButtonAddSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      try {      
-        const { data } = await axios.get(
-          BACKEND_PORT +
-            "users/dropdown-user",
-          { headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` } }
-        );
+      try {
+        const { data } = await axios.get(BACKEND_PORT + "users/dropdown-user", {
+          headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` },
+        });
         setData(await data.user);
       } catch (error: any) {
         console.error(error.message);
@@ -161,22 +159,22 @@ const ButtonAddSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
         if (prevData.length === 0) {
           return [newProject];
         }
-    
+
         // Check if there's a project with the same project_id
         const matchingProject = prevData.find(
           (project) => project.table_project_id === newProject.table_project_id
         );
-    
+
         // If a matching project is found, add the new project to the data
         if (matchingProject) {
           return [...prevData, newProject];
         }
-    
+
         // If no matching project is found, return the existing data unchanged
         return prevData;
       });
     });
-    
+
     // Clean up the socket listener on component unmount
     return () => {
       socket.off("newSubItem");
@@ -270,12 +268,13 @@ const ButtonAddSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
                           name="owner"
                           className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input"
                         >
-                          {data.map((item, key) => (
-                            <>
-                              <option value={key}>{item.full_name}</option>
-                            </>
+                          {data.map((item,key) => (
+                            <option key={item._id} value={key}>
+                              {item.full_name}
+                            </option>
                           ))}
                         </select>
+
                         <span className="absolute top-1/2 right-4 z-20 -translate-y-1/2">
                           <svg
                             width="24"
@@ -304,8 +303,7 @@ const ButtonAddSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
                       </label>
                       <div className="relative z-20 bg-white dark:bg-form-input">
                         <span className="absolute top-1/2 left-4 z-30 -translate-y-1/2">
-                        <FontAwesomeIcon icon={faListCheck} />
-
+                          <FontAwesomeIcon icon={faListCheck} />
                         </span>
                         <select
                           name="status"

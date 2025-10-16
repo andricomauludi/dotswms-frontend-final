@@ -67,7 +67,7 @@ const TableInside = ({ tableData }) => {
   return (
     <>
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
-        <div style={{ marginTop: "10px", marginBottom:"20px" }}>
+        <div style={{ marginTop: "10px", marginBottom: "20px" }}>
           <ButtonAddProject tableData={tableData} />
         </div>
         <div className="max-w-full overflow-x-auto">
@@ -117,7 +117,7 @@ const TableInside = ({ tableData }) => {
             </thead>
             <tbody>
               {datas.map((packageItem, key) => (
-                <>
+                <React.Fragment key={packageItem._id || key}>
                   <tr key={key}>
                     <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
                       <h5 className="font-small text-black dark:text-white">
@@ -341,7 +341,7 @@ const TableInside = ({ tableData }) => {
                     </td>
                   </tr>
                   <TableSubItems tableData={packageItem._id} />
-                </>
+                </React.Fragment>
               ))}
             </tbody>
           </table>

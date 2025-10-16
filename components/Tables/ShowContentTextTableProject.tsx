@@ -37,7 +37,7 @@ export default function ShowFileProject({ tableData }) {
 
   return (
     <>
-      <p className="text-black dark:text-white">
+      <div className="text-black dark:text-white">
         {/* <embed
                       src={`data:application/pdf;base64,${packageItem.contenttext}`}
                     /> */}
@@ -87,7 +87,7 @@ export default function ShowFileProject({ tableData }) {
             </ModalContent>
           </Modal>
         </div>
-      </p>
+      </div>
     </>
   );
 }
