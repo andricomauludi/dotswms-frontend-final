@@ -99,6 +99,7 @@ const TableInside = ({ tableData }) => {
       socket.off("newTableProject");
       socket.off("tableProjectDeleted");
       socket.off("tableProjectEdited");
+      socket.disconnect();
     };
   }, [triggerApiCall, tableData._id]); // Only listen for changes to tableData._id or triggerApiCall
 

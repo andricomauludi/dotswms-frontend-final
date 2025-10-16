@@ -82,6 +82,7 @@ const TableProject = ({ tableData }) => {
       socket.off('newProject');
       socket.off('projectDeleted');
       socket.off('projectEdited');
+      socket.disconnect();
     };
   }, [tableData]);
 

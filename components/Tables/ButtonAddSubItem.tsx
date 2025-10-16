@@ -178,6 +178,7 @@ const ButtonAddSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
     // Clean up the socket listener on component unmount
     return () => {
       socket.off("newSubItem");
+      socket.disconnect();
     };
   }, []);
 

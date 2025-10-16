@@ -256,6 +256,7 @@ const ButtonAddTableProject = forwardRef(
       // Clean up the socket listener on component unmount
       return () => {
         socket.off("newTableProject");
+        socket.disconnect();
       };
     }, []);
 

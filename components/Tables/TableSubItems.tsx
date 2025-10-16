@@ -101,6 +101,7 @@ const TableSubItems = ({ tableData }) => {
       socket.off('subItemDeleted', handleSubItemDeleted);
       socket.off(`newSubItem_${tableData._id}`, handleNewSubItem);
       socket.off('subItemEdited', handleSubItemEdited);
+      socket.disconnect();
   };
   }, [triggerApiCall, tableData._id]);
 

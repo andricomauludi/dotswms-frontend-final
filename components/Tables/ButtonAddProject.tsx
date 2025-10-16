@@ -124,6 +124,7 @@ const ButtonAddProject = forwardRef(({ parentFunction, tableData }, ref) => {
   
     return () => {
       socket.off('newProject');
+      socket.disconnect();
       setLoading(false);
 
     };
