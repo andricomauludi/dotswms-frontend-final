@@ -1,33 +1,31 @@
 "use client";
-import axios, { Axios, AxiosError } from "axios";
+import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import ButtonAddProject from "./ButtonAddProject";
-import {
-  Accordion,
-  AccordionItem,
-  Button,
-  Modal,
-  ModalContent,
-  useDisclosure,
-} from "@nextui-org/react";
+import { Accordion, AccordionItem, useDisclosure } from "@nextui-org/react";
 import TableInside from "./TableInside";
 import ButtonEditProject from "./ButtonEditProject";
 import ButtonDeleteProject from "./ButtonDeleteProject";
 import { BACKEND_PORT, COOKIE_NAME } from "@/constants";
 import { useCookies } from "next-client-cookies";
-import { socket } from "@/lib/socket"; // ✅ gunakan socket global
+import { socket } from "@/lib/socket";
 
 const TableProject = ({ tableData }) => {
   const childRef = useRef(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [datas, setData] = useState([]);
   const [dataproject, setDataProject] = useState([]);
-  const [size, setSize] = React.useState("5xl");
   const [isLoading, setLoading] = useState(true);
   const [triggerApiCall, setTriggerApiCall] = useState(true);
   const cookies = useCookies();
+
+  // Reset data setiap ganti group project
   useEffect(() => {
-    const groupRoom = `group_${tableData._id}`;
+    setDataProject([]);
+    setTriggerApiCall(true);
+  }, [tableData._id]);
+
+  useEffect(() => {
+    if (!tableData._id) return;
 
     const fetchData = async () => {
       setLoading(true);
@@ -37,7 +35,6 @@ const TableProject = ({ tableData }) => {
           {
             headers: {
               Authorization: `Bearer ${cookies.get(COOKIE_NAME)}`,
-              "Content-Type": "multipart/form-data",
             },
           }
         );
@@ -53,12 +50,6 @@ const TableProject = ({ tableData }) => {
       fetchData();
       setTriggerApiCall(false);
     }
-
-    // ✅ Join room khusus group project
-    socket.emit("joinGroupProject", groupRoom);
-
-    // ✅ Listener realtime untuk room ini
-    const handleGroupProjectData = (newData) => setDataProject(newData);
 
     const handleNewProject = (newProject) => {
       setDataProject((prev) => {
@@ -79,28 +70,26 @@ const TableProject = ({ tableData }) => {
       );
     };
 
-    socket.on("groupProjectData", handleGroupProjectData);
+    socket.emit("joinGroupProject", tableData._id);
+    console.log(`🟢 Joined room: ${tableData._id}`);
+
     socket.on("newProject", handleNewProject);
     socket.on("projectDeleted", handleProjectDeleted);
     socket.on("projectEdited", handleProjectEdited);
 
     return () => {
-      // ✅ Leave room saat accordion ditutup / unmount
-      socket.emit("leaveGroupProject", groupRoom);
-
-      socket.off("groupProjectData", handleGroupProjectData);
+      socket.emit("leaveGroupProject", tableData._id);
+      console.log(`🔴 Left room: ${tableData._id}`);
       socket.off("newProject", handleNewProject);
       socket.off("projectDeleted", handleProjectDeleted);
       socket.off("projectEdited", handleProjectEdited);
     };
   }, [tableData._id, triggerApiCall]);
 
-  const handleParentFunction = () => {
-    setTriggerApiCall(true);
-  };
+  const handleParentFunction = () => setTriggerApiCall(true);
 
   if (isLoading) return <p>Loading...</p>;
-  if (!datas) return <p>No Project data</p>;
+  if (!dataproject.length) return <p>No Project data</p>;
 
   return (
     <>
@@ -109,10 +98,7 @@ const TableProject = ({ tableData }) => {
         parentFunction={handleParentFunction}
         tableData={tableData}
       />
-      <Accordion
-        variant="splitted"
-        // selectionMode="multiple"
-      >
+      <Accordion variant="splitted">
         {dataproject.map((Item, key) => (
           <AccordionItem
             key={key}
@@ -120,14 +106,12 @@ const TableProject = ({ tableData }) => {
             title={Item.project_name}
             className={`${Item.color_project}`}
           >
-            <div className="mb-6 flex place-content-end mr-2">
-              <div className="">
-                <ButtonEditProject
-                  ref={childRef}
-                  parentFunction={handleParentFunction}
-                  tableData={Item}
-                />
-              </div>
+            <div className="mb-6 flex justify-end mr-2">
+              <ButtonEditProject
+                ref={childRef}
+                parentFunction={handleParentFunction}
+                tableData={Item}
+              />
               <div className="ml-2">
                 <ButtonDeleteProject
                   ref={childRef}

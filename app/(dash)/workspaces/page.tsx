@@ -14,25 +14,16 @@ import {
   DropdownTrigger,
 } from "@nextui-org/react";
 import axios from "axios";
-import { Metadata } from "next";
 import React, { useEffect, useRef, useState } from "react";
 import { BACKEND_PORT, COOKIE_NAME } from "@/constants";
 
-// export const metadata: Metadata = {
-//   title: "Workspaces Page | DOTS WMS",
-//   description: "This is Workspaces page for DOTS WMS",
-//   // other metadata
-// };
-
 const WorkspacePage = () => {
   const cookies = useCookies();
-
   const childRef = useRef(null);
   const [datas, setData] = useState([]);
   const [isLoading, setLoading] = useState(true);
   const [triggerApiCall, setTriggerApiCall] = useState(true);
-
-  const [selectedOption, setSelectedOption] = React.useState(new Set([0]));
+  const [selectedOption, setSelectedOption] = useState(new Set([0]));
 
   useEffect(() => {
     const fetchData = async () => {
@@ -42,7 +33,7 @@ const WorkspacePage = () => {
           BACKEND_PORT + "workspaces/all-group-project",
           { headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` } }
         );
-        setData(await response.groupproject);
+        setData(response.groupproject);
       } catch (error: any) {
         console.error(error.message);
       }
@@ -51,68 +42,53 @@ const WorkspacePage = () => {
 
     if (triggerApiCall) {
       fetchData();
-      setTriggerApiCall(false); // Reset the trigger after API call
+      setTriggerApiCall(false);
     }
   }, [triggerApiCall]);
 
-  const handleParentFunction = () => {
-    // Your logic or function here
+  const handleParentFunction = () => setTriggerApiCall(true);
 
-    // Set the trigger to true to re-run the useEffect
-    setTriggerApiCall(true);
-  };
-  
   if (isLoading) return <p>Loading...</p>;
   if (!datas || datas.length === 0)
     return (
-  <>
-  <h1>
-    Add Group Project
-  </h1>
-      <ButtonAddGroupProject
-        ref={childRef}
-        parentFunction={handleParentFunction}
-      />
-  </>
+      <>
+        <h1>Add Group Project</h1>
+        <ButtonAddGroupProject
+          ref={childRef}
+          parentFunction={handleParentFunction}
+        />
+      </>
     );
 
-  
-
-  // Convert the Set to an Array and get the first value.
   const selectedOptionValue = Array.from(selectedOption)[0];
+  const selectedGroup = datas[selectedOptionValue];
+
   return (
     <>
       <Breadcrumb
         pageName="Workspaces"
-        titleName={
-          datas[selectedOptionValue]?.group_project ||
-          "No Group Project Selected"
-        }
+        titleName={selectedGroup?.group_project || "No Group Project Selected"}
       />
       <div className="mb-6 flex">
-        <div className="">
-          <ButtonEditGroupProject
-            ref={childRef}
-            parentFunction={handleParentFunction}
-            tableData={datas[selectedOptionValue]}
-          />
-        </div>
+        <ButtonEditGroupProject
+          ref={childRef}
+          parentFunction={handleParentFunction}
+          tableData={selectedGroup}
+        />
         <div className="ml-2">
           <ButtonDeleteGroupProject
             ref={childRef}
             parentFunction={handleParentFunction}
-            tableData={datas[selectedOptionValue]}
+            tableData={selectedGroup}
           />
         </div>
       </div>
+
       <div className="flex flex-col gap-5">
         <div className="text-left">
-          {/* <h1>
-            <strong>Group Project :</strong>
-          </h1> */}
           <ButtonGroup variant="flat">
             <Button>
-              {datas[selectedOptionValue]?.group_project || "No Group Project"}
+              {selectedGroup?.group_project || "No Group Project"}
             </Button>
             <Dropdown placement="bottom-end">
               <DropdownTrigger>
@@ -133,7 +109,7 @@ const WorkspacePage = () => {
               </DropdownTrigger>
               <DropdownMenu
                 disallowEmptySelection
-                aria-label="Merge options"
+                aria-label="Select Group Project"
                 selectedKeys={selectedOption}
                 selectionMode="single"
                 onSelectionChange={setSelectedOption}
@@ -152,7 +128,9 @@ const WorkspacePage = () => {
             />
           </ButtonGroup>
         </div>
-        <TableProject tableData={datas[selectedOptionValue]} />
+
+        {/* ✅ Re-render TableProject setiap group project berubah */}
+        <TableProject key={selectedGroup._id} tableData={selectedGroup} />
       </div>
     </>
   );
