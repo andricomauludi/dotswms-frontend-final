@@ -15,11 +15,9 @@ import ButtonEditProject from "./ButtonEditProject";
 import ButtonDeleteProject from "./ButtonDeleteProject";
 import { BACKEND_PORT, COOKIE_NAME } from "@/constants";
 import { useCookies } from "next-client-cookies";
-import { io } from 'socket.io-client';
-
+import { socket } from "@/lib/socket"; // ✅ gunakan socket global
 
 const TableProject = ({ tableData }) => {
-  const socket = io(BACKEND_PORT); // Connect to the Socket.IO serve
   const childRef = useRef(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [datas, setData] = useState([]);
@@ -28,13 +26,14 @@ const TableProject = ({ tableData }) => {
   const [isLoading, setLoading] = useState(true);
   const [triggerApiCall, setTriggerApiCall] = useState(true);
   const cookies = useCookies();
-
   useEffect(() => {
+    const groupRoom = `group_${tableData._id}`;
+
     const fetchData = async () => {
       setLoading(true);
       try {
         const { data } = await axios.get(
-          BACKEND_PORT + "workspaces/get-project-specific/" + tableData._id,
+          `${BACKEND_PORT}workspaces/get-project-specific/${tableData._id}`,
           {
             headers: {
               Authorization: `Bearer ${cookies.get(COOKIE_NAME)}`,
@@ -44,47 +43,57 @@ const TableProject = ({ tableData }) => {
         );
         setDataProject(data.groupproject);
       } catch (e) {
-        console.log(e.message);
+        console.error(e.message);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
-  
-    fetchData();
 
-    // Listen for real-time data updates
-    socket.on('groupProjectData', (newData) => {
-      setDataProject(newData);      
-
-    });    
-    socket.on('newProject', (newProject) => {
-      setDataProject((prevData) => [...prevData, newProject]);
-    });
-    socket.on('projectDeleted', (deletedProject) => {
-      setDataProject((prevData) =>
-        prevData.filter((project) => project._id !== deletedProject.projectId)
-      );    
-    });
-    // Listen for project edits
-  socket.on('projectEdited', (updatedProject) => {
-    setDataProject((prevData) =>
-      prevData.map((project) =>
-        project._id === updatedProject._id ? updatedProject : project
-      )
-    );   
-  });
-  
     if (triggerApiCall) {
       fetchData();
-      setTriggerApiCall(false); // Reset the trigger after API call
+      setTriggerApiCall(false);
     }
-    return () => {
-      socket.off('groupProjectData');      
-      socket.off('newProject');
-      socket.off('projectDeleted');
-      socket.off('projectEdited');
-      socket.disconnect();
+
+    // ✅ Join room khusus group project
+    socket.emit("joinGroupProject", groupRoom);
+
+    // ✅ Listener realtime untuk room ini
+    const handleGroupProjectData = (newData) => setDataProject(newData);
+
+    const handleNewProject = (newProject) => {
+      setDataProject((prev) => {
+        const exists = prev.some((p) => p._id === newProject._id);
+        return exists ? prev : [...prev, newProject];
+      });
     };
-  }, [tableData]);
+
+    const handleProjectDeleted = (deletedProject) => {
+      setDataProject((prev) =>
+        prev.filter((p) => p._id !== deletedProject.projectId)
+      );
+    };
+
+    const handleProjectEdited = (updatedProject) => {
+      setDataProject((prev) =>
+        prev.map((p) => (p._id === updatedProject._id ? updatedProject : p))
+      );
+    };
+
+    socket.on("groupProjectData", handleGroupProjectData);
+    socket.on("newProject", handleNewProject);
+    socket.on("projectDeleted", handleProjectDeleted);
+    socket.on("projectEdited", handleProjectEdited);
+
+    return () => {
+      // ✅ Leave room saat accordion ditutup / unmount
+      socket.emit("leaveGroupProject", groupRoom);
+
+      socket.off("groupProjectData", handleGroupProjectData);
+      socket.off("newProject", handleNewProject);
+      socket.off("projectDeleted", handleProjectDeleted);
+      socket.off("projectEdited", handleProjectEdited);
+    };
+  }, [tableData._id, triggerApiCall]);
 
   const handleParentFunction = () => {
     setTriggerApiCall(true);
@@ -100,8 +109,9 @@ const TableProject = ({ tableData }) => {
         parentFunction={handleParentFunction}
         tableData={tableData}
       />
-      <Accordion variant="splitted" 
-      // selectionMode="multiple"
+      <Accordion
+        variant="splitted"
+        // selectionMode="multiple"
       >
         {dataproject.map((Item, key) => (
           <AccordionItem

@@ -27,11 +27,9 @@ import {
 import ButtonAddSubItem from "./ButtonAddSubItem";
 import ButtonDeleteSubItem from "./ButtonDeleteSubItem";
 import { useCookies } from "next-client-cookies";
-import { io } from "socket.io-client";
+import { socket } from "@/lib/socket"; // ✅ gunakan socket global
 
 const TableSubItems = ({ tableData }) => {
-  const socket = io(BACKEND_PORT); // Connect to the Socket.IO serve
-
   const childRef = useRef(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [datas, setData] = useState([]);
@@ -45,65 +43,82 @@ const TableSubItems = ({ tableData }) => {
     onOpen();
   };
   useEffect(() => {
+    if (!tableData?._id) return;
+
+    // 🔹 Fetch data awal
     const fetchData = async () => {
       setLoading(true);
       try {
-        const payload = {
-          _id: tableData._id,
-        };
-
         const { data } = await axios.get(
           BACKEND_PORT + "workspaces/all-sub-item/" + tableData._id,
-          { headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` } }
+          {
+            headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` },
+          }
         );
-        // const { data: response } = await axios.get(
-        //   "/api/workspaces/tableproject"
-        // );
-        setData(await data.subItem);
+        setData(data.subItem);
       } catch (error: any) {
         console.error(error.message);
       }
       setLoading(false);
     };
 
-    const handleNewSubItem = (newProject) => {
-      setData((prevData) => [...prevData, newProject]);
+    if (triggerApiCall) {
+      fetchData();
+      setTriggerApiCall(false);
+    }
+
+    // ==============================
+    // ✅ SOCKET HANDLERS
+    // ==============================
+
+    // Subitem baru ditambahkan
+    const handleNewSubItem = (payload: any) => {
+      console.log("📩 Received newSubItem payload:", payload);
+
+      // hanya proses kalau project id cocok
+      if (payload.projectId !== tableData._id) return;
+
+      setData((prev) => {
+        const exists = prev.some((p) => p._id === payload.newSubItem._id);
+        return exists ? prev : [...prev, payload.newSubItem];
+      });
+
+      console.log("🟢 New sub item for project:", payload.projectId);
     };
 
-    const handleSubItemDeleted = (deletedProject) => {
-      setData((prevData) =>
-        prevData.filter((project) => project._id !== deletedProject.projectId)
-      );
-    };
-
-    const handleSubItemEdited = (updatedProject) => {
-      setData((prevData) =>
-        prevData.map((project) =>
-          project._id === updatedProject._id ? updatedProject : project
+    // Subitem diubah
+    const handleSubItemEdited = (payload: any) => {
+      if (payload.projectId !== tableData._id) return;
+      setData((prev) =>
+        prev.map((p) =>
+          p._id === payload.updatedSubItem._id ? payload.updatedSubItem : p
         )
       );
     };
 
-    // Register socket listeners
-    socket.on(`subItemData_${tableData._id}`, setData);
-    socket.on("subItemDeleted", handleSubItemDeleted);
-    socket.on(`newSubItem_${tableData._id}`, handleNewSubItem);
-    socket.on("subItemEdited", handleSubItemEdited);
+    // Subitem dihapus
+    const handleSubItemDeleted = (payload: any) => {
+      if (payload.projectId !== tableData._id) return;
+      setData((prev) =>
+        prev.filter((p) => p._id !== payload.deletedSubItem._id)
+      );
+    };
 
-    if (triggerApiCall) {
-      fetchData();
-      setTriggerApiCall(false); // Reset the trigger after API call
-    }
-      
-     // Clean up the socket listeners on component unmount
-     return () => {
-      socket.off(`subItemData_${tableData._id}`);
-      socket.off('subItemDeleted', handleSubItemDeleted);
-      socket.off(`newSubItem_${tableData._id}`, handleNewSubItem);
-      socket.off('subItemEdited', handleSubItemEdited);
-      socket.disconnect();
-  };
-  }, [triggerApiCall, tableData._id]);
+    // Debug global
+    socket.onAny((event, data) => console.log("📡 Received:", event, data));
+
+    // ✅ Daftarkan handler sebenarnya
+    socket.on("newSubItem", handleNewSubItem);
+    socket.on("subItemEdited", handleSubItemEdited);
+    socket.on("subItemDeleted", handleSubItemDeleted);
+
+    // Cleanup
+    return () => {
+      socket.off("newSubItem", handleNewSubItem);
+      socket.off("subItemEdited", handleSubItemEdited);
+      socket.off("subItemDeleted", handleSubItemDeleted);
+    };
+  }, [tableData._id, triggerApiCall]);
 
   const handleParentFunction = () => {
     // Your logic or function here
@@ -112,64 +127,68 @@ const TableSubItems = ({ tableData }) => {
     setTriggerApiCall(true);
   };
 
-  if (isLoading) return <tr><td>Loading...</td></tr>;
+  if (isLoading)
+    return (
+      <tr>
+        <td>Loading...</td>
+      </tr>
+    );
   // if (!datas) return <p>No Project data</p>;
 
   return (
- 
-      <tr>
-        <td colSpan={13}>
-          <Accordion isCompact>
-            <AccordionItem
-              key={tableData._id}
-              aria-label="Sub Items"
-              startContent={<FontAwesomeIcon icon={faArrowAltCircleDown} />}
-              className="bg-gray-2 text-left dark:bg-meta-4"
-            >
-              <div className="rounded-sm bg-white px-5 pt-6 pb-2.5 dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
-                <div
-                  className="flex flex-wrap gap-3"
-                  style={{ marginTop: "10px", marginBottom: "20px" }}
-                >
-                  <ButtonAddSubItem
-                    ref={childRef}
-                    parentFunction={handleParentFunction}
-                    tableData={tableData}
-                  />
-                </div>
-                <table className="w-full table-auto">
-                  <thead>
-                    <tr className="bg-gray-2 text-left dark:bg-meta-4">
-                      <th className="min-w-[220px] py-4 px-4 text-xs text-black dark:text-white xl:pl-11">
-                        {/* <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11"> */}
-                        Sub Item
-                      </th>
-                      <th className="min-w-[150px] py-4 px-4 text-xs text-black dark:text-white">
-                        {/* <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white"> */}
-                        Owner
-                      </th>
-                      {/* <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white"> */}
-                      <th className="min-w-[120px] py-4 px-4 text-xs text-black dark:text-white">
-                        Status
-                      </th>
-                      <th className="py-4 px-4 text-xs text-black dark:text-white">
-                        Date
-                      </th>
-                      <th className="py-4 px-4 text-xs text-black dark:text-white">
-                        Actions
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {datas.map((packageItem, key) => (                    
-                        <tr key={packageItem._id}>
-                          <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
-                            <h5 className="font-medium text-black dark:text-white text-xs">
-                              {packageItem.subitem}
-                            </h5>
-                          </td>
-                          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                            {/* <div
+    <tr>
+      <td colSpan={13}>
+        <Accordion isCompact>
+          <AccordionItem
+            key={tableData._id}
+            aria-label="Sub Items"
+            startContent={<FontAwesomeIcon icon={faArrowAltCircleDown} />}
+            className="bg-gray-2 text-left dark:bg-meta-4"
+          >
+            <div className="rounded-sm bg-white px-5 pt-6 pb-2.5 dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+              <div
+                className="flex flex-wrap gap-3"
+                style={{ marginTop: "10px", marginBottom: "20px" }}
+              >
+                <ButtonAddSubItem
+                  ref={childRef}
+                  parentFunction={handleParentFunction}
+                  tableData={tableData}
+                />
+              </div>
+              <table className="w-full table-auto">
+                <thead>
+                  <tr className="bg-gray-2 text-left dark:bg-meta-4">
+                    <th className="min-w-[220px] py-4 px-4 text-xs text-black dark:text-white xl:pl-11">
+                      {/* <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11"> */}
+                      Sub Item
+                    </th>
+                    <th className="min-w-[150px] py-4 px-4 text-xs text-black dark:text-white">
+                      {/* <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white"> */}
+                      Owner
+                    </th>
+                    {/* <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white"> */}
+                    <th className="min-w-[120px] py-4 px-4 text-xs text-black dark:text-white">
+                      Status
+                    </th>
+                    <th className="py-4 px-4 text-xs text-black dark:text-white">
+                      Date
+                    </th>
+                    <th className="py-4 px-4 text-xs text-black dark:text-white">
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {datas.map((packageItem, key) => (
+                    <tr key={packageItem._id}>
+                      <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
+                        <h5 className="font-medium text-black dark:text-white text-xs">
+                          {packageItem.subitem}
+                        </h5>
+                      </td>
+                      <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                        {/* <div
                               className="relative"
                               style={{
                                 width: "48px",
@@ -186,54 +205,53 @@ const TableSubItems = ({ tableData }) => {
                               />
                             </div> */}
 
-                            <p className="hidden text-black dark:text-white sm:block text-xs">
-                              {packageItem.owner}
-                            </p>
-                          </td>
-                          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                            <p
-                              className={`inline-flex rounded-full bg-opacity-10 py-1 px-3  text-xs font-medium ${
-                                packageItem.status === "not yet"
-                                  ? "text-secondary bg-secondary"
-                                  : packageItem.status === "on process"
-                                  ? "text-warning bg-warning"
-                                  : packageItem.status === "done"
-                                  ? "text-success bg-success"
-                                  : "text-warning bg-warning"
-                              }`}
-                            >
-                              {packageItem.status}
-                            </p>
-                          </td>
-                          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                            <p className="text-black dark:text-white text-xs">
-                              {packageItem.date}
-                            </p>
-                          </td>
-                          <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                            <div className="flex items-center space-x-3.5">
-                              <ButtonEditSubItem
-                                ref={childRef}
-                                parentFunction={handleParentFunction}
-                                tableData={packageItem}
-                              />
-                              <ButtonDeleteSubItem
-                                ref={childRef}
-                                parentFunction={handleParentFunction}
-                                tableData={packageItem}
-                              />
-                            </div>
-                          </td>
-                        </tr>
-                      
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </AccordionItem>
-          </Accordion>
-        </td>
-      </tr>
+                        <p className="hidden text-black dark:text-white sm:block text-xs">
+                          {packageItem.owner}
+                        </p>
+                      </td>
+                      <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                        <p
+                          className={`inline-flex rounded-full bg-opacity-10 py-1 px-3  text-xs font-medium ${
+                            packageItem.status === "not yet"
+                              ? "text-secondary bg-secondary"
+                              : packageItem.status === "on process"
+                              ? "text-warning bg-warning"
+                              : packageItem.status === "done"
+                              ? "text-success bg-success"
+                              : "text-warning bg-warning"
+                          }`}
+                        >
+                          {packageItem.status}
+                        </p>
+                      </td>
+                      <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                        <p className="text-black dark:text-white text-xs">
+                          {packageItem.date}
+                        </p>
+                      </td>
+                      <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                        <div className="flex items-center space-x-3.5">
+                          <ButtonEditSubItem
+                            ref={childRef}
+                            parentFunction={handleParentFunction}
+                            tableData={packageItem}
+                          />
+                          <ButtonDeleteSubItem
+                            ref={childRef}
+                            parentFunction={handleParentFunction}
+                            tableData={packageItem}
+                          />
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </AccordionItem>
+        </Accordion>
+      </td>
+    </tr>
   );
 };
 

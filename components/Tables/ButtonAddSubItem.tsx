@@ -152,32 +152,32 @@ const ButtonAddSubItem = forwardRef(({ parentFunction, tableData }, ref) => {
   }, []);
 
   useEffect(() => {
-    socket.on("newSubItem", (newProject) => {
-      setData((prevData) => {
-        // If the existing data is empty, add the new project directly
-        if (prevData.length === 0) {
-          return [newProject];
-        }
+    // socket.on("newSubItem", (newProject) => {
+    //   setData((prevData) => {
+    //     // If the existing data is empty, add the new project directly
+    //     if (prevData.length === 0) {
+    //       return [newProject];
+    //     }
 
-        // Check if there's a project with the same project_id
-        const matchingProject = prevData.find(
-          (project) => project.table_project_id === newProject.table_project_id
-        );
+    //     // Check if there's a project with the same project_id
+    //     const matchingProject = prevData.find(
+    //       (project) => project.table_project_id === newProject.table_project_id
+    //     );
 
-        // If a matching project is found, add the new project to the data
-        if (matchingProject) {
-          return [...prevData, newProject];
-        }
+    //     // If a matching project is found, add the new project to the data
+    //     if (matchingProject) {
+    //       return [...prevData, newProject];
+    //     }
 
-        // If no matching project is found, return the existing data unchanged
-        return prevData;
-      });
-    });
+    //     // If no matching project is found, return the existing data unchanged
+    //     return prevData;
+    //   });
+    // });
 
     // Clean up the socket listener on component unmount
     return () => {
-      socket.off("newSubItem");
-      socket.disconnect();
+      // socket.off("newSubItem");
+      // socket.disconnect();
     };
   }, []);
 

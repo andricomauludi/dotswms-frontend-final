@@ -89,7 +89,7 @@ const ButtonAddProject = forwardRef(({ parentFunction, tableData }, ref) => {
       );
   
       // Trigger real-time update
-      socket.emit('newProject', data.result);
+      // socket.emit('newProject', data.result);
   
       setLoadingModal(false);
   
@@ -118,13 +118,13 @@ const ButtonAddProject = forwardRef(({ parentFunction, tableData }, ref) => {
 
   useEffect(() => {
     setLoading(false);
-    socket.on('newProject', (newProject) => {
-      setData((prevData) => [...prevData, newProject]);
-    });
+    // socket.on('newProject', (newProject) => {
+    //   setData((prevData) => [...prevData, newProject]);
+    // });
   
     return () => {
-      socket.off('newProject');
-      socket.disconnect();
+      // socket.off('newProject');
+      // socket.disconnect();
       setLoading(false);
 
     };
