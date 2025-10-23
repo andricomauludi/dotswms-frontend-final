@@ -89,7 +89,7 @@ const TableProject = ({ tableData }) => {
   const handleParentFunction = () => setTriggerApiCall(true);
 
   if (isLoading) return <p>Loading...</p>;
-  if (!dataproject.length) return <p>No Project data</p>;
+  if (!dataproject) return <p>No Project data</p>;
 
   return (
     <>
