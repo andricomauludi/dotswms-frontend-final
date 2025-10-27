@@ -708,6 +708,8 @@ const ButtonAddTableProject = forwardRef(
                                 <option value="on preview">On Preview</option>
                                 <option value="on hold">On Hold</option>
                                 <option value="posted">Posted</option>
+                                <option value="on revised">On Revised</option>
+                                <option value="on scheduled">On Scheduled</option>
                               </select>
                               <span className="absolute top-1/2 right-4 z-20 -translate-y-1/2">
                                 <svg
