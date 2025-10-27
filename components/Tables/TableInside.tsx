@@ -59,7 +59,7 @@ const TableInside = ({ tableData }) => {
         const exists = prev.some((p) => p._id === payload.newTableProject._id);
         return exists ? prev : [...prev, payload.newTableProject];
       });
-      console.log("🟢 New table added for project:", payload.projectId);
+      // console.log("🟢 New table added for project:", payload.projectId);
     };
 
     const handleTableProjectEdited = ({ projectId, updatedProject }) => {
@@ -67,13 +67,13 @@ const TableInside = ({ tableData }) => {
       setData((prev) =>
         prev.map((p) => (p._id === updatedProject._id ? updatedProject : p))
       );
-      console.log("🟠 Table edited:", updatedProject._id);
+      // console.log("🟠 Table edited:", updatedProject._id);
     };
 
     const handleTableProjectDeleted = ({ projectId, deletedProject }) => {
       if (projectId !== tableData._id) return;
       setData((prev) => prev.filter((p) => p._id !== deletedProject._id));
-      console.log("🔴 Table deleted:", deletedProject._id);
+      // console.log("🔴 Table deleted:", deletedProject._id);
     };
 
     // 🔗 Pasang listener global

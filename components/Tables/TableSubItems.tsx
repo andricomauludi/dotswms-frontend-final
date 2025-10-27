@@ -73,7 +73,7 @@ const TableSubItems = ({ tableData }) => {
 
     // Subitem baru ditambahkan
     const handleNewSubItem = (payload: any) => {
-      console.log("📩 Received newSubItem payload:", payload);
+      // console.log("📩 Received newSubItem payload:", payload);
 
       // hanya proses kalau project id cocok
       if (payload.projectId !== tableData._id) return;
@@ -83,7 +83,7 @@ const TableSubItems = ({ tableData }) => {
         return exists ? prev : [...prev, payload.newSubItem];
       });
 
-      console.log("🟢 New sub item for project:", payload.projectId);
+      // console.log("🟢 New sub item for project:", payload.projectId);
     };
 
     // Subitem diubah

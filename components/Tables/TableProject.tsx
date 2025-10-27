@@ -71,7 +71,7 @@ const TableProject = ({ tableData }) => {
     };
 
     socket.emit("joinGroupProject", tableData._id);
-    console.log(`🟢 Joined room: ${tableData._id}`);
+    // console.log(`🟢 Joined room: ${tableData._id}`);
 
     socket.on("newProject", handleNewProject);
     socket.on("projectDeleted", handleProjectDeleted);
@@ -79,7 +79,7 @@ const TableProject = ({ tableData }) => {
 
     return () => {
       socket.emit("leaveGroupProject", tableData._id);
-      console.log(`🔴 Left room: ${tableData._id}`);
+      // console.log(`🔴 Left room: ${tableData._id}`);
       socket.off("newProject", handleNewProject);
       socket.off("projectDeleted", handleProjectDeleted);
       socket.off("projectEdited", handleProjectEdited);
