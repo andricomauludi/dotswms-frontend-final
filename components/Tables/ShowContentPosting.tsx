@@ -72,6 +72,7 @@ export default function ShowContentPosting({ contentPostingItem }) {
         }
       );
       const url = window.URL.createObjectURL(new Blob([response.data]));
+      console.log("ini url dari setmedia " + url);
       setMediaUrl(url);
     } catch (error) {
       console.error(error);
@@ -116,15 +117,33 @@ export default function ShowContentPosting({ contentPostingItem }) {
                   ) : (
                     <div className="flex-shrink-0 text-center">
                       {contentPostingItem.file_type.includes("image") && (
-                        <img
-                          src={mediaUrl}
-                          alt="Fetched content"
-                          style={{
-                            maxWidth: "600px",
-                            maxHeight: "400px",
-                            margin: "0 auto",
-                          }} // Center the image
-                        />
+                        <>
+                          <img
+                            src={mediaUrl}
+                            alt="Fetched content"
+                            style={{
+                              maxWidth: "600px",
+                              maxHeight: "400px",
+                              margin: "0 auto",
+                            }} // Center the image
+                          />
+                          <a
+                            href={mediaUrl}
+                            download={contentPostingItem.file_name_real}
+                            className="block mt-2 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+                          >
+                            <Button
+                              color="primary"
+                              style={{
+                                backgroundImage:
+                                  "linear-gradient(to right, blue , pink)",
+                                color: "white",
+                              }}
+                            >
+                              <FontAwesomeIcon icon={faDownload} /> Download
+                            </Button>
+                          </a>
+                        </>
                       )}
                       {contentPostingItem.file_type === "video/mp4" && (
                         <video controls width="600">
@@ -134,7 +153,7 @@ export default function ShowContentPosting({ contentPostingItem }) {
                       )}
                       <h3
                         className="font-medium text-black dark:text-white"
-                        style={{ paddingTop:"20px",paddingBottom: "20px" }}
+                        style={{ paddingTop: "20px", paddingBottom: "20px" }}
                       >
                         {contentPostingItem.file_name_real}
                       </h3>
@@ -167,9 +186,7 @@ export default function ShowContentPosting({ contentPostingItem }) {
                             Drive
                           </Button>
                         </a>
-                        <p
-                          style={{paddingTop: "20px" }}
-                        >
+                        <p style={{ paddingTop: "20px" }}>
                           You can download the file in Google Drive too
                         </p>
                       </>
@@ -224,11 +241,27 @@ export default function ShowContentPosting({ contentPostingItem }) {
                         <source src={mediaUrl} type="video/mp4" />
                         Your browser does not support the video tag.
                       </video>
+                      <a
+                        href={mediaUrl}
+                        download={contentPostingItem.file_name_real}
+                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                      >
+                        <Button
+                          color="primary"
+                          style={{
+                            backgroundImage:
+                              "linear-gradient(to right, blue , pink)",
+                            color: "white",
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faDownload} /> Download Video
+                        </Button>
+                      </a>
                       <h3
                         className="font-medium text-black dark:text-white"
-                        style={{paddingTop:"20px", paddingBottom: "20px" }}
+                        style={{ paddingTop: "20px", paddingBottom: "20px" }}
                       >
-                        {contentPostingItem.file_name}
+                        {contentPostingItem.file_name_real}
                       </h3>
                     </div>
                   )}
@@ -259,10 +292,8 @@ export default function ShowContentPosting({ contentPostingItem }) {
                             Drive
                           </Button>
                         </a>
-                        <p                        
-                          style={{paddingTop: "20px" }}
-                        >
-                         You can download the file in Google Drive too
+                        <p style={{ paddingTop: "20px" }}>
+                          You can download the file in Google Drive too
                         </p>
                       </>
                     )
