@@ -60,21 +60,8 @@ export default function ContentPostingList({ contentPostingItem }) {
         const { data } = await axios.get(
           BACKEND_PORT + "workspaces/content-posting/" + contentPostingItem._id,
           { headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` } }
-        );
-
-        // const payload = {
-        //   id: tableData._id,
-        // };
-        // const { data: response } = await axios.post(
-        //   "/api/workspaces/tableinside",
-        //   payload
-        // );
-        // const { data: response } = await axios.get(
-        //   "/api/workspaces/tableproject"
-        // );
-        setData(await data.contentPosting);
-        console.log(data)
-        // setData(await response.data.tableproject);
+        );      
+        setData(await data.contentPosting);               
       } catch (error: any) {
         console.error(error.message);
       }

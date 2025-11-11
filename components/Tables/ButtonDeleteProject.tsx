@@ -162,7 +162,7 @@ const ButtonDeleteProject = forwardRef(
           <FontAwesomeIcon
             icon={faTrash}
             key={"md"}
-            size="xs"
+            size="l"
             onClick={() => handleOpen("md")}
           />
         </button>

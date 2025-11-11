@@ -2,6 +2,7 @@
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import ButtonAddProject from "./ButtonAddProject";
+import ButtonDuplicateProject from "./ButtonDuplicateProject";
 import { Accordion, AccordionItem, useDisclosure } from "@nextui-org/react";
 import TableInside from "./TableInside";
 import ButtonEditProject from "./ButtonEditProject";
@@ -106,13 +107,18 @@ const TableProject = ({ tableData }) => {
             title={Item.project_name}
             className={`${Item.color_project}`}
           >
-            <div className="mb-6 flex justify-end mr-2">
-              <ButtonEditProject
+            <div className="mb-6 flex justify-between items-center w-full mr-2">
+              <ButtonDuplicateProject
                 ref={childRef}
                 parentFunction={handleParentFunction}
                 tableData={Item}
               />
-              <div className="ml-2">
+              <div className="flex gap-3 justify-end">
+                <ButtonEditProject
+                  ref={childRef}
+                  parentFunction={handleParentFunction}
+                  tableData={Item}
+                />
                 <ButtonDeleteProject
                   ref={childRef}
                   parentFunction={handleParentFunction}

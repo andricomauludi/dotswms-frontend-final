@@ -714,7 +714,7 @@ const ButtonEditTableProject = forwardRef(
                             "linear-gradient(to right, green , yellow)",
                         }}
                       >
-                        Edit Item
+                        Save
                       </Button>
                     </div>
                   </div>

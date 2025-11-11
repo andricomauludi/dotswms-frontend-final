@@ -212,7 +212,7 @@ const ButtonEditGroupProject = forwardRef(
                         "linear-gradient(to right, green , yellow)",
                     }}
                   >
-                    Edit Group Project
+                    Save
                   </Button>
                 </form>
               </div>

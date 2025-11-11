@@ -36,7 +36,6 @@ const ButtonEditProject = forwardRef(({ parentFunction, tableData }, ref) => {
   const [type, setType] = useState("text");
   const cookies = useCookies();
 
-
   const handleChildEvent = () => {
     // Do something in the child component
     parentFunction(); // Call the parent function
@@ -63,7 +62,7 @@ const ButtonEditProject = forwardRef(({ parentFunction, tableData }, ref) => {
     //   alert(error.message);
     // }
   };
-  const router = useRouter();
+  const router = useRouter();  
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     setLoadingModal(true);
@@ -71,9 +70,9 @@ const ButtonEditProject = forwardRef(({ parentFunction, tableData }, ref) => {
     event.preventDefault();
 
     formData.append("_id", tableData._id);
-    formData.append("project_name", event.currentTarget.projectname.value);        
+    formData.append("project_name", event.currentTarget.projectname.value);
     if (event.currentTarget.projectcolor.value !== "default") {
-      formData.append("color_project", event.currentTarget.projectcolor.value);     
+      formData.append("color_project", event.currentTarget.projectcolor.value);
     }
 
     try {
@@ -91,16 +90,18 @@ const ButtonEditProject = forwardRef(({ parentFunction, tableData }, ref) => {
         BACKEND_PORT + "workspaces/edit-project/",
         formData,
         {
-          headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}`, 'Content-Type': 'multipart/form-data' },
+          headers: {
+            Authorization: `Bearer ${cookies.get(COOKIE_NAME)}`,
+            "Content-Type": "multipart/form-data",
+          },
         }
-      );    
+      );
       setLoadingModal(false);
 
       onClose();
       onClose();
-      handleChildEvent()
+      handleChildEvent();
 
-    
       //redirect the user to dashboard
     } catch (e) {
       setLoadingModal(false);
@@ -149,7 +150,7 @@ const ButtonEditProject = forwardRef(({ parentFunction, tableData }, ref) => {
         <FontAwesomeIcon
           icon={faEdit}
           key={"5xl"}
-          size="xs"
+          size="l"
           onClick={() => handleOpen("5xl")}
         />
       </button>
@@ -189,28 +190,32 @@ const ButtonEditProject = forwardRef(({ parentFunction, tableData }, ref) => {
                       </label>
                       <div className="relative z-20 bg-white dark:bg-form-input">
                         <span className="absolute top-1/2 left-4 z-30 -translate-y-1/2">
-                        <FontAwesomeIcon icon={faPalette} />
+                          <FontAwesomeIcon icon={faPalette} />
                         </span>
                         <select
                           name="projectcolor"
                           defaultValue="default"
-
                           className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input"
                         >
                           <option hidden value="default">
                             {`${
-                          tableData.color_project === "border-l-6 border-warning"
-                            ? "Yellow"
-                            : tableData.color_project === "border-l-6 border-primary"
-                            ? "Blue"
-                            : tableData.color_project === "border-l-6 border-danger"
-                            ? "Red"
-                            : tableData.color_project === "border-l-6 border-secondary"
-                            ? "Purple"
-                            : tableData.color_project === "border-l-6 border-success"
-                            ? "Green"
-                            : ""
-                        }`}
+                              tableData.color_project ===
+                              "border-l-6 border-warning"
+                                ? "Yellow"
+                                : tableData.color_project ===
+                                  "border-l-6 border-primary"
+                                ? "Blue"
+                                : tableData.color_project ===
+                                  "border-l-6 border-danger"
+                                ? "Red"
+                                : tableData.color_project ===
+                                  "border-l-6 border-secondary"
+                                ? "Purple"
+                                : tableData.color_project ===
+                                  "border-l-6 border-success"
+                                ? "Green"
+                                : ""
+                            }`}
                           </option>
                           <option value="border-l-6 border-warning">
                             Yellow
@@ -257,7 +262,7 @@ const ButtonEditProject = forwardRef(({ parentFunction, tableData }, ref) => {
                       "linear-gradient(to right, green , yellow)",
                   }}
                 >
-                  Edit Project
+                  Save
                 </Button>
               </form>
             </div>
