@@ -141,6 +141,16 @@ const ChatCard = () => {
                     {item.email}
                   </span>
                 </p>
+                <p>
+                  <span className="text-sm text-black dark:text-white">
+                    {item.phone}
+                  </span>
+                </p>
+                <p>
+                  <span className="text-sm text-black dark:text-white">
+                    {item.birthday}
+                  </span>
+                </p>
                 <p
                   className={"inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium text-warning bg-warning"}
                 >

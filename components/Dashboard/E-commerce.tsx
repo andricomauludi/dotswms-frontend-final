@@ -14,6 +14,9 @@ import { faSquareCheck } from "@fortawesome/free-solid-svg-icons/faSquareCheck";
 import { useCookies } from "next-client-cookies";
 import { BACKEND_PORT, COOKIE_NAME } from "@/constants";
 import { useRouter } from "next/navigation";
+import TableOne from "../Tables/TableOne";
+import ChartTwo from "../Charts/ChartTwo";
+import ChartOne from "../Charts/ChartOne";
 
 const MapOne = dynamic(() => import("../Maps/MapOne"), {
   ssr: false,
@@ -103,6 +106,7 @@ const ECommerce: React.FC = () => {
       <div className="mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5">
         {/* <ChartOne /> */}
         <ChatCard />
+        {/* <ChatCardOri /> */}
         {/* <ChartThree /> */}
         {/* <MapOne />
         <div className="col-span-12 xl:col-span-8">

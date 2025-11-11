@@ -1,4 +1,9 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useState } from "react";
+import React, {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useState,
+} from "react";
 import {
   Modal,
   ModalContent,
@@ -15,14 +20,13 @@ import "react-toastify/dist/ReactToastify.css";
 import { useCookies } from "next-client-cookies";
 import { BACKEND_PORT, COOKIE_NAME } from "@/constants";
 
-const ButtonAddGroupProject = forwardRef(( {parentFunction} , ref) => {
+const ButtonAddGroupProject = forwardRef(({ parentFunction }, ref) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [data, setData] = useState([]);  
+  const [data, setData] = useState([]);
   const [isLoading, setLoading] = useState(true);
   const [isLoadingModal, setLoadingModal] = useState(false);
   const [size, setSize] = React.useState("2xl");
   const cookies = useCookies();
-
 
   const handleChildEvent = () => {
     // Do something in the child component
@@ -64,24 +68,26 @@ const ButtonAddGroupProject = forwardRef(( {parentFunction} , ref) => {
       //   }
       // );
 
-
       const { data } = await axios.post(
         BACKEND_PORT + "workspaces/create-group-project",
         formData,
         {
-          headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}`, 'Content-Type': 'multipart/form-data' },
+          headers: {
+            Authorization: `Bearer ${cookies.get(COOKIE_NAME)}`,
+            "Content-Type": "multipart/form-data",
+          },
         }
-      );    
+      );
       setLoadingModal(false);
       // alert("Success");
 
       onClose();
-      onClose();  
-      handleChildEvent();    
-      
+      onClose();
+      handleChildEvent();
+
       toast.success("New Group Project Added!", {
         autoClose: 3000,
-        position: "top-right",        
+        position: "top-right",
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -90,7 +96,7 @@ const ButtonAddGroupProject = forwardRef(( {parentFunction} , ref) => {
         theme: "colored",
         transition: Flip,
         // onClose: () => handleChildEvent()
-      });      
+      });
       //redirect the user to dashboard
     } catch (e) {
       setLoadingModal(false);
@@ -112,15 +118,11 @@ const ButtonAddGroupProject = forwardRef(( {parentFunction} , ref) => {
       //   console.error(error.message);
       // }
 
-
-
       try {
-        const { data } = await axios.get(
-          BACKEND_PORT +
-            "users/dropdown-user",
-          { headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` } }
-        );                
-    
+        const { data } = await axios.get(BACKEND_PORT + "users/dropdown-user", {
+          headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` },
+        });
+
         setData(await data.user);
 
         // console.log(datatoken);
@@ -168,17 +170,17 @@ const ButtonAddGroupProject = forwardRef(( {parentFunction} , ref) => {
     <>
       <Button
         variant="flat"
-        key={"2xl"}
         onPress={() => handleOpen("2xl")}
         style={{
           backgroundImage: "linear-gradient(to right, green , yellow)",
           color: "black",
         }}
-        className="hover:bg-opacity-30"
-        isIconOnly
+        radius="lg" // cukup ini saja
+        className="ml-3 p-3 hover:bg-opacity-30"
       >
         <FontAwesomeIcon icon={faPlus} />
       </Button>
+
       <div style={{ zIndex: 99999 }}>
         <Modal
           className="sticky top-0 flex w-full bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none"

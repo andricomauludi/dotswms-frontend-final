@@ -87,12 +87,10 @@ const WorkspacePage = () => {
       <div className="flex flex-col gap-5">
         <div className="text-left">
           <ButtonGroup variant="flat">
-            <Button>
-              {selectedGroup?.group_project || "No Group Project"}
-            </Button>
             <Dropdown placement="bottom-end">
               <DropdownTrigger>
-                <Button isIconOnly>
+                <Button>
+                  {selectedGroup?.group_project || "No Group Project"}
                   <svg
                     fill="none"
                     height="14"
@@ -122,11 +120,11 @@ const WorkspacePage = () => {
                 ))}
               </DropdownMenu>
             </Dropdown>
-            <ButtonAddGroupProject
-              ref={childRef}
-              parentFunction={handleParentFunction}
-            />
           </ButtonGroup>
+          <ButtonAddGroupProject
+            ref={childRef}
+            parentFunction={handleParentFunction}
+          />
         </div>
 
         {/* ✅ Re-render TableProject setiap group project berubah */}

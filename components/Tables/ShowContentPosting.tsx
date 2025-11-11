@@ -166,8 +166,8 @@ export default function ShowContentPosting({ contentPostingItem }) {
                           className="font-medium text-black dark:text-white"
                           style={{ paddingBottom: "20px", paddingTop: "20px" }}
                         >
-                          If loading takes too long, you can access this file
-                          via Google Drive
+                          Please access this file via Google Drive in case the
+                          buffer takes too long to load
                         </h3>
                         <a
                           href={data}
@@ -187,7 +187,7 @@ export default function ShowContentPosting({ contentPostingItem }) {
                           </Button>
                         </a>
                         <p style={{ paddingTop: "20px" }}>
-                          You can download the file in Google Drive too
+                          The file is also available for download via Google Drive.
                         </p>
                       </>
                     )
@@ -272,8 +272,8 @@ export default function ShowContentPosting({ contentPostingItem }) {
                           className="font-medium text-black dark:text-white"
                           style={{ paddingBottom: "20px", paddingTop: "20px" }}
                         >
-                          If loading takes too long, you can access this file
-                          via Google Drive
+                          Please access this file via Google Drive in case the
+                          buffer takes too long to load
                         </h3>
                         <a
                           href={data}
@@ -293,7 +293,7 @@ export default function ShowContentPosting({ contentPostingItem }) {
                           </Button>
                         </a>
                         <p style={{ paddingTop: "20px" }}>
-                          You can download the file in Google Drive too
+                          The file is also available for download via Google Drive.
                         </p>
                       </>
                     )
