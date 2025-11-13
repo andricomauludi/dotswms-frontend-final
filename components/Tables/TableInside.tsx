@@ -17,6 +17,7 @@ import { BACKEND_PORT, COOKIE_NAME } from "@/constants";
 import ShowContentPosting from "./ShowContentPosting";
 import ContentPostingList from "./ContentPostingList";
 import { socket } from "@/lib/socket"; // ✅ gunakan socket global
+import ButtonSortTableProject from "./ButtonSortTableProject";
 
 const TableInside = ({ tableData }) => {
   const cookies = useCookies();
@@ -54,12 +55,23 @@ const TableInside = ({ tableData }) => {
 
     // ✅ Listener realtime global, tapi filter per project
     const handleNewTableProject = (payload) => {
-      if (payload.projectId !== tableData._id) return; // ⛔ skip project lain
-      setData((prev) => {
-        const exists = prev.some((p) => p._id === payload.newTableProject._id);
-        return exists ? prev : [...prev, payload.newTableProject];
-      });
-      // console.log("🟢 New table added for project:", payload.projectId);
+      if (payload.projectId !== tableData._id) return;
+
+      // ⚡ Bisa menerima array (sort) atau object (create)
+      if (Array.isArray(payload.newTableProject)) {
+        // Replace seluruh data saat sort
+        setData(payload.newTableProject);
+        console.log("masukkkk");
+      } else {
+        // Tambah data baru saat create
+        setData((prev) => {
+          const exists = prev.some(
+            (p) => p._id === payload.newTableProject._id
+          );
+          console.log("masukkkk2");
+          return exists ? prev : [...prev, payload.newTableProject];
+        });
+      }
     };
 
     const handleTableProjectEdited = ({ projectId, updatedProject }) => {
@@ -82,7 +94,7 @@ const TableInside = ({ tableData }) => {
     socket.on("tableProjectDeleted", handleTableProjectDeleted);
 
     // ✅ Debug: lihat semua event masuk
-    socket.onAny((event, data) => console.log("📡 Received:", event, data));
+    // socket.onAny((event, data) => console.log("📡 Received:", event, data));
 
     // 🧹 Cleanup
     return () => {
@@ -100,12 +112,23 @@ const TableInside = ({ tableData }) => {
   return (
     <>
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
-        <div style={{ marginTop: "10px", marginBottom: "20px" }}>
-          <ButtonAddProject
-            ref={childRef}
-            parentFunction={handleParentFunction}
-            tableData={tableData}
-          />
+        <div className="mb-6 flex justify-between items-center w-full mr-2">
+          <div style={{ marginTop: "10px" }}>
+            <ButtonAddProject
+              ref={childRef}
+              parentFunction={handleParentFunction}
+              tableData={tableData}
+            />
+          </div>
+          <div className="flex gap-3 justify-end">
+            <button>
+              <ButtonSortTableProject
+                ref={childRef}
+                parentFunction={handleParentFunction}
+                tableData={tableData}
+              />
+            </button>
+          </div>
         </div>
 
         <div className="max-w-full overflow-x-auto">
@@ -193,18 +216,18 @@ const TableInside = ({ tableData }) => {
                     </td>
                     <td className="border-b border-[#eee] py-3 px-2 dark:border-strokedark">
                       <p
-                        className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-xs text-xs ${
+                        className={`inline-flex rounded-full py-1 px-3 text-xs text-xs ${
                           packageItem.contentcategory === "reels"
-                            ? "text-primary bg-primary"
+                            ? "text-white bg-primary"
                             : packageItem.contentcategory === "tiktok"
-                            ? "text-secondary bg-secondary"
+                            ? "text-black bg-secondary"
                             : packageItem.contentcategory === "photo"
-                            ? "text-warning bg-warning"
+                            ? "text-black bg-warning"
                             : packageItem.contentcategory === "design"
-                            ? "text-danger bg-danger"
+                            ? "text-white bg-danger"
                             : packageItem.contentcategory === "youtubevideo"
-                            ? "text-success bg-success"
-                            : "text-warning bg-warning"
+                            ? "text-black bg-success"
+                            : "text-black bg-warning"
                         }`}
                       >
                         {packageItem.contentcategory}
@@ -240,16 +263,16 @@ const TableInside = ({ tableData }) => {
                     </td>
                     <td className="border-b border-[#eee] py-3 px-2 dark:border-strokedark">
                       <p
-                        className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-xs text-xs ${
+                        className={`inline-flex rounded-full py-1 px-3 text-xs text-xs ${
                           packageItem.postingstatus === "not yet"
-                            ? "text-primary bg-primary"
+                            ? "text-white bg-primary"
                             : packageItem.postingstatus === "on preview"
-                            ? "text-warning bg-warning"
+                            ? "text-black bg-warning"
                             : packageItem.postingstatus === "on hold"
-                            ? "text-danger bg-danger"
+                            ? "text-white bg-danger"
                             : packageItem.postingstatus === "posted"
-                            ? "text-success bg-success"
-                            : "text-warning bg-warning"
+                            ? "text-white bg-success"
+                            : "text-black bg-warning"
                         }`}
                       >
                         {packageItem.postingstatus}

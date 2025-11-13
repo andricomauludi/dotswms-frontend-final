@@ -6,7 +6,7 @@ import {
 } from "@nextui-org/react";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFile } from "@fortawesome/free-solid-svg-icons";
+import { faFile, faFileText } from "@fortawesome/free-solid-svg-icons";
 
 export default function ShowFileProject({ tableData }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -47,7 +47,7 @@ export default function ShowFileProject({ tableData }) {
           className="flex items-center gap-3.5 text-xs font-medium duration-300 ease-in-out hover:text-primary lg:text-xs"
           // className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
         >
-          <FontAwesomeIcon icon={faFile} />
+          <FontAwesomeIcon icon={faFileText} size="lg" />
           Content Text
         </Link>
         <div>

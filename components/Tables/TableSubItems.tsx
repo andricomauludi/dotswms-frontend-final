@@ -104,8 +104,7 @@ const TableSubItems = ({ tableData }) => {
       );
     };
 
-    // Debug global
-    socket.onAny((event, data) => console.log("📡 Received:", event, data));
+        
 
     // ✅ Daftarkan handler sebenarnya
     socket.on("newSubItem", handleNewSubItem);

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Modal, ModalContent, useDisclosure } from "@nextui-org/react";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFile } from "@fortawesome/free-solid-svg-icons";
+import {  faClosedCaptioning, faHashtag } from "@fortawesome/free-solid-svg-icons";
 
 export default function ShowPostingCaptionTableProject({ tableData }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -20,9 +20,9 @@ export default function ShowPostingCaptionTableProject({ tableData }) {
     <div className="text-black dark:text-white">
       <button
         onClick={() => handleOpen("5xl")}
-        className="flex items-center gap-3.5 text-xs font-medium duration-300 ease-in-out hover:text-primary lg:text-xs"
+        className="flex items-center text-xs font-medium duration-300 ease-in-out hover:text-primary lg:text-xs"
       >
-        <FontAwesomeIcon icon={faFile} />
+        <FontAwesomeIcon icon={faClosedCaptioning} size="lg"/>
         Posting Caption
       </button>
 

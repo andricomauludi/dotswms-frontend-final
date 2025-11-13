@@ -27,6 +27,8 @@ import ShowContentPosting from "./ShowContentPosting";
 
 export default function ContentPostingList({ contentPostingItem }) {
   const cookies = useCookies();
+  const [modalOpen, setModalOpen] = useState(false);
+  const [activeIndexModal, setActiveIndexModal] = useState(0);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [data, setData] = useState([]);
@@ -60,8 +62,8 @@ export default function ContentPostingList({ contentPostingItem }) {
         const { data } = await axios.get(
           BACKEND_PORT + "workspaces/content-posting/" + contentPostingItem._id,
           { headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` } }
-        );      
-        setData(await data.contentPosting);               
+        );
+        setData(await data.contentPosting);
       } catch (error: any) {
         console.error(error.message);
       }
@@ -76,21 +78,15 @@ export default function ContentPostingList({ contentPostingItem }) {
 
   return (
     <>
-      {data.map((contentPostingItem: any) => {
-        return (
-          <>
-            {contentPostingItem.file_type === "image/jpg" ? (
-              <ShowContentPosting contentPostingItem={contentPostingItem} />
-            ) : contentPostingItem.file_type === "image/jpeg" ? (
-              <ShowContentPosting contentPostingItem={contentPostingItem} />
-            ) : contentPostingItem.file_type === "image/png" ? (
-              <ShowContentPosting contentPostingItem={contentPostingItem} />
-            ) : (
-              <ShowContentPosting contentPostingItem={contentPostingItem} />
-            )}
-          </>
-        );
-      })}
+      {data && data.length > 0 ? (
+        <ShowContentPosting          
+          contentArray={data} // <-- seluruh array          
+          isOpen={modalOpen}
+          setIsOpen={setModalOpen}
+        />
+      ) : (
+        <></>
+      )}
     </>
   );
 }

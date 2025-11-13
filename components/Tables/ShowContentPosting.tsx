@@ -1,69 +1,59 @@
-import React, { useEffect, useState } from "react";
-import {
-  Modal,
-  ModalContent,
-  useDisclosure,
-  Button,
-  Spinner,
-} from "@nextui-org/react";
-import axios, { AxiosError } from "axios";
-import { useRouter } from "next/navigation";
-import styles from "./ButtonAddProject.module.css";
-import { Container } from "react-bootstrap";
-import Link from "next/link";
+"use client";
+import React, { useState, useEffect } from "react";
+import { Modal, ModalContent, Button, Spinner } from "@nextui-org/react";
+import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faDownload,
-  faImage,
-  faSignOutAlt,
-  faVideo,
-} from "@fortawesome/free-solid-svg-icons";
+import { faDownload, faImage, faVideo, faSignOutAlt, faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { BACKEND_PORT, COOKIE_NAME } from "@/constants";
 import { useCookies } from "next-client-cookies";
 
-export default function ShowContentPosting({ contentPostingItem }) {
+export default function ShowContentPosting({ contentArray, initialIndex = 0, isOpen, setIsOpen }) {
   const cookies = useCookies();
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const [data, setData] = useState();
-  const [imageloader, setImageLoader] = useState();
-  const [isLoading, setLoading] = useState(true);
-  const [isLoadingLink, setLoadingLink] = useState(true);
+  const [activeIndex, setActiveIndex] = useState(initialIndex);
   const [mediaUrl, setMediaUrl] = useState("");
-  const [mediaType, setMediaType] = useState(""); // To track media type (image or video)
-  const [size, setSize] = React.useState("5xl");
+  const [googleDriveUrl, setGoogleDriveUrl] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingLink, setIsLoadingLink] = useState(false);
   const [error, setError] = useState("");
-  const handleOpen = async (size) => {
-    setLoading(true); // Set loading to true when modal opens
-    onOpen();
+
+  useEffect(() => {
+    if (isOpen) fetchMedia(contentArray[activeIndex]);
+  }, [activeIndex, isOpen]);
+
+  if (!contentArray || contentArray.length === 0) return <p className="text-gray-400 italic">No content posting available</p>;
+
+  const currentItem = contentArray[activeIndex];
+
+  const fetchMedia = async (item) => {
+    if (!item) return;
+
+    setIsLoading(true);
+    setIsLoadingLink(true);
+    setError("");
+    setMediaUrl("");
+    setGoogleDriveUrl("");
+
+    const payload = { file_name: item.file_name, file_type: item.file_type };
 
     try {
-      const payload = {
-        file_name: contentPostingItem.file_name,
-        file_type: contentPostingItem.file_type,
-      };
-      const data = await axios.post(
+      const linkRes = await axios.post(
         BACKEND_PORT + "workspaces/show-content-posting-link",
         payload,
         {
           headers: { Authorization: `Bearer ${cookies.get(COOKIE_NAME)}` },
         }
       );
-      console.log(data.data.fileUrl);
-      setData(await data.data.fileUrl);
-    } catch (error) {
-      console.error(error);
-      setError("Failed to fetch file."); // Set error message
+      setGoogleDriveUrl(linkRes.data.fileUrl);
+    } catch (err) {
+      console.error(err);
+      setError("Failed to fetch Google Drive link.");
     } finally {
-      setLoadingLink(false); // Set loading to false after fetching
+      setIsLoadingLink(false);
     }
 
     try {
-      const payload = {
-        file_name: contentPostingItem.file_name,
-        file_type: contentPostingItem.file_type,
-      };
-      const response = await axios.post(
+      const blobRes = await axios.post(
         BACKEND_PORT + "workspaces/show-content-posting",
         payload,
         {
@@ -71,247 +61,133 @@ export default function ShowContentPosting({ contentPostingItem }) {
           responseType: "blob",
         }
       );
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      console.log("ini url dari setmedia " + url);
+      const url = window.URL.createObjectURL(new Blob([blobRes.data]));
       setMediaUrl(url);
-    } catch (error) {
-      console.error(error);
-      setError("Failed to fetch file."); // Set error message
+    } catch (err) {
+      console.error(err);
+      setError("Failed to fetch file.");
     } finally {
-      setLoading(false); // Set loading to false after fetching
+      setIsLoading(false);
+    }
+  };
+
+  const handlePrev = () => setActiveIndex((activeIndex - 1 + contentArray.length) % contentArray.length);
+  const handleNext = () => setActiveIndex((activeIndex + 1) % contentArray.length);
+
+  const renderMedia = () => {
+    if (isLoading) return <Spinner label="Fetching file, please wait..." color="success" labelColor="success" />;
+    if (error) return <p className="text-red-500">{error}</p>;
+    if (!currentItem) return <p>No file available</p>;
+
+    if (currentItem.file_type.includes("image")) {
+      return (
+        <>
+          <img
+            src={mediaUrl}
+            alt={currentItem.file_name_real}
+            style={{ maxWidth: "600px", maxHeight: "400px", margin: "0 auto", borderRadius: "12px" }}
+          />
+          <a href={mediaUrl} download={currentItem.file_name_real}>
+            <Button color="primary" className="mt-4" style={{ backgroundImage: "linear-gradient(to right, blue, pink)", color: "white" }}>
+              <FontAwesomeIcon icon={faDownload} /> Download
+            </Button>
+          </a>
+        </>
+      );
+    }
+
+    if (currentItem.file_type === "video/mp4") {
+      return (
+        <>
+          <video controls width="400" style={{ display: "block", margin: "0 auto", borderRadius: "12px" }}>
+            <source src={mediaUrl} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          <a href={mediaUrl} download={currentItem.file_name_real}>
+            <Button color="primary" className="mt-4" style={{ backgroundImage: "linear-gradient(to right, blue, pink)", color: "white" }}>
+              <FontAwesomeIcon icon={faDownload} /> Download Video
+            </Button>
+          </a>
+        </>
+      );
     }
   };
 
   return (
     <>
-      {contentPostingItem.file_type === "image/jpg" ||
-      contentPostingItem.file_type === "image/jpeg" ||
-      contentPostingItem.file_type === "image/png" ? (
-        <p className="text-black dark:text-white">
-          <FontAwesomeIcon icon={faImage} onClick={() => handleOpen("5xl")} />
-          <div>
-            <Modal
-              className="sticky top-0 z-999 flex w-full bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none"
-              size={"5xl"}
-              isOpen={isOpen}
-              onClose={onClose}
-              scrollBehavior={"outside"}
-              backdrop="blur"
-            >
-              <ModalContent>
-                <div className="w-full max-w-200 rounded-lg bg-white py-12 px-8 dark:bg-boxdark md:py-15 md:px-17.5 text-center">
-                  <h3
-                    className="font-medium text-black dark:text-white"
-                    style={{ paddingBottom: "20px" }}
-                  >
-                    Content Posting
-                  </h3>
-                  {isLoading ? (
-                    <Spinner
-                      label="Fetching file, please wait..."
-                      color="success"
-                      labelColor="success"
-                    />
-                  ) : error ? (
-                    <p className="text-red-500">{error}</p>
-                  ) : (
-                    <div className="flex-shrink-0 text-center">
-                      {contentPostingItem.file_type.includes("image") && (
-                        <>
-                          <img
-                            src={mediaUrl}
-                            alt="Fetched content"
-                            style={{
-                              maxWidth: "600px",
-                              maxHeight: "400px",
-                              margin: "0 auto",
-                            }} // Center the image
-                          />
-                          <a
-                            href={mediaUrl}
-                            download={contentPostingItem.file_name_real}
-                            className="block mt-2 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-                          >
-                            <Button
-                              color="primary"
-                              style={{
-                                backgroundImage:
-                                  "linear-gradient(to right, blue , pink)",
-                                color: "white",
-                              }}
-                            >
-                              <FontAwesomeIcon icon={faDownload} /> Download
-                            </Button>
-                          </a>
-                        </>
-                      )}
-                      {contentPostingItem.file_type === "video/mp4" && (
-                        <video controls width="600">
-                          <source src={mediaUrl} type="video/mp4" />
-                          Your browser does not support the video tag.
-                        </video>
-                      )}
-                      <h3
-                        className="font-medium text-black dark:text-white"
-                        style={{ paddingTop: "20px", paddingBottom: "20px" }}
-                      >
-                        {contentPostingItem.file_name_real}
-                      </h3>
-                    </div>
-                  )}
-                  {!isLoadingLink ? (
-                    data && (
-                      <>
-                        <h3
-                          className="font-medium text-black dark:text-white"
-                          style={{ paddingBottom: "20px", paddingTop: "20px" }}
-                        >
-                          Please access this file via Google Drive in case the
-                          buffer takes too long to load
-                        </h3>
-                        <a
-                          href={data}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <Button
-                            color="primary"
-                            style={{
-                              backgroundImage:
-                                "linear-gradient(to right, green , yellow)",
-                              color: "black",
-                            }}
-                          >
-                            <FontAwesomeIcon icon={faSignOutAlt} /> Go to Google
-                            Drive
-                          </Button>
-                        </a>
-                        <p style={{ paddingTop: "20px" }}>
-                          The file is also available for download via Google Drive.
-                        </p>
-                      </>
-                    )
-                  ) : (
-                    <Spinner
-                      label="Fetching link, please wait..."
-                      color="success"
-                      labelColor="success"
-                    />
-                  )}
-                </div>
-              </ModalContent>
-            </Modal>
+      {/* ICON GRID */}
+      <div className="flex flex-wrap gap-4 mb-4">
+        {contentArray.map((item, index) => (
+          <div
+            key={item._id || index}
+            className="cursor-pointer text-black dark:text-white hover:scale-110 transition-transform"
+            onClick={() => { setActiveIndex(index); setIsOpen(true); }}
+            title={item.file_name_real}
+          >
+            {item.file_type.includes("image") ? (
+              <FontAwesomeIcon icon={faImage} size="lg" />
+            ) : item.file_type === "video/mp4" ? (
+              <FontAwesomeIcon icon={faVideo} size="lg" />
+            ) : (
+              <p>No file</p>
+            )}
           </div>
-        </p>
-      ) : contentPostingItem.file_type === "video/mp4" ? (
-        <p className="text-black dark:text-white">
-          <FontAwesomeIcon icon={faVideo} onClick={() => handleOpen("5xl")} />
-          <div>
-            <Modal
-              className="sticky top-0 z-999 flex w-full bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none"
-              size={"5xl"}
-              isOpen={isOpen}
-              onClose={onClose}
-              scrollBehavior={"outside"}
-              backdrop="blur"
-            >
-              <ModalContent>
-                <div className="w-full max-w-200 rounded-lg bg-white py-12 px-8 dark:bg-boxdark md:py-15 md:px-17.5 text-center">
-                  <h3
-                    className="font-medium text-black dark:text-white"
-                    style={{ paddingBottom: "20px" }}
-                  >
-                    Content Posting
+        ))}
+      </div>
+
+      {/* MODAL */}
+      <Modal size="5xl" isOpen={isOpen} onClose={() => setIsOpen(false)} scrollBehavior="outside" backdrop="blur">
+        <ModalContent>
+          <div className="relative bg-white dark:bg-boxdark rounded-lg py-12 px-8 text-center">
+            <h3 className="font-medium text-black dark:text-white mb-5">Content Posting</h3>
+
+            {renderMedia()}
+
+            {!isLoading && currentItem && (
+              <h3 className="font-medium text-black dark:text-white mt-6 mb-4" style={{ wordBreak: "break-word" }}>
+                {currentItem.file_name_real}
+              </h3>
+            )}
+
+            {/* Google Drive fallback */}
+            {!isLoadingLink ? (
+              googleDriveUrl && (
+                <>
+                  <h3 className="font-medium text-black dark:text-white mt-4 mb-4">
+                    Please access this file via Google Drive in case the buffer takes too long to load
                   </h3>
-                  {isLoading ? (
-                    <Spinner
-                      label="Fetching file, please wait..."
-                      color="success"
-                      labelColor="success"
-                    />
-                  ) : error ? (
-                    <p className="text-red-500">{error}</p>
-                  ) : (
-                    <div className="flex-shrink-0 text-center">
-                      <video
-                        controls
-                        width="600"
-                        style={{ display: "block", margin: "0 auto" }}
-                      >
-                        <source src={mediaUrl} type="video/mp4" />
-                        Your browser does not support the video tag.
-                      </video>
-                      <a
-                        href={mediaUrl}
-                        download={contentPostingItem.file_name_real}
-                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                      >
-                        <Button
-                          color="primary"
-                          style={{
-                            backgroundImage:
-                              "linear-gradient(to right, blue , pink)",
-                            color: "white",
-                          }}
-                        >
-                          <FontAwesomeIcon icon={faDownload} /> Download Video
-                        </Button>
-                      </a>
-                      <h3
-                        className="font-medium text-black dark:text-white"
-                        style={{ paddingTop: "20px", paddingBottom: "20px" }}
-                      >
-                        {contentPostingItem.file_name_real}
-                      </h3>
-                    </div>
-                  )}
-                  {!isLoadingLink ? (
-                    data && (
-                      <>
-                        <h3
-                          className="font-medium text-black dark:text-white"
-                          style={{ paddingBottom: "20px", paddingTop: "20px" }}
-                        >
-                          Please access this file via Google Drive in case the
-                          buffer takes too long to load
-                        </h3>
-                        <a
-                          href={data}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <Button
-                            color="primary"
-                            style={{
-                              backgroundImage:
-                                "linear-gradient(to right, green , yellow)",
-                              color: "black",
-                            }}
-                          >
-                            <FontAwesomeIcon icon={faSignOutAlt} /> Go to Google
-                            Drive
-                          </Button>
-                        </a>
-                        <p style={{ paddingTop: "20px" }}>
-                          The file is also available for download via Google Drive.
-                        </p>
-                      </>
-                    )
-                  ) : (
-                    <Spinner
-                      label="Fetching link, please wait..."
-                      color="success"
-                      labelColor="success"
-                    />
-                  )}
-                </div>
-              </ModalContent>
-            </Modal>
+                  <a href={googleDriveUrl} target="_blank" rel="noopener noreferrer">
+                    <Button color="primary" style={{ backgroundImage: "linear-gradient(to right, green , yellow)", color: "black" }}>
+                      <FontAwesomeIcon icon={faSignOutAlt} /> Go to Google Drive
+                    </Button>
+                  </a>
+                  <p style={{ paddingTop: "20px" }}>The file is also available for download via Google Drive.</p>
+                </>
+              )
+            ) : (
+              <Spinner label="Fetching link, please wait..." color="success" labelColor="success" />
+            )}
+
+            {/* Carousel arrows */}
+            {contentArray.length > 1 && !isLoading && (
+              <>
+                <button
+                  onClick={handlePrev}
+                  className="absolute top-1/2 left-0 transform -translate-y-1/2 p-2 text-3xl text-gray-700 hover:text-black dark:text-gray-300 dark:hover:text-white"
+                >
+                  <FontAwesomeIcon icon={faArrowLeft} />
+                </button>
+                <button
+                  onClick={handleNext}
+                  className="absolute top-1/2 right-0 transform -translate-y-1/2 p-2 text-3xl text-gray-700 hover:text-black dark:text-gray-300 dark:hover:text-white"
+                >
+                  <FontAwesomeIcon icon={faArrowRight} />
+                </button>
+              </>
+            )}
           </div>
-        </p>
-      ) : (
-        <p>No file</p>
-      )}
+        </ModalContent>
+      </Modal>
     </>
   );
 }

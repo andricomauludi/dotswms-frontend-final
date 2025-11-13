@@ -106,7 +106,7 @@ const ButtonDuplicateProject = forwardRef(
         <button className="hover:text-primary">
           <FontAwesomeIcon
             icon={faCopy}
-            size="l"
+            size="lg"
             onClick={() => handleOpen("5xl")}
           />
         </button>
