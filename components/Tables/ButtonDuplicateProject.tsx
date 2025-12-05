@@ -89,12 +89,13 @@ const ButtonDuplicateProject = forwardRef(
           }
         );
 
-        toast.success("Project duplicated successfully!", { transition: Flip });
+        alert("Project duplicated successfully!");
         handleChildEvent();
         onClose();
       } catch (e) {
         const error = e as AxiosError;
-        toast.error("Error duplicating project: " + error.message);
+        alert("Error duplicating project: " + error.message);
+
       } finally {
         setLoadingModal(false);
       }
